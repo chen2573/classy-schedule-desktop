@@ -31,11 +31,7 @@ app.on('ready', function()
     // Load main.html into window
     // This syntax is just //__dirname/mainWindow.html
     // __dirname gets the relative path of THIS file (main.js)
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '../src/home.html'),
-        protocol:'file:',
-        slashes: true
-    }));
+    mainWindow.loadURL('http://localhost:3000');
 
     // Quit entire application when main process is closed
     mainWindow.on('closed', function(){
