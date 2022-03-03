@@ -1,0 +1,55 @@
+.menu-container
+{
+    margin-top: 5vh;
+}
+
+.schedule-container
+{
+    width: 98vw;
+    height: 80vh;
+    margin-top: 5vh;
+    margin-left: 1vw;
+
+    overflow: auto;
+    border-radius: 1em;
+    box-shadow: 2.5px 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.schedule
+{
+    width: 98%;
+    margin-left: 1%;
+}
+
+th[scope='col']
+{
+    width: 25vw;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    background-color: #cccccc;
+}
+
+th[scope='row']
+{
+    width: 25vw;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    background-color: #dddddd;
+}
+
+td
+{
+    width: 25vw;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    background-color: #eeeeee;
+}
+
+.entry-button
+{
+    width: 80%;
+    height: 2.5vh;
+}
