@@ -2,6 +2,36 @@ import {React, useState} from 'react';
 import {Popover, Button} from '@mui/material';
 import './solution.css';
 
+const PopoverItem = ({anchor, popoverTarget, open, handleClose, time, entry}) =>
+{
+    var popoverContent;  //content within popover element
+
+    //for future updates, popoverContent can be set to elements that are fetched according to popoverTarget
+    if (popoverTarget == 'course')
+    {
+        popoverContent = <h2>Course info</h2>;
+    }
+    else if (popoverTarget == 'room')
+    {
+        popoverContent = <h2>Room info</h2>;
+    }
+    else
+    {
+        popoverContent = <h2>Professor info</h2>;
+    }
+
+
+    return <Popover
+                id={time+entry}
+                open={open}
+                anchorEl={anchor}
+                onClose={handleClose}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+            >
+                {popoverContent}
+            </Popover>;
+}
+
 const SolutionItem = ({courseEntries, time}) =>
 {
     //handle table items click event
@@ -25,28 +55,21 @@ const SolutionItem = ({courseEntries, time}) =>
     };
     const handleClose = () => {setAnchorEl(null);};
 
-    const open = Boolean(anchorEl);
 
 
     //generate items
-    const item = <tr className="row">
+    const item = <tr key={time} className="row">
                     <th scope="row">{time}</th>
 
+
+                    {<PopoverItem anchor={anchorEl} popoverTarget={popoverTarget} open={Boolean(anchorEl)} handleClose={handleClose} time={time} entry={"blah"}/>}
+
+
                     {<td className="course-container">    {courseEntries.map((entry) => {
-                        return <table key={entry.course}><tbody><tr><td>
+                        return <table key={entry.course}><tbody><tr key={entry.course} ><td>
                                     <Button className="entry-button" variant="text" onClick={handleClickCourse} color="inherit">
                                         {entry.course}
                                     </Button>
-
-                                    <Popover
-                                        id={time+entry.course}
-                                        open={open && popoverTarget == 'course'}
-                                        anchorEl={anchorEl}
-                                        onClose={handleClose}
-                                        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                                    >
-                                        <h2>Course info</h2>
-                                    </Popover>
                                </td></tr></tbody></table>})}
                     </td>}
 
@@ -55,16 +78,6 @@ const SolutionItem = ({courseEntries, time}) =>
                                     <Button className="entry-button" variant="text" onClick={handleClickRoom} color="inherit">
                                         {entry.room}
                                     </Button>
-
-                                    <Popover
-                                        id={time+entry.room}
-                                        open={open && popoverTarget == 'room'}
-                                        anchorEl={anchorEl}
-                                        onClose={handleClose}
-                                        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                                    >
-                                        <h2>Room info</h2>
-                                    </Popover>
                                                                                                 </td></tr></tbody></table>})}
                     </td>}
                     {<td className="professor-container"> {courseEntries.map((entry) => {
@@ -72,18 +85,8 @@ const SolutionItem = ({courseEntries, time}) =>
                                     <Button className="entry-button" variant="text" onClick={handleClickProfessor} color="inherit">
                                         {entry.professor}
                                     </Button>
-
-                                    <Popover
-                                        id={time+entry.professor}
-                                        open={open && popoverTarget == 'professor'}
-                                        anchorEl={anchorEl}
-                                        onClose={handleClose}
-                                        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                                    >
-                                        <h2>Professor info</h2>
-                                    </Popover>
                                </td></tr></tbody></table>})} </td>}
-                 </tr>;
+                </tr>;
 
 
     return item;
@@ -97,7 +100,7 @@ export function Solution ()
                                                     {course:"CISC 130", room:"OSS 431", professor:"Dr. Yilek"},
                                                     {course:"CISC 420", room:"OSS 429", professor:"Dr. Marrinan"}],
                                 };
-
+    const keys = Object.keys(dummyCourseEntries);
                                 
     return (
         <div className="container">
@@ -112,8 +115,7 @@ export function Solution ()
                             <th scope="col">Professor</th>
                         </tr>
 
-                        <SolutionItem courseEntries={dummyCourseEntries['8:15am - 9:20am']}  time={'8:15am - 9:20am'}/>
-                        <SolutionItem courseEntries={dummyCourseEntries['9:35am - 10:40am']} time={'9:35am - 10:40am'}/>
+                        {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
                     </tbody>
                 </table>
             </div>
