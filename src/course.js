@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ReactDOM from 'react-dom';
+import {Link} from 'react-router-dom';
 
 export function course() {
 
@@ -12,11 +13,6 @@ export function course() {
         <div>
             <h1> Add Class </h1>
 
-            <button type="button">
-                <a href="home.html">
-                    Home
-                </a>
-            </button>
             <form>
 
 
@@ -100,7 +96,7 @@ export function course() {
                     </select>
                 </label><br></br>
                 <input type="submit" />
-            </form>
+            </form><br></br>
         </div>
     );
 
