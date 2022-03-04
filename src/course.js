@@ -1,23 +1,27 @@
 import { useState } from "react";
 import ReactDOM from 'react-dom';
-import {Link} from 'react-router-dom';
 
 export function course() {
+    const [name, setName] = useState("");
 
-    //const handleSubmit = (event) => {
-        //event.preventDefault();
-      //  alert(inputs);
-    //}
-
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        alert(`The name you entered was: ${name}`)
+    }
+    const onSubmit = (e) => {
+        e.preventDefault()
+    
+        alert(`Test for submited info: ${value}`)
+      }
     return (
         <div>
             <h1> Add Class </h1>
 
-            <form>
+            <form onSubmit={handleSubmit}>
 
 
-                <label for="program">Program
-                    <select name="program" id="program">
+                <label>Program
+                    <select name="program" id="program"onChange={(e) => setName(e.target.value)}>
                         <option value="stat">STAT</option>
                         <option value="cisc">CISC</option>
                     </select>
