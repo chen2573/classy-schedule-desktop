@@ -100,7 +100,7 @@ export function Solution ()
 
                                 
     return (
-        <div className="container">
+        <div className="table-container">
 
             <div className="schedule-container">
                 <table className="schedule">

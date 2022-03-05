@@ -68,7 +68,7 @@ body {
   width: 100%;
 }
 
-.task {
+.item {
   background: #f4f4f4;
   margin: 5px;
   padding: 10px 20px;
@@ -79,7 +79,7 @@ body {
   border-left: 5px solid green;
 }
 
-.task h3 {
+.item h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,4 +123,10 @@ body {
 footer {
   margin-top: 30px;
   text-align: center;
+}
+
+.element-page {
+  max-width:100%;
+  display: flex;
+  flex-wrap: wrap;
 }
