@@ -103,7 +103,7 @@ export function Solution ()
     const keys = Object.keys(dummyCourseEntries);
                                 
     return (
-        <div className="container">
+        <div className="table-container">
 
             <div className="schedule-container">
                 <table className="schedule">
