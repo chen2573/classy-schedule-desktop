@@ -8,7 +8,7 @@ import Room from './room.js';
 import Solution from './solution.js';
 import { ClassNames } from '@emotion/react';
 
-const DEVELOPMENT_MODE = false;
+const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
 
 function App() {
   const [courses, setCourse] = useState([])
