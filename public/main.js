@@ -2,9 +2,12 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 const shell = require('electron').shell;
+const mysql = require('mysql');
+const fs = require('fs');
+const { ipcRenderer } = require('electron');
 
 // Objects coming from electron
-const {app, BrowserWindow, Menu, ipcMain} = electron;
+const {app, BrowserWindow, Menu, ipcMain } = electron;
 
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
@@ -15,35 +18,41 @@ let addWindow;
 // Listen for app to ready
 app.on('ready', function() 
 {
+    createMainWindow()
+});
+
+function createMainWindow() {
     // Create new window
     mainWindow = new BrowserWindow(
-    {
-        // This is to allow node code to run in html
-        webPreferences: 
         {
-            nodeIntegration: true,
-            contextIsolation: false,
-        },
-        width: 1000,
-        height: 800
-    });
-
-    // Load main.html into window
-    // This syntax is just //__dirname/mainWindow.html
-    // __dirname gets the relative path of THIS file (main.js)
-    mainWindow.loadURL('http://localhost:3000');
-
-    // Quit entire application when main process is closed
-    mainWindow.on('closed', function(){
-        app.quit();
-    });
-
-    // Build menu from template
-    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-
-    // Insert menu
-    Menu.setApplicationMenu(mainMenu);
-});
+            // This is to allow node code to run in html
+            webPreferences: 
+            {
+                nodeIntegration: false,
+                enableRemoteModule: true,
+                contextIsolation: true,
+                preload: path.join(__dirname, 'preload.js')
+            },
+            width: 1000,
+            height: 800
+        });
+    
+        // Load main.html into window
+        // This syntax is just //__dirname/mainWindow.html
+        // __dirname gets the relative path of THIS file (main.js)
+        mainWindow.loadURL('http://localhost:3000');
+    
+        // Quit entire application when main process is closed
+        mainWindow.on('closed', function(){
+            app.quit();
+        });
+    
+        // Build menu from template
+        const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    
+        // Insert menu
+        Menu.setApplicationMenu(mainMenu);
+}
 
 // Handle create add window 
 
@@ -75,13 +84,6 @@ function createAddWindow() {
         addWindow = null;
     });
 }
-
-// Catch item.add
-ipcMain.on('item:add', function(e, item){
-    console.log(item);
-    mainWindow.webContents.send('item:add', item);
-    addWindow.close();
-});
 
 // Create menu template
 const mainMenuTemplate = [
@@ -149,4 +151,58 @@ if(process.env.NODE_ENV !== 'production'){
             }
         ]
     });
+}
+
+// ============ Inter Process Communication ==============
+ipcMain.on("toMain", (event, args) => {
+    console.log('Success', args)
+    queryDatabase().then((data) => {
+        mainWindow.webContents.send('fromMain', data)
+    })
+});
+
+// ============ DataBase functions ======================== ==> May be moved outside of this class for safety
+const connectToSever = () => {
+    return new Promise((resolve, reject)=> {
+        var config =
+    {
+        host: 'capstonedb01.mysql.database.azure.com',
+        user: 'desktopteam',
+        password: 'desktoppass',
+        database: 'testdb',
+        port: 3306,
+        ssl: {ca: fs.readFileSync(path.join(__dirname, 'DBCertificate', 'DigiCertGlobalRootCA.crt.pem'))}
+    };
+
+    const conn = new mysql.createConnection(config);
+
+    conn.connect(
+        function (err) { 
+        if (err) { 
+            console.log("!!! Cannot connect !!! Error:");
+            reject(err)
+        }
+        else
+        {
+            resolve(conn)
+        }
+    });
+    })
+    
+}
+
+function queryDatabase(){
+    return new Promise((resolve, reject) => {
+        connectToSever().then(conn => {
+            conn.query('SELECT * FROM Class', function(err, results, fields) {
+                if(err) {
+                    reject(err)
+                }
+                else {
+                    resolve(results);
+                }
+            })
+     
+        })
+    })
 }
