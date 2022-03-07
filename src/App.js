@@ -55,11 +55,6 @@ function App() {
   }
 
 
-  //menubar states
-  const [currentPage, setCurrentPage] = useState('home');
-  const handleCurrentPageUpdate = (newPage) => {setCurrentPage(newPage);} //handle current page updates from child
-
-
   //global styling
   const theme = createTheme({
     palette: {primary: {main: "#90a4ae"}, secondary: {main: "#ffffff"}}
