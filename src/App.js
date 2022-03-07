@@ -6,7 +6,6 @@ import CoursePage from './components/CoursePage.js';
 import Professor from './professor.js';
 import Room from './room.js';
 import Solution from './solution.js';
-import { ClassNames } from '@emotion/react';
 
 const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
 
