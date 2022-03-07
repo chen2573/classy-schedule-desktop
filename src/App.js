@@ -22,11 +22,8 @@ function App() {
     setCourses([...courses, newCourse])
   }
   const deleteCourse = (id) => {
-    console.log('delete',id)
-    //const id = Math.floor(Math.random() * 10000) + 1
-
-    //const newCourse = { id, ...course }
-    //setCourses([...courses, newCourse])
+    console.log(id);
+    setCourses(courses.filter((course) => course.id !== id))
   }
   const testDBQuery = () => {
     if (window.DB === undefined || DEVELOPMENT_MODE) {
