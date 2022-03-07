@@ -6,6 +6,8 @@ import CoursePage from './components/CourseAddPage.js';
 import Professor from './professor.js';
 import Room from './room.js';
 import Solution from './solution.js';
+import MenuBar from './components/Menubar.js';
+import {createTheme, ThemeProvider} from '@mui/material';
 
 const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
 
@@ -51,11 +53,23 @@ function App() {
     }
   }
 
+
+  //menubar states
+  const [currentPage, setCurrentPage] = useState('home');
+  const handleCurrentPageUpdate = (newPage) => {setCurrentPage(newPage);} //handle current page updates from child
+
+
+  //global styling
+  const theme = createTheme({
+    palette: {primary: {main: "#90a4ae"}, secondary: {main: "#ffffff"}}
+  });
+
   return (
+    <ThemeProvider theme={theme}>
     <Router>
       <div className="App">
-        <Home />
         <Routes>
+          <Route path='/' element={<Home/>}/>
           <Route path='/course' element={<CoursePage onAddCourse={addCourse} courses={courses} />} />
           <Route path='/professor' element={<Professor />} />
           <Route path='/room' element={<Room />} />
@@ -64,7 +78,10 @@ function App() {
 
         <button onClick={testDBQuery}>SEND</button>
       </div>
+
+      <div className='menu-container'><MenuBar/></div>
     </Router>
+    </ThemeProvider>
   );
 }
 
