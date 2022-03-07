@@ -22,6 +22,7 @@ function App() {
     setCourses([...courses, newCourse])
   }
   const deleteCourse = (id) => {
+    console.log('delete',id)
     //const id = Math.floor(Math.random() * 10000) + 1
 
     //const newCourse = { id, ...course }
@@ -70,7 +71,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path='/' element={<Home/>}/>
-          <Route path='/course' element={<CoursePage onAddCourse={addCourse} courses={courses} />} />
+          <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} />} />
           <Route path='/professor' element={<Professor />} />
           <Route path='/room' element={<Room />} />
           <Route path='/schedule' element={<Solution />} />

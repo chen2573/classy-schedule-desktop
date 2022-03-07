@@ -174,11 +174,12 @@ const CourseAdd = ({onAddCourse}) => {
  * This component is a view that lists out individual CourseListItems.
  * @param courses - The state of courses that is passed down from App.js
  */
-const CourseList = ({courses}) => {
+const CourseList = ({courses, onDelete}) => {
   return (
     <div className='container'>
     {courses.map((currentCourse, index) => (
-        <CourseListItem key={index} course={currentCourse}/>
+        <CourseListItem key={index} course={currentCourse}
+        onDelete={onDelete}/>
     ))}
     </div>
   )
@@ -189,10 +190,10 @@ const CourseList = ({courses}) => {
  * The component that will display an individual course. These components will populate the CourseList component.
  * @param course - an individual course
  */
-const CourseListItem = ({course}) => {
+const CourseListItem = ({course, onDelete}) => {
   return (
     <div className='item'>
-        <h3>{course.program} {course.number}<FaTimes style={{color: 'red', cursor: 'pointer'}} /></h3>
+        <h3>{course.program} {course.number}<FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(course.courseID)} /></h3>
         {/* This stuff in the paragraph tag will become popover*/}
         <p>Class ID: {course.courseID} Course Name: {course.name}<br></br>Capacity: {course.capacity}</p>
     </div>
@@ -205,12 +206,12 @@ const CourseListItem = ({course}) => {
  * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
  * @param courses - the state of courses passed from App.js
  */
-const CourseAddPage = ({onAddCourse, courses}) => {
+const CourseAddPage = ({onAddCourse, courses, onDelete}) => {
   return (
     <div>
         <div className='element-page'>
             <CourseAdd onAddCourse={onAddCourse}/>
-            <CourseList courses={courses}/>
+            <CourseList onDelete={onDelete} courses={courses}/>
         </div>
     </div>
   )
