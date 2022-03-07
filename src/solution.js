@@ -119,11 +119,6 @@ export function Solution ()
                     </tbody>
                 </table>
             </div>
-
-
-            <div className="menu-container">
-                <h2>menubar here</h2>
-            </div>
         </div>
     );
 }
