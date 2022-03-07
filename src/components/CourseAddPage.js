@@ -1,4 +1,7 @@
+import { ListItem } from '@mui/material'
+//import { AsyncTaskManager } from 'builder-util'
 import { React, useState } from 'react'
+import {FaTimes} from 'react-icons/fa'
 
 /**
  * This component represents the form that will be used by the user to enter in new course data.
@@ -14,6 +17,7 @@ const CourseAdd = ({onAddCourse}) => {
   const [days, setDays] = useState('')
   const [tech, setTech] = useState('')
   const [lab, setLab] = useState(false)
+  const [courseID, setCourseID] = useState('')
 
   const onSubmit = (e) => {
       e.preventDefault()
@@ -26,18 +30,22 @@ const CourseAdd = ({onAddCourse}) => {
           alert('Please enter the course number')
           return
       }
-      // if (!name) {
-      //     alert('Please enter a course name')
-      //     return
-      // }
+      if (!name) {
+          alert('Please enter a course name')
+          return
+      }
+      if (!courseID) {
+        alert('Please enter the course ID')
+        return
+     }
       // if (!credits) {
       //     alert('Please enter the number of credits')
       //     return
       // }
-      // if (!capacity) {
-      //     alert('Please enter the course capacity')
-      //     return
-      // }
+      if (!capacity) {
+         alert('Please enter the course capacity')
+         return
+      }
       // if (!length) {
       //     alert('Please enter a course meeting time')
       //     return
@@ -51,10 +59,13 @@ const CourseAdd = ({onAddCourse}) => {
       //     return
       // }
 
-      onAddCourse({program,number})
+      onAddCourse({program,number,name,courseID,capacity})
 
+      setCapacity('')
       setProgram('')
       setNumber('')
+      setName('')
+      setCourseID('')
   }
 
   return (
@@ -69,6 +80,11 @@ const CourseAdd = ({onAddCourse}) => {
                       <option value="cisc">CISC</option>
                       <option value="cisc">Math</option>
                   </select>
+              </div>
+
+              <div className='form-control'>
+                  <label>Course ID</label>
+                  <input type="number" placeholder='Enter course ID' value={courseID} onChange={(e) => setCourseID(e.target.value)}/>
               </div>
 
               <div className='form-control'>
@@ -158,11 +174,12 @@ const CourseAdd = ({onAddCourse}) => {
  * This component is a view that lists out individual CourseListItems.
  * @param courses - The state of courses that is passed down from App.js
  */
-const CourseList = ({courses}) => {
+const CourseList = ({courses, onDelete}) => {
   return (
     <div className='container'>
     {courses.map((currentCourse, index) => (
-        <CourseListItem key={index} course={currentCourse}/>
+        <CourseListItem key={index} course={currentCourse}
+        onDelete={onDelete}/>
     ))}
     </div>
   )
@@ -173,11 +190,12 @@ const CourseList = ({courses}) => {
  * The component that will display an individual course. These components will populate the CourseList component.
  * @param course - an individual course
  */
-const CourseListItem = ({course}) => {
+const CourseListItem = ({course, onDelete}) => {
   return (
     <div className='item'>
-        <h3>{course.program} {course.number}</h3>
-        <p>TODO</p>
+        <h3>{course.program} {course.number}<FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(course.courseID)} /></h3>
+        {/* This stuff in the paragraph tag will become popover*/}
+        <p>Class ID: {course.courseID} Course Name: {course.name}<br></br>Capacity: {course.capacity}</p>
     </div>
   )
 }
@@ -188,12 +206,12 @@ const CourseListItem = ({course}) => {
  * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
  * @param courses - the state of courses passed from App.js
  */
-const CourseAddPage = ({onAddCourse, courses}) => {
+const CourseAddPage = ({onAddCourse, courses, onDelete}) => {
   return (
     <div>
         <div className='element-page'>
             <CourseAdd onAddCourse={onAddCourse}/>
-            <CourseList courses={courses}/>
+            <CourseList onDelete={onDelete} courses={courses}/>
         </div>
     </div>
   )

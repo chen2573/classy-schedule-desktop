@@ -21,7 +21,13 @@ function App() {
     const newCourse = { id, ...course }
     setCourses([...courses, newCourse])
   }
+  const deleteCourse = (id) => {
+    console.log('delete',id)
+    //const id = Math.floor(Math.random() * 10000) + 1
 
+    //const newCourse = { id, ...course }
+    //setCourses([...courses, newCourse])
+  }
   const testDBQuery = () => {
     if (window.DB === undefined || DEVELOPMENT_MODE) {
       console.log('Using dummy data')
@@ -35,12 +41,13 @@ function App() {
         console.log(dataRows);
 
         dataRows.forEach(data => {
-          var id = data.ClassId;
-          var program = data.ClassName;
-          var courseCapacity = data.Capacity;
+          var courseID = data.ClassID;
+          var program = data.department;
+          var capacity = data.Capacity;
           var number = data.CourseNumber;
+          var name = data.ClassName;
 
-          var newCourse = {program, number}; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          var newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
           setCourses([...courses, newCourse])
         })
       });
@@ -59,7 +66,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path='/' element={<Home/>}/>
-          <Route path='/course' element={<CoursePage onAddCourse={addCourse} courses={courses} />} />
+          <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} />} />
           <Route path='/professor' element={<Professor />} />
           <Route path='/room' element={<Room />} />
           <Route path='/schedule' element={<Solution />} />
