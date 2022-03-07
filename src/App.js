@@ -19,7 +19,7 @@ function App() {
     const newCourse = { id, ...course }
     setCourses([...courses, newCourse])
   }
-  const deleteCourse = (course) => {
+  const deleteCourse = (id) => {
     //const id = Math.floor(Math.random() * 10000) + 1
 
     //const newCourse = { id, ...course }

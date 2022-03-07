@@ -192,7 +192,7 @@ const CourseList = ({courses}) => {
 const CourseListItem = ({course}) => {
   return (
     <div className='item'>
-        <h3>{course.program} {course.number}<FaTimes /></h3>
+        <h3>{course.program} {course.number}<FaTimes style={{color: 'red', cursor: 'pointer'}} /></h3>
         {/* This stuff in the paragraph tag will become popover*/}
         <p>Class ID: {course.courseID} Course Name: {course.name}<br></br>Capacity: {course.capacity}</p>
     </div>
