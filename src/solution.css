@@ -1,13 +1,8 @@
-.menu-container
-{
-    margin-top: 5vh;
-}
-
 .schedule-container
 {
-    width: 98vw;
-    height: 80vh;
-    margin-top: 5vh;
+    width: 97vw;
+    height: 85vh;
+    margin-top: 2.5vh;
     margin-left: 1vw;
 
     overflow: auto;

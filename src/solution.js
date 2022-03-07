@@ -1,5 +1,6 @@
-import {React, useState} from 'react';
-import {Popover, Button} from '@mui/material';
+import {react, useState} from 'react';
+import PropTypes from 'prop-types';
+import {Popover, Button, Tabs, Tab, Box, Typography} from '@mui/material';
 import './solution.css';
 
 const PopoverItem = ({anchor, popoverTarget, open, handleClose, time, entry}) =>
@@ -101,11 +102,47 @@ export function Solution ()
                                                     {course:"CISC 420", room:"OSS 429", professor:"Dr. Marrinan"}],
                                 };
     const keys = Object.keys(dummyCourseEntries);
+
+
+    //tab states and functions
+    function a11yProps(index) {return {id: `simple-tab-${index}`, 'aria-controls': `simple-tabpanel-${index}`,}}
+    
+    const [value, setValue] = useState(0);
+    const handleChange = (event, newValue) => {setValue(newValue);};
+
+    function TabPanel(props)
+    {
+        const { children, value, index, ...other } = props;
+      
+        return (
+          <div
+            className="tab-pannel-container"
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+          >
+            {value === index && (<Box sx={{ p: 3 }}>{children}</Box>)}
+          </div>
+        );
+      }
+      
+      TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
+    
                                 
     return (
         <div className="table-container">
 
             <div className="schedule-container">
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Monday-Wednesday-Friday" {...a11yProps(0)} />
+                <Tab label="Monday-Wednesday" {...a11yProps(1)} />
+                <Tab label="Tuesday-Thursday" {...a11yProps(2)} />
+            </Tabs>
+
+
+            <TabPanel value={value} index={0}>
                 <table className="schedule">
                     <tbody>
                         <tr className="row">
@@ -118,6 +155,44 @@ export function Solution ()
                         {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
                     </tbody>
                 </table>
+
+                <h1>MWF</h1>
+            </TabPanel>
+
+            <TabPanel value={value} index={1}>
+                <table className="schedule">
+                    <tbody>
+                        <tr className="row">
+                            <th scope="col">Time</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Room</th>
+                            <th scope="col">Professor</th>
+                        </tr>
+
+                        {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
+                    </tbody>
+                </table>
+
+                <h1>MW</h1>
+            </TabPanel>
+
+            <TabPanel value={value} index={2}>
+                <table className="schedule">
+                    <tbody>
+                        <tr className="row">
+                            <th scope="col">Time</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Room</th>
+                            <th scope="col">Professor</th>
+                        </tr>
+
+                        {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
+                    </tbody>
+                </table>
+
+                <h1>TR</h1>
+            </TabPanel>
+
             </div>
         </div>
     );
