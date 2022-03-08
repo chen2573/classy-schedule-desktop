@@ -3,11 +3,23 @@ import { ListItem } from '@mui/material'
 import { React, useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
 
+const ProgramSelectItems = ({programs}) => {
+    let programsList = programs.map(p => {
+        return (<option key={p} value={p}>{p}</option>)
+    })
+    
+    return (
+        <>
+            {programsList}
+        </>
+    )
+}
+
 /**
  * This component represents the form that will be used by the user to enter in new course data.
  * @param onAddCourse - the addSubmit function that is passed down from App.js
  */
-const CourseAdd = ({onAddCourse}) => {
+const CourseAdd = ({onAddCourse, programs}) => {
   const [program, setProgram] = useState('')
   const [number, setNumber] = useState('')
   const [name, setName] = useState('')
@@ -21,6 +33,7 @@ const CourseAdd = ({onAddCourse}) => {
 
   const onSubmit = (e) => {
       e.preventDefault()
+      e.target.reset();
 
       if (!program) {
           alert('Please enter a progrom')
@@ -66,6 +79,8 @@ const CourseAdd = ({onAddCourse}) => {
       setNumber('')
       setName('')
       setCourseID('')
+      setCredits('')
+      setLength('')
   }
 
   return (
@@ -76,9 +91,7 @@ const CourseAdd = ({onAddCourse}) => {
                   <label>Program</label>
                   <select onChange={(e) => setProgram(e.target.value)}>
                       <option value=""></option>
-                      <option value="stat">STAT</option>
-                      <option value="cisc">CISC</option>
-                      <option value="cisc">Math</option>
+                      <ProgramSelectItems programs={programs}/>
                   </select>
               </div>
 
@@ -206,11 +219,11 @@ const CourseListItem = ({course, onDelete}) => {
  * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
  * @param courses - the state of courses passed from App.js
  */
-const CourseAddPage = ({onAddCourse, courses, onDelete}) => {
+const CourseAddPage = ({onAddCourse, courses, onDelete, programs}) => {
   return (
     <div>
         <div className='element-page'>
-            <CourseAdd onAddCourse={onAddCourse}/>
+            <CourseAdd onAddCourse={onAddCourse} programs={programs}/>
             <CourseList onDelete={onDelete} courses={courses}/>
         </div>
     </div>
