@@ -54,7 +54,7 @@ function App() {
 
   //global styling
   const theme = createTheme({
-    palette: {primary: {main: "#90a4ae"}, secondary: {main: "#ffffff"}}
+    palette: {primary: {main: "#90a4ae", dark:'#546e7a'}, secondary: {main: "#ffffff", dark:'#cfd8dc'}}
   });
 
   return (
