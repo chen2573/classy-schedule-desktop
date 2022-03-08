@@ -1,7 +1,7 @@
 import {react, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography} from '@mui/material';
-import './assets/styles/solution.css';
+import '../assets/styles/Solution.css';
 
 const PopoverItem = ({anchor, popoverTarget, open, handleClose, time, entry}) =>
 {
