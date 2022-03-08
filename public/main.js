@@ -161,7 +161,7 @@ ipcMain.on("toMain", (event, args) => {
     })
 });
 
-// ============ DataBase functions ======================== ==> May be moved outside of this class for safety
+// ============ DataBase functions ======================== 
 const connectToSever = () => {
     return new Promise((resolve, reject)=> {
         var config =
