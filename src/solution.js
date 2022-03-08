@@ -132,7 +132,12 @@ export function Solution ()
     
                                 
     return (
-        <div className="table-container">
+        <div className="solutions-container">
+
+            <Box sx={{ width: '100%'}}>
+                <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
+                <hr/>
+            </Box>
 
             <div className="schedule-container">
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -156,6 +161,15 @@ export function Solution ()
                     </tbody>
                 </table>
 
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
+                <h1>MWF</h1>
                 <h1>MWF</h1>
             </TabPanel>
 
@@ -193,6 +207,9 @@ export function Solution ()
                 <h1>TR</h1>
             </TabPanel>
 
+            <Button variant="contained" sx={{position:'absolute', bottom:'15vh', right:'2.5vw'}}>
+                <Typography variant="text" color="secondary">Generate Schedule</Typography>
+            </Button>
             </div>
         </div>
     );

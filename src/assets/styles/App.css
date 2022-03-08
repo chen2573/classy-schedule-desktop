@@ -1,0 +1,11 @@
+/* Custom Scrollbar */
+div::-webkit-scrollbar
+{
+    width: 8px;               /* width of the entire scrollbar */
+}
+
+div::-webkit-scrollbar-thumb
+{
+    background-color: #cfd8dc;
+    border-radius: 10px;
+}

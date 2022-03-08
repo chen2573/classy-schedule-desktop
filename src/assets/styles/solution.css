@@ -1,9 +1,15 @@
+hr
+{
+    width: 8.5em;
+    margin-left: 2.5vw;
+    margin-top: 0.5vh;
+}
 .schedule-container
 {
     width: 97vw;
-    height: 85vh;
+    height: 80vh;
     margin-top: 2.5vh;
-    margin-left: 1vw;
+    margin-left: 1.5vw;
 
     overflow: auto;
     border-radius: 1em;
@@ -14,6 +20,12 @@
 {
     width: 98%;
     margin-left: 1%;
+}
+
+.tab-pannel-container
+{
+    height: 67.5vh;
+    overflow: scroll;
 }
 
 th[scope='col']
