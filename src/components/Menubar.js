@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import './Menubar.css';
+import './../assets/styles/Menubar.css';
 import {Link} from 'react-router-dom';
 import {AppBar, Button, Box} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
