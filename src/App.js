@@ -186,7 +186,7 @@ function App() {
           <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>} />
           <Route path='/professor' element={<ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} />} />
           <Route path='/room' element={<Room />} />
-          <Route path='/schedule' element={<Solution />} />
+          <Route path='/schedule' element={<Solution professors={professors} courses={courses} rooms={null}/>} />
         </Routes>
 
         <button >SEND</button>
