@@ -4,11 +4,12 @@ import './assets/styles/App.css';
 import Home from './home.js';
 import CoursePage from './components/CourseAddPage.js';
 import ProfessorPage from './components/ProfessorAddPage.js';
-import Room from './room.js';
+import RoomPage from './components/RoomAddPage.js'
+//import Room from './room.js';
 import Solution from './components/Solution.js';
 import MenuBar from './components/Menubar.js';
 import {createTheme, ThemeProvider} from '@mui/material';
-import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleData';
+import {sampleCourses, samplePrograms, sampleProfessors, sampleRooms} from './utils/sampleData';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -24,7 +25,8 @@ const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dum
  */
 const {
   FETCH_ALL_COURSE_DATA,
-  FETCH_ALL_PROFESSOR_DATA
+  FETCH_ALL_PROFESSOR_DATA,
+  FETCH_ALL_ROOM_DATA
 } = require('./utils/queries');
 
 
@@ -32,6 +34,7 @@ function App() {
   const [programs, setPrograms] = useState([]); //This has to be an Array for some reason.
   const [courses, setCourses] = useState([]);
   const [professors, setProfessors] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
 
   const addCourse = (course) => {
@@ -59,6 +62,18 @@ function App() {
     setProfessors(professors.filter((professor) => professor.id !== id));
   };
 
+  const addRoom = (room) => {
+    const id = Math.floor(Math.random() * 10000) + 1;
+
+    const newRoom = { id, ...room }
+    setRooms([...rooms, newRoom]);
+  };
+
+  const deleteRoom = (id) => {
+    console.log('delete',id);
+    setProfessors(rooms.filter((room) => room.id !== id));
+  };
+
     /**
    * Gets the latest data for all entities when a new page is loaded.
    */
@@ -67,6 +82,7 @@ function App() {
   function updateAllStates() {
     getLatestCourses();
     getLatestProfessors();
+    getLatestRooms();
   };
 
   /**
@@ -171,7 +187,49 @@ function App() {
     }
 }
 
+function getLatestRooms() {
 
+  let stateRooms = [];
+
+  if (window.DB === undefined || DEVELOPMENT_MODE) {
+    console.log('Using sample data');
+
+    sampleRooms.map((room) => {
+      let rbuilding = room.rbuilding;
+      let rnumber = room.rnumber;
+      let rcapacity = room.rcapacity;
+      let rtech = room.rtech;
+        let id = Math.floor(Math.random() * 10000) + 1;
+
+        var newRoom = {id, rbuilding, rnumber, rcapacity, rtech,};
+        stateRooms.push(newRoom);
+    })
+    setRooms(stateRooms);
+  }
+  else {
+    console.log(FETCH_ALL_ROOM_DATA);
+
+    window.DB.send("toMain", FETCH_ALL_ROOM_DATA);
+
+    window.DB.receive("fromMain", (dataRows) => {
+      console.log(dataRows);
+      console.log(typeof dataRows);
+
+      dataRows.map( (data) => {
+        let rbuilding = data.rbuilding;
+        let rnumber = data.rnumber;
+        let rcapacity = data.rcapacity;
+        let rtech = data.rtech;
+        const id = Math.floor(Math.random() * 10000) + 1
+
+        let newRoom = {rnumber}; 
+
+        stateRooms.push(newRoom);
+      });
+      setCourses(stateRooms);
+    });
+  }
+}
   //global styling
   const theme = createTheme({
     palette: {primary: {main: "#90a4ae", dark:'#546e7a'}, secondary: {main: "#ffffff", dark:'#cfd8dc'}}
@@ -185,7 +243,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
           <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>} />
           <Route path='/professor' element={<ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} />} />
-          <Route path='/room' element={<Room />} />
+          <Route path='/room' element={<RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms} />} />
           <Route path='/schedule' element={<Solution professors={professors} courses={courses} rooms={null}/>} />
         </Routes>
 
