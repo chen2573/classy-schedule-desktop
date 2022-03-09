@@ -30,10 +30,13 @@ const RoomAdd = ({onAddRoom}) => {
             alert('Please enter the student capacity')
             return;
         }
+        {/*
+        UNCOMMENT ONCE CHECKBOX FORM IS FIXED - GLENN
         if (!rtech) {
           alert('Please enter the tech requirements')
           return;
         }
+        */}
 
         onAddRoom({rbuilding, rnumber, rcapacity, rtech});
         setRBuilding('');
@@ -44,48 +47,47 @@ const RoomAdd = ({onAddRoom}) => {
     return (
     <div className = 'container'>
         <h1> Add Room </h1>
-
         <form onSubmit={onSubmit}>
-        <div className='formcontrol'>
+            <div className='form-control'>
             <label> Building:</label>
                 <input type="text" placeholder="Enter Three Character Code for the Building" value={rbuilding} 
                 onChange={(e)=> setRBuilding(e.target.value)}/>
-        </div>
-        <div classname='formcontrol'>
-            <label>Room Number:</label>
+            </div>
+            <div className='form-control'>
+                <label>Room Number:</label>
                 <input type="number" placeholder="Enter the Room Number" value={rnumber} 
                 onChange={(e)=> setRNumber(e.target.value)}/>
+            </div>
+            <div className='form-control'>
+                <label>Room Capacity:</label>
+                    <input type="number" placeholder= "Enter the Room Capacity" value={rcapacity} 
+                    onChange={(e)=> setRCapacity(e.target.value)}/>
+            </div>
+            <h4>Select Technology in this Room</h4>
+            <div className='form-control'>
+                <label for="desktop">Desktop Computers
+                    <input type="checkbox" id="desktop" name="desktop" value="Desktop"/>
+                </label>
+
+                <label for="laptop">Laptop Computers
+                    <input type="checkbox" id="laptop" name="laptop" value="Laptop"/>
+                </label>
+
+                <label for="projector">Projector
+                    <input type="checkbox" id="projector" name="projector" value="Projector"/> 
+                </label>
+
+                <label for="whiteboard">Whiteboard
+                    <input type="checkbox" id="whiteboard" name="whiteboard" value="Whiteboard"/>
+                </label>
+
+                <label for="chalkboard">Chalkboard
+                    <input type="checkbox" id="chalkboard" name="chalkboard" value="Chalkboard"/>
+                </label>
+            </div>
+            <input type="submit" value='Save Room' className='btn btn-block'/>
+            </form>
         </div>
-        <div classname='formcontrol'>
-            <label>Room Capacity:</label>
-                <input type="number" placeholder= "Enter the Room Capacity" value={rcapacity} 
-                onChange={(e)=> setRCapacity(e.target.value)}/>
-        </div>
-        <h4>Select Technology in this Room</h4>
-        <div classname='formcontrol'>
-            <label for="desktop">Desktop Computers
-                <input type="checkbox" id="desktop" name="desktop" value="Desktop"/>
-            </label>
-
-            <label for="laptop">Laptop Computers
-                <input type="checkbox" id="laptop" name="laptop" value="Laptop"/>
-            </label>
-
-            <label for="projector">Projector
-                <input type="checkbox" id="projector" name="projector" value="Projector"/> 
-            </label>
-
-            <label for="whiteboard">Whiteboard
-                <input type="checkbox" id="whiteboard" name="whiteboard" value="Whiteboard"/>
-            </label>
-
-            <label for="chalkboard">Chalkboard
-                <input type="checkbox" id="chalkboard" name="chalkboard" value="Chalkboard"/>
-            </label>
-        </div>
-        <input type="submit" value='Save Room'/>
-        </form>
-    </div>
     );
 }
     /**
