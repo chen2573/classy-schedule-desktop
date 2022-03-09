@@ -5,14 +5,14 @@ import {FaTimes} from 'react-icons/fa'
 
 const ProgramSelectItems = ({programs}) => {
     let programsList = programs.map(p => {
-        return (<option key={p} value={p}>{p}</option>)
-    })
+        return (<option key={p} value={p}>{p}</option>);
+    });
     
     return (
         <>
             {programsList}
         </>
-    )
+    );
 }
 
 /**
@@ -20,67 +20,67 @@ const ProgramSelectItems = ({programs}) => {
  * @param onAddCourse - the addSubmit function that is passed down from App.js
  */
 const CourseAdd = ({onAddCourse, programs}) => {
-  const [program, setProgram] = useState('')
-  const [number, setNumber] = useState('')
-  const [name, setName] = useState('')
-  const [credits, setCredits] = useState('')
-  const [capacity, setCapacity] = useState('')
-  const [length, setLength] = useState('')
-  const [days, setDays] = useState('')
-  const [tech, setTech] = useState('')
-  const [lab, setLab] = useState(false)
-  const [courseID, setCourseID] = useState('')
+  const [program, setProgram] = useState('');
+  const [number, setNumber] = useState('');
+  const [name, setName] = useState('');
+  const [credits, setCredits] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [length, setLength] = useState('');
+  const [days, setDays] = useState('');
+  const [tech, setTech] = useState('');
+  const [lab, setLab] = useState(false);
+  const [courseID, setCourseID] = useState('');
 
   const onSubmit = (e) => {
-      e.preventDefault()
+      e.preventDefault();
       e.target.reset();
 
       if (!program) {
-          alert('Please enter a progrom')
-          return
+          alert('Please enter a program');
+          return;
       }
       if (!number) {
-          alert('Please enter the course number')
-          return
+          alert('Please enter the course number');
+          return;
       }
       if (!name) {
-          alert('Please enter a course name')
-          return
+          alert('Please enter a course name');
+          return;
       }
       if (!courseID) {
-        alert('Please enter the course ID')
-        return
+        alert('Please enter the course ID');
+        return;
      }
       // if (!credits) {
-      //     alert('Please enter the number of credits')
-      //     return
+      //     alert('Please enter the number of credits');
+      //     return;
       // }
       if (!capacity) {
-         alert('Please enter the course capacity')
-         return
+         alert('Please enter the course capacity');
+         return;
       }
       // if (!length) {
-      //     alert('Please enter a course meeting time')
-      //     return
+      //     alert('Please enter a course meeting time');
+      //     return;
       // }
       // if (!days) {
-      //     alert('Please enter the days the course will be meeting')
-      //     return
+      //     alert('Please enter the days the course will be meeting');
+      //     return;
       // }
       // if (!tech) {
-      //     alert('Please enter the tecnology the course will need')
-      //     return
+      //     alert('Please enter the tecnology the course will need');
+      //     return;
       // }
 
-      onAddCourse({program,number,name,courseID,capacity})
+      onAddCourse({program,number,name,courseID,capacity});
 
-      setCapacity('')
-      setProgram('')
-      setNumber('')
-      setName('')
-      setCourseID('')
-      setCredits('')
-      setLength('')
+      setCapacity('');
+      setProgram('');
+      setNumber('');
+      setName('');
+      setCourseID('');
+      setCredits('');
+      setLength('');
   }
 
   return (
@@ -195,7 +195,7 @@ const CourseList = ({courses, onDelete}) => {
         onDelete={onDelete}/>
     ))}
     </div>
-  )
+  );
 }
 
 
@@ -212,7 +212,7 @@ const CourseListItem = ({course, onDelete}) => {
         <em>Course Name</em> : {course.name}<br/>
         <em>Capacity</em> : {course.capacity}</p>
     </div>
-  )
+  );
 }
 
 /**
@@ -229,7 +229,7 @@ const CourseAddPage = ({onAddCourse, courses, onDelete, programs}) => {
             <CourseList onDelete={onDelete} courses={courses}/>
         </div>
     </div>
-  )
+  );
 }
 
-export default CourseAddPage
+export default CourseAddPage;
