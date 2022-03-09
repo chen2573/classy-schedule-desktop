@@ -18,7 +18,7 @@ let addWindow;
 // Listen for app to ready
 app.on('ready', function() 
 {
-    createMainWindow()
+    createMainWindow();
 });
 
 function createMainWindow() {
@@ -155,10 +155,10 @@ if(process.env.NODE_ENV !== 'production'){
 
 // ============ Inter Process Communication ==============
 ipcMain.on("toMain", (event, args) => {
-    console.log('Success', args)
+    console.log('Success', args);
     queryDatabase(args).then((data) => {
         mainWindow.webContents.send('fromMain', data)
-    })
+    });
 });
 
 // ============ DataBase functions ======================== 

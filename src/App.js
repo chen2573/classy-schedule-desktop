@@ -25,48 +25,49 @@ const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dum
 const {
   FETCH_ALL_COURSE_DATA,
   FETCH_ALL_PROFESSOR_DATA
-} = require('./utils/queries')
+} = require('./utils/queries');
 
 
 function App() {
-  const [programs, setPrograms] = useState([]) //This has to be an Array for some reason.
-  const [courses, setCourses] = useState([])
-  const [professors, setProfessors] = useState([])
+  const [programs, setPrograms] = useState([]); //This has to be an Array for some reason.
+  const [courses, setCourses] = useState([]);
+  const [professors, setProfessors] = useState([]);
 
 
   const addCourse = (course) => {
-    const id = Math.floor(Math.random() * 10000) + 1
+    const id = Math.floor(Math.random() * 10000) + 1;
 
     const newCourse = { id, ...course }
-    setCourses([...courses, newCourse])
-  }
+    setCourses([...courses, newCourse]);
+  };
   
   const deleteCourse = (id) => {
     console.log(id);
-    setCourses(courses.filter((course) => course.id !== id))
-  }
+    setCourses(courses.filter((course) => course.id !== id));
+  };
   
  
   const addProfessor = (professor) => {
-    const id = Math.floor(Math.random() * 10000) + 1
+    const id = Math.floor(Math.random() * 10000) + 1;
 
     const newProfessor = { id, ...professor }
-    setProfessors([...professors, newProfessor])
-  }
+    setProfessors([...professors, newProfessor]);
+  };
 
   const deleteProfessor = (id) => {
-    console.log('delete',id)
-  }
+    console.log('delete',id);
+    setProfessors(professors.filter((professor) => professor.id !== id));
+  };
 
     /**
    * Gets the latest data for all entities when a new page is loaded.
    */
-  useEffect(updateAllStates,[])
+  useEffect(updateAllStates,[]);
 
   function updateAllStates() {
     getLatestCourses();
     getLatestProfessors();
-  }
+  };
 
   /**
    * Gets the latest data for courses.
@@ -75,12 +76,12 @@ function App() {
       // Clears up the currently stored data and gets new data in the following code.
       // There was a bug where with every refresh, we would get duplicate state.
       //setCourses('')
-      setPrograms('')
+      setPrograms('');
 
       let stateCourses = [];
 
       if (window.DB === undefined || DEVELOPMENT_MODE) {
-        console.log('Using sample data')
+        console.log('Using sample data');
 
         sampleCourses.map((course) => {
             let courseID = course.courseID;
@@ -88,16 +89,16 @@ function App() {
             let capacity = course.capacity;
             let number = course.number;
             let name = course.name;
-            let id = Math.floor(Math.random() * 10000) + 1
+            let id = Math.floor(Math.random() * 10000) + 1;
 
             var newCourse = {id, program, number, name, courseID, capacity};
-            stateCourses.push(newCourse)
+            stateCourses.push(newCourse);
         })
-        setCourses(stateCourses)
-        setPrograms(samplePrograms)
+        setCourses(stateCourses);
+        setPrograms(samplePrograms);
       }
       else {
-        console.log(FETCH_ALL_COURSE_DATA)
+        console.log(FETCH_ALL_COURSE_DATA);
         // Send a query to main
         window.DB.send("toMain", FETCH_ALL_COURSE_DATA); // Add constants
 
@@ -117,10 +118,10 @@ function App() {
 
             let newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
-            stateCourses.push(newCourse)
-          })
-          setCourses(stateCourses)
-          setPrograms(samplePrograms)
+            stateCourses.push(newCourse);
+          });
+          setCourses(stateCourses);
+          setPrograms(samplePrograms);
         });
       }
   }
@@ -134,17 +135,17 @@ function App() {
 
     // Database team has to fix their tables.
     if (window.DB === undefined || DEVELOPMENT_MODE || true) {
-      console.log('Using sample data')
+      console.log('Using sample data');
 
       sampleProfessors.map((prof) => {
           let name = prof.name;
           let department = prof.department;
-          const id = Math.floor(Math.random() * 10000) + 1
+          const id = Math.floor(Math.random() * 10000) + 1;
 
           let newProfessor = {id, name, department};
-          stateProfessors.push(newProfessor)
-      })
-      setProfessors(stateProfessors)
+          stateProfessors.push(newProfessor);
+      });
+      setProfessors(stateProfessors);
     }
     else {
       
@@ -158,14 +159,14 @@ function App() {
         dataRows.map( (data) => {
           let name = data.ProfessorName;
           let department = '';
-          const id = Math.floor(Math.random() * 10000) + 1
+          const id = Math.floor(Math.random() * 10000) + 1;
 
-          let newProf = {id, name, department}
-          stateProfessors.push(newProf)
+          let newProf = {id, name, department};
+          stateProfessors.push(newProf);
           
           
-        })
-        setProfessors(stateProfessors)
+        });
+        setProfessors(stateProfessors);
       });
     }
 }

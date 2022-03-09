@@ -1,48 +1,48 @@
-import { ListItem } from '@mui/material'
-//import { AsyncTaskManager } from 'builder-util'
-import { React, useState } from 'react'
-import {FaTimes} from 'react-icons/fa'
+import { ListItem } from '@mui/material';
+//import { AsyncTaskManager } from 'builder-util';
+import { React, useState } from 'react';
+import {FaTimes} from 'react-icons/fa';
 
 /**
  * This component represents the form that will be used by the user to enter in new professor data.
  * @param onAddProfessor - the addSubmit function that is passed down from App.js
  */
 const ProfessorAdd = ({onAddProfessor}) => {
-  const [department, setDepartment] = useState('')
-  const [name, setName] = useState('')
-  const [teach_load, setTeachLoad] = useState('')
-  const [length, setLength] = useState('')
-  const [days, setDays] = useState('')
+  const [department, setDepartment] = useState('');
+  const [name, setName] = useState('');
+  const [teach_load, setTeachLoad] = useState('');
+  const [length, setLength] = useState('');
+  const [days, setDays] = useState('');
 
   const onSubmit = (e) => {
-      e.preventDefault()
+      e.preventDefault();
 
       if (!department) {
-          alert('Please enter a progrom')
-          return
+          alert('Please enter a progrom');
+          return;
       }
       if (!name) {
-          alert('Please enter a professor name')
-          return
+          alert('Please enter a professor name');
+          return;
       }
       if (!teach_load) {
-          alert('Please enter desired teach load')
-        return
+          alert('Please enter desired teach load');
+        return;
       }
       // if (!length) {
-      //     alert('Please enter a meeting time')
-      //     return
+      //     alert('Please enter a meeting time');
+      //     return;
       // }
       // if (!days) {
-      //     alert('Please enter the days the will be meeting')
-      //     return
+      //     alert('Please enter the days the will be meeting');
+      //     return;
       // }
 
 
-      onAddProfessor({department,name})
+      onAddProfessor({department,name});
 
-      setDepartment('')
-      setName('')
+      setDepartment('');
+      setName('');
       // Find a way to set the default value of teach load to 6
   }
 
@@ -93,7 +93,7 @@ const ProfessorList = ({professors, onDelete}) => {
         onDelete={onDelete}/>
     ))}
     </div>
-  )
+  );
 }
 
 
@@ -108,7 +108,7 @@ const ProfessorListItem = ({professor, onDelete}) => {
         {/* This stuff in the paragraph tag will become popover*/}
         <p>Department: {professor.department}<br></br></p>
     </div>
-  )
+  );
 }
 
 /**
@@ -125,7 +125,7 @@ const ProfessorAddPage = ({onAddProfessor, professors, onDelete}) => {
             <ProfessorList onDelete={onDelete} professors={professors}/>
         </div>
     </div>
-  )
+  );
 }
 
-export default ProfessorAddPage
+export default ProfessorAddPage;
