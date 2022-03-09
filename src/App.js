@@ -17,7 +17,7 @@ import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleDat
  * **Note** If you are looking at the the localhost verion of our app, it
  * will always use sample data.
  */
-const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
+const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dummy data.
 
 /**
  * Constants we will use to make our database queries.
