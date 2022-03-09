@@ -208,7 +208,9 @@ const CourseListItem = ({course, onDelete}) => {
     <div className='item'>
         <h3>{course.program} {course.number}<FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(course.id)} /></h3>
         {/* This stuff in the paragraph tag will become popover*/}
-        <p>Class ID: {course.courseID} Course Name: {course.name}<br></br>Capacity: {course.capacity}</p>
+        <p><em>Class ID</em> : {course.courseID} <br/>
+        <em>Course Name</em> : {course.name}<br/>
+        <em>Capacity</em> : {course.capacity}</p>
     </div>
   )
 }

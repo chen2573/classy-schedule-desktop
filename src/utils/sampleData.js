@@ -39,7 +39,16 @@ export const samplePrograms = ["STAT", "MATH", "GEO", "MUSC"]
  */
 export const sampleProfessors = [
     {
-        
+        "name": "Jason Sawin",
+        "department": "CISC"
+    },
+    {
+        "name": "Sarah Miracle",
+        "department": "CISC"
+    },
+    {
+        "name": "Amelia McNamara",
+        "department": "STAT"
     }
 ]
 
