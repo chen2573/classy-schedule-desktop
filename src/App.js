@@ -8,7 +8,7 @@ import Room from './room.js';
 import Solution from './components/Solution.js';
 import MenuBar from './components/Menubar.js';
 import {createTheme, ThemeProvider} from '@mui/material';
-import {sampleCourses, samplePrograms, sampleProfessors, sampleRooms} from './utils/sampleData'
+import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleData'
 
 /**
  * Toggle to get data from database or use sample data.
@@ -132,51 +132,7 @@ function App() {
 
     let stateProfessors = [];
 
-    // Database team has to fix their connection
-    if (window.DB === undefined || DEVELOPMENT_MODE || true) {
-      console.log('Using sample data')
-
-      sampleProfessors.map((prof) => {
-          let name = prof.name;
-          let department = prof.department;
-          const id = Math.floor(Math.random() * 10000) + 1
-
-          let newProfessor = {id, name, department};
-          stateProfessors.push(newProfessor)
-      })
-      setProfessors(stateProfessors)
-    }
-    else {
-      
-      // Send a query to main
-      window.DB.send("toMain", FETCH_ALL_PROFESSOR_DATA);
-
-      // Recieve the results
-      window.DB.receive("fromMain", (dataRows) => {
-        console.log(dataRows);
-
-        dataRows.map( (data) => {
-          let name = data.ProfessorName;
-          let department = '';
-          const id = Math.floor(Math.random() * 10000) + 1
-
-          let newProf = {id, name, department}
-          stateProfessors.push(newProf)
-          
-          
-        })
-        setProfessors(stateProfessors)
-      });
-    }
-
-    /**
-   * Gets the latest data for professors.
-   */
-   function getLatestRooms() {
-
-    let stateRooms = [];
-
-    // Database team has to fix their connection
+    // Database team has to fix their tables.
     if (window.DB === undefined || DEVELOPMENT_MODE || true) {
       console.log('Using sample data')
 
