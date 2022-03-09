@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
 import Home from './home.js';
 import CoursePage from './components/CourseAddPage.js';
@@ -8,7 +8,7 @@ import Room from './room.js';
 import Solution from './components/Solution.js';
 import MenuBar from './components/Menubar.js';
 import {createTheme, ThemeProvider} from '@mui/material';
-import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleData'
+import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleData';
 
 /**
  * Toggle to get data from database or use sample data.

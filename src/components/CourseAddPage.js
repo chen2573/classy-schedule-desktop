@@ -1,7 +1,7 @@
-import { ListItem } from '@mui/material'
-//import { AsyncTaskManager } from 'builder-util'
-import { React, useState } from 'react'
-import {FaTimes} from 'react-icons/fa'
+import { ListItem } from '@mui/material';
+//import { AsyncTaskManager } from 'builder-util';
+import { React, useState } from 'react';
+import {FaTimes} from 'react-icons/fa';
 
 const ProgramSelectItems = ({programs}) => {
     let programsList = programs.map(p => {
