@@ -1,0 +1,5 @@
+module.exports = {
+    FETCH_ALL_COURSE_DATA: 'SELECT * FROM Class',
+    FETCH_ALL_PROFESSOR_DATA: 'SELECT * FROM Professor',
+    FETCH_ALL_ROOM_DATA: 'SELECT * FROM Room'
+}

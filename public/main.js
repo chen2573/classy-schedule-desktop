@@ -156,7 +156,7 @@ if(process.env.NODE_ENV !== 'production'){
 // ============ Inter Process Communication ==============
 ipcMain.on("toMain", (event, args) => {
     console.log('Success', args)
-    queryDatabase().then((data) => {
+    queryDatabase(args).then((data) => {
         mainWindow.webContents.send('fromMain', data)
     })
 });
@@ -169,7 +169,7 @@ const connectToSever = () => {
         host: 'capstonedb01.mysql.database.azure.com',
         user: 'desktopteam',
         password: 'desktoppass',
-        database: 'testdb',
+        database: 'classyschedule',
         port: 3306,
         ssl: {ca: fs.readFileSync(path.join(__dirname, 'DBCertificate', 'DigiCertGlobalRootCA.crt.pem'))}
     };
@@ -191,10 +191,10 @@ const connectToSever = () => {
     
 }
 
-function queryDatabase(){
+function queryDatabase(query){
     return new Promise((resolve, reject) => {
         connectToSever().then(conn => {
-            conn.query('SELECT * FROM Class', function(err, results, fields) {
+            conn.query(query, function(err, results, fields) {
                 if(err) {
                     reject(err)
                 }
