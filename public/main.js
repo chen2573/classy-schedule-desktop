@@ -196,7 +196,7 @@ function queryDatabase(query){
         connectToSever().then(conn => {
             conn.query(query, function(err, results, fields) {
                 if(err) {
-                    reject(err)
+                    reject(err);
                 }
                 else {
                     resolve(results);
