@@ -71,7 +71,7 @@ function App() {
 
   const deleteRoom = (id) => {
     console.log('delete',id);
-    setProfessors(rooms.filter((room) => room.id !== id));
+    setRooms(rooms.filter((room) => room.id !== id));
   };
 
     /**
