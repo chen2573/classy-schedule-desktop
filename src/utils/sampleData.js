@@ -57,6 +57,15 @@ export const sampleProfessors = [
  */
 export const sampleRooms = [
     {
-        
-    }
+        "rnumber": "432",
+        "rbuilding": "OSS"
+    },
+    {
+        "rnumber": "415",
+        "rbuilding": "OSS"
+    },
+    {
+        "rnumber": "420",
+        "rbuilding": "OSS"
+    }  
 ]
