@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './assets/styles/App.css';
 import Home from './home.js';
@@ -8,12 +8,14 @@ import Room from './room.js';
 import Solution from './components/Solution.js';
 import MenuBar from './components/Menubar.js';
 import {createTheme, ThemeProvider} from '@mui/material';
+import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleData'
 
 const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
 
-function App() {
-  const [courses, setCourses] = useState([])
 
+function App() {
+  const [programs, setPrograms] = useState([]) //This has to be an Array for some reason.
+  const [courses, setCourses] = useState([])
   const [professors, setProfessors] = useState([])
 
 
@@ -23,47 +25,141 @@ function App() {
     const newCourse = { id, ...course }
     setCourses([...courses, newCourse])
   }
+  
   const deleteCourse = (id) => {
     console.log(id);
     setCourses(courses.filter((course) => course.id !== id))
   }
+  
+ 
   const addProfessor = (professor) => {
     const id = Math.floor(Math.random() * 10000) + 1
 
     const newProfessor = { id, ...professor }
     setProfessors([...professors, newProfessor])
   }
+
   const deleteProfessor = (id) => {
     console.log('delete',id)
   }
-  const testDBQuery = () => {
+
+    /**
+   * Gets the latest data for all entities when a new page is loaded.
+   */
+  useEffect(updateAllStates,[])
+
+  function updateAllStates() {
+    getLatestCourses();
+    getLatestProfessors();
+  }
+
+  /**
+   * Gets the latest data for courses.
+   */
+  function getLatestCourses() {
+      // Clears up the currently stored data and gets new data in the following code.
+      // There was a bug where with every refresh, we would get duplicate state.
+      //setCourses('')
+      setPrograms('')
+
+      let stateCourses = [];
+
+      if (window.DB === undefined || DEVELOPMENT_MODE) {
+        console.log('Using sample data')
+
+        sampleCourses.map((course) => {
+            let courseID = course.courseID;
+            let program = course.program;
+            let capacity = course.capacity;
+            let number = course.number;
+            let name = course.name;
+            let id = Math.floor(Math.random() * 10000) + 1
+
+            var newCourse = {id, program, number, name, courseID, capacity};
+            stateCourses.push(newCourse)
+        })
+        setCourses(stateCourses)
+        setPrograms(samplePrograms)
+      }
+      else {
+        // Send a query to main
+        window.DB.send("toMain", "some data");
+
+        // Recieve the results
+        window.DB.receive("fromMain", (dataRows) => {
+          console.log(dataRows);
+          console.log(typeof dataRows);
+
+          dataRows.map( (data) => {
+            var courseID = data.ClassID;
+            var program = data.department;
+            var department = data.department;
+            var capacity = data.Capacity;
+            var number = data.CourseNumber;
+            var name = data.ClassName;
+            const id = Math.floor(Math.random() * 10000) + 1
+
+            var newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
+
+            stateCourses.push(newCourse)
+          })
+          setCourses(stateCourses)
+          setPrograms(samplePrograms)
+        });
+      }
+  }
+  
+  /**
+   * Gets the latest data for professors.
+   */
+   function getLatestProfessors() {
+
+    let stateProfessors = [];
+
     if (window.DB === undefined || DEVELOPMENT_MODE) {
-      console.log('Using dummy data')
+      console.log('Using sample data')
+
+      sampleProfessors.map((prof) => {
+          let name = prof.name;
+          let department = prof.department;
+          const id = Math.floor(Math.random() * 10000) + 1
+
+          var newProfessor = {id, name, department};
+          stateProfessors.push(newProfessor)
+      })
+      setProfessors(stateProfessors)
     }
     else {
+      // TODO:
       // Send a query to main
-      window.DB.send("toMain", "some data");
+      // window.DB.send("toMain", "some data");
 
-      // Recieve the results
-      window.DB.receive("fromMain", (dataRows) => {
-        console.log(dataRows);
+      // // Recieve the results
+      // window.DB.receive("fromMain", (dataRows) => {
+      //   console.log(dataRows);
+      //   console.log(typeof dataRows);
 
-        dataRows.forEach(data => {
-          var courseID = data.ClassID;
-          var program = data.department;
-          var department = data.department;
-          var capacity = data.Capacity;
-          var number = data.CourseNumber;
-          var name = data.ClassName;
+      //   dataRows.map( (data) => {
+      //     var courseID = data.ClassID;
+      //     var program = data.department;
+      //     var department = data.department;
+      //     var capacity = data.Capacity;
+      //     var number = data.CourseNumber;
+      //     var name = data.ClassName;
+      //     const id = Math.floor(Math.random() * 10000) + 1
 
-          var newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
-          var newProfessor = {department, name};
-          setCourses([...courses, newCourse])
-          setProfessors([...professors, newProfessor])
-        })
-      });
+      //     var newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
+      //     var newProfessor = {department, name};
+
+      //     stateCourses.push(newCourse)
+          
+      //     setProfessors([...professors, newProfessor])
+      //   })
+      //   setCourses(stateCourses)
+      //   setPrograms(samplePrograms)
+      // });
     }
-  }
+}
 
 
   //global styling
@@ -77,13 +173,13 @@ function App() {
       <div className="App">
         <Routes>
           <Route path='/' element={<Home/>}/>
-          <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} />} />
+          <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>} />
           <Route path='/professor' element={<ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} />} />
           <Route path='/room' element={<Room />} />
           <Route path='/schedule' element={<Solution />} />
         </Routes>
 
-        <button onClick={testDBQuery}>SEND</button>
+        <button >SEND</button>
       </div>
 
       <div className='menu-container'><MenuBar/></div>
