@@ -1,6 +1,7 @@
 import {react, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography} from '@mui/material';
+import {Popover, Button, Tabs, Tab, Box, Typography, Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import '../assets/styles/Solution.css';
 
 const PopoverItem = ({anchor, popoverTarget, open, handleClose, time, entry}) =>
@@ -146,31 +147,75 @@ export function Solution ({professors, courses, rooms})
                 <Tab label="Tuesday-Thursday" {...a11yProps(2)} />
             </Tabs>
 
-
+            
             <TabPanel value={value} index={0}>
-                <table className="schedule">
-                    <tbody>
-                        <tr className="row">
-                            <th scope="col">Time</th>
-                            <th scope="col">Course</th>
-                            <th scope="col">Room</th>
-                            <th scope="col">Professor</th>
-                        </tr>
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
+                        <Typography color="primary.dark">Solution 1</Typography>
+                        <Typography color="primary" sx={{marginLeft:'1.5vw'}}>Score: 0</Typography>
+                    </AccordionSummary>
 
-                        {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
-                    </tbody>
-                </table>
+                    <AccordionDetails>
+                        <table className="schedule">
+                            <tbody>
+                                <tr className="row">
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Room</th>
+                                    <th scope="col">Professor</th>
+                                </tr>
 
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
-                <h1>MWF</h1>
+                                {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
+                            </tbody>
+                        </table>
+                    </AccordionDetails>
+                </Accordion>
+
+
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
+                        <Typography color="primary.dark">Solution 2</Typography>
+                        <Typography color="primary" sx={{marginLeft:'1.5vw'}}>Score: 0</Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                        <table className="schedule">
+                            <tbody>
+                                <tr className="row">
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Room</th>
+                                    <th scope="col">Professor</th>
+                                </tr>
+
+                                {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
+                            </tbody>
+                        </table>
+                    </AccordionDetails>
+                </Accordion>
+
+
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
+                        <Typography color="primary.dark">Solution 3</Typography>
+                        <Typography color="primary" sx={{marginLeft:'1.5vw'}}>Score: 0</Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                        <table className="schedule">
+                            <tbody>
+                                <tr className="row">
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Room</th>
+                                    <th scope="col">Professor</th>
+                                </tr>
+
+                                {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
+                            </tbody>
+                        </table>
+                    </AccordionDetails>
+                </Accordion>
             </TabPanel>
 
             <TabPanel value={value} index={1}>
@@ -207,7 +252,7 @@ export function Solution ({professors, courses, rooms})
                 <h1>TR</h1>
             </TabPanel>
 
-            <Button variant="contained" sx={{position:'absolute', bottom:'15vh', right:'2.5vw'}}>
+            <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
                 <Typography variant="text" color="secondary">Generate Schedule</Typography>
             </Button>
             </div>

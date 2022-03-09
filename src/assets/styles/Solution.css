@@ -7,7 +7,7 @@ hr
 .schedule-container
 {
     width: 97vw;
-    height: 80vh;
+    height: 82.5vh;
     margin-top: 2.5vh;
     margin-left: 1.5vw;
 
@@ -24,7 +24,7 @@ hr
 
 .tab-pannel-container
 {
-    height: 67.5vh;
+    height: 70vh;
     overflow: scroll;
 }
 
