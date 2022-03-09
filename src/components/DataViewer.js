@@ -8,7 +8,7 @@ export function DataViewer ({id, dataState, anchor, open, handleClose})
     
     return (
         <Popover
-                id={time+entry}
+                id={id}
                 open={open}
                 anchorEl={anchor}
                 onClose={handleClose}
