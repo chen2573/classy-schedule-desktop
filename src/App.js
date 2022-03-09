@@ -10,7 +10,22 @@ import MenuBar from './components/Menubar.js';
 import {createTheme, ThemeProvider} from '@mui/material';
 import {sampleCourses, samplePrograms, sampleProfessors} from './utils/sampleData'
 
-const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
+/**
+ * Toggle to get data from database or use sample data.
+ * true - gets data from sample data.
+ * false - gets data from database.
+ * **Note** If you are looking at the the localhost verion of our app, it
+ * will always use sample data.
+ */
+const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dummy data.
+
+/**
+ * Constants we will use to make our database queries.
+ */
+const {
+  FETCH_ALL_COURSE_DATA,
+  FETCH_ALL_PROFESSOR_DATA
+} = require('./utils/queries')
 
 
 function App() {
@@ -82,8 +97,9 @@ function App() {
         setPrograms(samplePrograms)
       }
       else {
+        console.log(FETCH_ALL_COURSE_DATA)
         // Send a query to main
-        window.DB.send("toMain", "some data");
+        window.DB.send("toMain", FETCH_ALL_COURSE_DATA); // Add constants
 
         // Recieve the results
         window.DB.receive("fromMain", (dataRows) => {
@@ -91,15 +107,15 @@ function App() {
           console.log(typeof dataRows);
 
           dataRows.map( (data) => {
-            var courseID = data.ClassID;
-            var program = data.department;
-            var department = data.department;
-            var capacity = data.Capacity;
-            var number = data.CourseNumber;
-            var name = data.ClassName;
+            let courseID = data.ClassID;
+            let program = data.department;
+            let department = data.department;
+            let capacity = data.Capacity;
+            let number = data.CourseNumber;
+            let name = data.ClassName;
             const id = Math.floor(Math.random() * 10000) + 1
 
-            var newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
+            let newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
             stateCourses.push(newCourse)
           })
@@ -116,7 +132,8 @@ function App() {
 
     let stateProfessors = [];
 
-    if (window.DB === undefined || DEVELOPMENT_MODE) {
+    // Database team has to fix their tables.
+    if (window.DB === undefined || DEVELOPMENT_MODE || true) {
       console.log('Using sample data')
 
       sampleProfessors.map((prof) => {
@@ -124,40 +141,32 @@ function App() {
           let department = prof.department;
           const id = Math.floor(Math.random() * 10000) + 1
 
-          var newProfessor = {id, name, department};
+          let newProfessor = {id, name, department};
           stateProfessors.push(newProfessor)
       })
       setProfessors(stateProfessors)
     }
     else {
-      // TODO:
+      
       // Send a query to main
-      // window.DB.send("toMain", "some data");
+      window.DB.send("toMain", FETCH_ALL_PROFESSOR_DATA);
 
-      // // Recieve the results
-      // window.DB.receive("fromMain", (dataRows) => {
-      //   console.log(dataRows);
-      //   console.log(typeof dataRows);
+      // Recieve the results
+      window.DB.receive("fromMain", (dataRows) => {
+        console.log(dataRows);
 
-      //   dataRows.map( (data) => {
-      //     var courseID = data.ClassID;
-      //     var program = data.department;
-      //     var department = data.department;
-      //     var capacity = data.Capacity;
-      //     var number = data.CourseNumber;
-      //     var name = data.ClassName;
-      //     const id = Math.floor(Math.random() * 10000) + 1
+        dataRows.map( (data) => {
+          let name = data.ProfessorName;
+          let department = '';
+          const id = Math.floor(Math.random() * 10000) + 1
 
-      //     var newCourse = {program, number, name, courseID, capacity}; //This needs to be the same as onAddCourse() in CourseAddPage.js
-      //     var newProfessor = {department, name};
-
-      //     stateCourses.push(newCourse)
+          let newProf = {id, name, department}
+          stateProfessors.push(newProf)
           
-      //     setProfessors([...professors, newProfessor])
-      //   })
-      //   setCourses(stateCourses)
-      //   setPrograms(samplePrograms)
-      // });
+          
+        })
+        setProfessors(stateProfessors)
+      });
     }
 }
 
