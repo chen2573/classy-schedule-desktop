@@ -13,6 +13,7 @@ export function DataViewer ({id, dataState, anchor, open, handleClose})
                 anchorEl={anchor}
                 onClose={handleClose}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                transformOrigin={{vertical: 'bottom', horizontal: 'center'}}
             >
             
             {displayData.map((attribute) => {return <Box>{attribute[0]} {attribute[1]}</Box>})}
