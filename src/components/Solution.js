@@ -1,10 +1,11 @@
-import {react, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography, Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import '../assets/styles/Solution.css';
 
-const PopoverItem = ({anchor, popoverTarget, open, handleClose, time, entry}) =>
+const PopoverItem = ({anchor, popoverTarget, open, handleClose, id, dataState}) =>
 {
     var popoverContent;  //content within popover element
 
@@ -24,11 +25,12 @@ const PopoverItem = ({anchor, popoverTarget, open, handleClose, time, entry}) =>
 
 
     return <Popover
-                id={time+entry}
+                id={id}
                 open={open}
                 anchorEl={anchor}
                 onClose={handleClose}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                transformOrigin={{vertical: 'bottom', horizontal: 'center'}}
             >
                 {popoverContent}
             </Popover>;
@@ -58,13 +60,12 @@ const SolutionItem = ({courseEntries, time}) =>
     const handleClose = () => {setAnchorEl(null);};
 
 
-
     //generate items
     const item = <tr key={time} className="row">
                     <th scope="row">{time}</th>
 
 
-                    {<PopoverItem anchor={anchorEl} popoverTarget={popoverTarget} open={Boolean(anchorEl)} handleClose={handleClose} time={time} entry={"blah"}/>}
+                    {<PopoverItem anchor={anchorEl} popoverTarget={popoverTarget} open={Boolean(anchorEl)} handleClose={handleClose} id={0} dataState={null}/>}
 
 
                     {<td className="course-container">    {courseEntries.map((entry) => {
@@ -72,7 +73,7 @@ const SolutionItem = ({courseEntries, time}) =>
                                     <Button className="entry-button" variant="text" onClick={handleClickCourse} color="inherit">
                                         {entry.course}
                                     </Button>
-                               </td></tr></tbody></table>})}
+                            </td></tr></tbody></table>})}
                     </td>}
 
                     {<td className="room-container">      {courseEntries.map((entry) => {
@@ -87,7 +88,7 @@ const SolutionItem = ({courseEntries, time}) =>
                                     <Button className="entry-button" variant="text" onClick={handleClickProfessor} color="inherit">
                                         {entry.professor}
                                     </Button>
-                               </td></tr></tbody></table>})} </td>}
+                            </td></tr></tbody></table>})} </td>}
                 </tr>;
 
 
@@ -134,11 +135,12 @@ export function Solution ({professors, courses, rooms})
                                 
     return (
         <div className="solutions-container">
-
             <Box sx={{ width: '100%'}}>
                 <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
                 <hr/>
             </Box>
+
+
 
             <div className="schedule-container">
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -148,6 +150,7 @@ export function Solution ({professors, courses, rooms})
             </Tabs>
 
             
+
             <TabPanel value={value} index={0}>
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
@@ -218,6 +221,8 @@ export function Solution ({professors, courses, rooms})
                 </Accordion>
             </TabPanel>
 
+
+
             <TabPanel value={value} index={1}>
                 <table className="schedule">
                     <tbody>
@@ -234,6 +239,8 @@ export function Solution ({professors, courses, rooms})
 
                 <h1>MW</h1>
             </TabPanel>
+
+
 
             <TabPanel value={value} index={2}>
                 <table className="schedule">
@@ -252,9 +259,31 @@ export function Solution ({professors, courses, rooms})
                 <h1>TR</h1>
             </TabPanel>
 
+
+
             <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
                 <Typography variant="text" color="secondary">Generate Schedule</Typography>
             </Button>
+
+
+
+            <PopupState variant="popover">
+                {(popupState) => (
+                    <React.Fragment>
+                    <Button variant="contained"
+                            {...bindTrigger(popupState)} 
+                            sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                        <Typography variant="text" color="secondary">Settings</Typography>
+                    </Button>
+
+                    <Popover {...bindMenu(popupState)}
+                          anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                          transformOrigin={{vertical: 'bottom', horizontal: 'left'}}>
+                              
+                    </Popover>
+                    </React.Fragment>
+                )}
+            </PopupState>
             </div>
         </div>
     );
