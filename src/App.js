@@ -230,10 +230,14 @@ function getLatestRooms() {
     });
   }
 }
+
+
   //global styling
   const theme = createTheme({
     palette: {primary: {main: "#90a4ae", dark:'#546e7a'}, secondary: {main: "#ffffff", dark:'#cfd8dc'}}
   });
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -244,7 +248,7 @@ function getLatestRooms() {
           <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>} />
           <Route path='/professor' element={<ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} />} />
           <Route path='/room' element={<RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms} />} />
-          <Route path='/schedule' element={<Solution professors={professors} courses={courses} rooms={null}/>} />
+          <Route path='/schedule' element={<Solution professors={professors} courses={courses} rooms={rooms}/>} />
         </Routes>
 
         <button >SEND</button>
