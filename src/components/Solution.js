@@ -30,7 +30,7 @@ const PopoverItem = ({anchor, popoverTarget, open, handleClose, id, dataState}) 
                 anchorEl={anchor}
                 onClose={handleClose}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                transformOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                transformOrigin={{vertical: 'top', horizontal: 'center'}}
             >
                 {popoverContent}
             </Popover>;
