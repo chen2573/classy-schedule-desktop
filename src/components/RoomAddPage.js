@@ -112,7 +112,8 @@ const RoomListItem = ({room, onDelete}) => {
     return(
     <div className='item'>
         {/* this needs to change to a location if more than one building is used number is not unique*/}
-        <h3>{room.rnumber} <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(room.id)} /></h3>
+        <h3>Room: {room.rnumber} <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(room.id)} /></h3>
+        <p><em>Building: {room.rbuilding}</em></p>
         {/*Do we want to add a subheader like the video*/}
     </div>
     );
