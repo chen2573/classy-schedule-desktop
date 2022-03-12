@@ -5,7 +5,7 @@ import Home from './components/HomePage.js';
 import CoursePage from './components/CourseAddPage.js';
 import ProfessorPage from './components/ProfessorAddPage.js';
 import RoomPage from './components/RoomAddPage.js'
-import Solution from './components/Solution.js';
+import Solution from './components/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleProfessors, sampleRooms } from './utils/sampleData';
