@@ -1,7 +1,7 @@
 import {React} from 'react';
 import {Link} from 'react-router-dom';
 
-export function home ()
+export function HomePage ()
 {
     
     return (
@@ -12,4 +12,4 @@ export function home ()
     );
 }
 
-export default home;
+export default HomePage;
