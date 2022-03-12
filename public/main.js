@@ -154,10 +154,17 @@ if(process.env.NODE_ENV !== 'production'){
 }
 
 // ============ Inter Process Communication ==============
-ipcMain.on("toMain", (event, args) => {
-    console.log('Success', args);
+ipcMain.on("toMain:Program", (event, args) => {
+    console.log('Main recieved Program info', args);
     queryDatabase(args).then((data) => {
-        mainWindow.webContents.send('fromMain', data)
+        mainWindow.webContents.send('fromMain:Program', data)
+    });
+});
+
+ipcMain.on("toMain:Course", (event, args) => {
+    console.log('Main recieved Course info', args);
+    queryDatabase(args).then((data) => {
+        mainWindow.webContents.send('fromMain:Course', data)
     });
 });
 
@@ -171,7 +178,7 @@ const connectToSever = () => {
         password: 'desktoppass',
         database: 'classyschedule',
         port: 3306,
-        ssl: {ca: fs.readFileSync(path.join(__dirname, 'DBCertificate', 'DigiCertGlobalRootCA.crt.pem'))}
+        //ssl: {ca: fs.readFileSync(path.join(__dirname, 'DBCertificate', 'DigiCertGlobalRootCA.crt.pem'))}
     };
 
     const conn = new mysql.createConnection(config);
