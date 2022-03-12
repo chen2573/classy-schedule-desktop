@@ -11,14 +11,15 @@ const ProfessorAdd = ({onAddProfessor}) => {
   const [department, setDepartment] = useState('');
   const [name, setName] = useState('');
   const [teach_load, setTeachLoad] = useState('');
-  const [length, setLength] = useState('');
-  const [days, setDays] = useState('');
+  const [time_block, setTimeBlock] = useState('');
+  const [can_teach, setCanTeach] = useState([]);
+  const [want_teach, setWantTeach] = useState([]);
 
   const onSubmit = (e) => {
       e.preventDefault();
 
       if (!department) {
-          alert('Please enter a progrom');
+          alert('Please enter a department');
           return;
       }
       if (!name) {
@@ -29,15 +30,20 @@ const ProfessorAdd = ({onAddProfessor}) => {
           alert('Please enter desired teach load');
         return;
       }
-      // if (!length) {
-      //     alert('Please enter a meeting time');
-      //     return;
-      // }
-      // if (!days) {
-      //     alert('Please enter the days the will be meeting');
-      //     return;
-      // }
+      if (!time_block) {
+          alert('Please enter a meeting time');
+          return;
+      }
+      if (!can_teach) {
+          alert('text');
+          return;
+      }
+      if (!want_teach) {
+        alert('text');
+        return;
+      }
 
+      
 
       onAddProfessor({department,name});
 
@@ -72,14 +78,42 @@ const ProfessorAdd = ({onAddProfessor}) => {
               </div>
 
               <div className='form-control'>
-                  <label>Meeting Length</label>
-                  <input type="number" placeholder='Enter length of professor' value={length} onChange={(e) => setLength(e.target.value)}/>
+                  <label>Preferred Time Block</label>
+                  <select onChange={(e) => setTimeBlock(e.target.value)}>
+                    <option value=""></option>
+                    <option value="mwf_morning">MWF Morning</option>
+                    <option value="mwf_afternoon">MWF Afternoon</option>
+                    <option value="mwf_night">MWF Night</option>
+                    <option value="tr_morning">TR Morning</option>
+                    <option value="tr_afternoon">TR Afternoon</option>
+                    <option value="tr_night">TR Night</option>
+                  </select>
               </div>
+
+              <div className='form-control'>
+                  <label>Courses Professor Can Teach</label>
+                  <select multiple={true} onChange={(e) => setCanTeach(e.target.value)}>
+                    <option value="ai">Artificial Intelligence</option>
+                    <option value="capstone">Capstone</option>
+                    <option value="algo">Algorithms</option>
+                  </select>
+              </div>
+
+              <div className='form-control'>
+                  <label>Courses Professor Want to Teach</label>
+                  <select multiple={true} onChange={(e) => setWantTeach(e.target.value)}>
+                    <option value="ai">Artificial Intelligence</option>
+                    <option value="capstone">Capstone</option>
+                    <option value="algo">Algorithms</option>
+                  </select>
+              </div>
+
               <input type="submit" value='Save Professor' className='btn btn-block'/>
           </form>
       </div>
   );
 }
+
 
 /**
  * This component is a view that lists out individual ProfessorListItems.
@@ -123,6 +157,7 @@ const ProfessorAddPage = ({onAddProfessor, professors, onDelete}) => {
         <div className='element-page'>
             <ProfessorAdd onAddProfessor={onAddProfessor}/>
             <ProfessorList onDelete={onDelete} professors={professors}/>
+            
         </div>
     </div>
   );
