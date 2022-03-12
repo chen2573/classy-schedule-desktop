@@ -7,6 +7,7 @@ export const sampleCourses = [
         "number": 131,
         "name": "Intro to Programming",
         "courseID": 1234,
+        "credits": 4,
         "capacity": 20
     },
     {
@@ -14,6 +15,7 @@ export const sampleCourses = [
         "number": 230,
         "name": "Object Oriented Programming",
         "courseID": 1233,
+        "credits": 4,
         "capacity": 20
     },
     {
@@ -21,6 +23,7 @@ export const sampleCourses = [
         "number": 200,
         "name": "Statistics",
         "courseID": 1232,
+        "credits": 4,
         "capacity": 20
     },
     {
@@ -28,11 +31,29 @@ export const sampleCourses = [
         "number": 440,
         "name": "Data Mining",
         "courseID": 1234,
+        "credits": 4,
         "capacity": 20
     }
 ]
 
-export const samplePrograms = ["STAT", "MATH", "GEO", "MUSC"]
+export const samplePrograms = [
+    {
+        "id": 1,
+        "name": "STAT"
+    },
+    {
+        "id": 2,
+        "name": "MATH"
+    },
+    {
+        "id": 3,
+        "name": "GEO"
+    },
+    {
+        "id": 4,
+        "name": "MUSC"
+    }
+]
 
 /**
  * Sample data for professors.
