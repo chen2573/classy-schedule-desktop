@@ -338,14 +338,14 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path='/' element={<Home />} />
+            <Route path='/' element={<Home courses={courses} professors={professors} rooms={rooms}/>} />
             <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs} />} />
             <Route path='/professor' element={<ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} />} />
             <Route path='/room' element={<RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms} />} />
             <Route path='/schedule' element={<Solution professors={professors} courses={courses} rooms={rooms} />} />
           </Routes>
 
-          <button onClick={decribeDatabaseTable}>Get Table Details</button>
+          {/*<button onClick={decribeDatabaseTable}>Get Table Details</button> */}
         </div>
 
         <div className='menu-container'><MenuBar /></div>

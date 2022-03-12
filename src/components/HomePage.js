@@ -1,13 +1,78 @@
 import {React} from 'react';
-import {Link} from 'react-router-dom';
+import './../assets/styles/HomePage.css'
+import { NotificationsNone, Settings } from '@mui/icons-material'
 
-export function HomePage ()
+const TopBar = () => {
+    return (
+        <div className="topbar">
+            <div className="topbarWrapper">
+                <div className="topLeft">
+                    <span className="logo">ClassySchedule</span>
+                </div>
+                <div className="topRight">
+                    <div className="topBarIconContainer">
+                        <NotificationsNone/>
+                        <span className="topIconBadge">2</span>
+                    </div>
+                    <div className="topBarIconContainer">
+                        <Settings/>
+                    </div>
+                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Favatarfiles.alphacoders.com%2F114%2Fthumb-1920-114874.jpg&f=1&nofb=1" alt="" className="topAvatar" />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const ComponentsInfo = ({courses, professors, rooms}) => {
+    return (
+        <div className="featured">
+            <div className="featuredItem">
+                <span className="featuredTitle">Courses</span>
+                <div className="featuredInfo">
+                    <span className="featuredValue">{courses.length}</span>
+                </div>
+            </div>
+            <div className="featuredItem">
+                <span className="featuredTitle">Professors</span>
+                <div className="featuredInfo">
+                    <span className="featuredValue">{professors.length}</span>
+                </div>
+            </div>
+            <div className="featuredItem">
+                <span className="featuredTitle">Rooms</span>
+                <div className="featuredInfo">
+                    <span className="featuredValue">{rooms.length}</span>
+                </div>
+            </div>
+        </div>
+    )
+
+}
+
+const Dashboard = ({courses, professors, rooms}) => {
+    return (
+        <div className="home">
+            <ComponentsInfo courses={courses} professors={professors} rooms={rooms}/>
+        </div>
+    )
+}
+
+export function HomePage ({courses, professors, rooms})
 {
     
     return (
+        
     <div className="main-div">
-        <h1>Classy Schedule Home</h1>
-    <h5>This will be our home page</h5>
+        <TopBar></TopBar>
+        <br />
+        <br />
+        <div class="container-top-text">
+            <h4> Hello User, here are your latest stats...</h4>
+        </div>
+        <div className="container-home">
+            <Dashboard courses={courses} professors={professors} rooms={rooms}/>
+        </div>
     </div>
     );
 }
