@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
-import Home from './home.js';
+import Home from './components/HomePage.js';
 import CoursePage from './components/CourseAddPage.js';
 import ProfessorPage from './components/ProfessorAddPage.js';
 import RoomPage from './components/RoomAddPage.js'
