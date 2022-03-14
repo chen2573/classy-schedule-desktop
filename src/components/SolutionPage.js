@@ -95,7 +95,7 @@ const SolutionItem = ({courseEntries, time}) =>
     return item;
 }
 
-export function Solution ({professors, courses, rooms})
+export function SolutionPage ({professors, courses, rooms})
 {
     const dummyCourseEntries = {"8:15am - 9:20am": [{course:"CISC 131", room:"OSS 432", professor:"Dr. Hardt"},
                                                     {course:"CISC 480", room:"OSS 415", professor:"Dr. Sawin"}],
@@ -289,4 +289,4 @@ export function Solution ({professors, courses, rooms})
     );
 }
 
-export default Solution;
+export default SolutionPage;

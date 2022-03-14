@@ -1,49 +1,49 @@
 import {useState} from 'react';
 import './../assets/styles/Menubar.css';
 import {Link} from 'react-router-dom';
-import {AppBar, Button, Box} from '@mui/material';
+import {AppBar, Button, Box, Typography} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import ClassIcon from '@mui/icons-material/Class';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-export function MenuBar ()
+export function MenuBar ({setCurrentPage})
 {
     return (
-        <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }} color="primary">
+        <AppBar position="fixed" sx={{ top: 'auto', bottom: 0}} color="primary">
             <Box sx={{display: 'flex', justifyContent: 'space-evenly', borderRadius: 1}}>
                 <Box></Box>
 
-                <Button variant="text">
-                    <Link className="link" to='/'>
+                <Button variant="text" onClick={()=>{setCurrentPage('home')}}>
+                    <Box>
                         <HomeIcon color="secondary" size="large"/>
-                        <p>Home</p>
-                        </Link>
+                        <p className="button-text">Home</p>
+                    </Box>
                 </Button>
-                <Button variant="text"> 
-                    <Link className="link" to='/professor'>
+                <Button variant="text" onClick={()=>{setCurrentPage('professor')}}>
+                    <Box>
                         <PersonIcon color="secondary" size="large"/>
-                        <p>Professors</p>
-                        </Link>
+                        <p className="button-text">Professors</p>
+                    </Box>
                 </Button>
-                <Button variant="text"> 
-                    <Link className="link" to='/course'>
+                <Button variant="text" onClick={()=>{setCurrentPage('course')}}>
+                    <Box>
                         <ClassIcon color="secondary"/>
-                        <p>Courses</p>
-                    </Link>
+                        <p className="button-text">Courses</p>
+                    </Box>
                 </Button>
-                <Button variant="text"> 
-                    <Link className="link" to='/room'>
+                <Button variant="text" onClick={()=>{setCurrentPage('room')}}>
+                    <Box>
                         <MeetingRoomIcon color="secondary"/>
-                        <p>Rooms</p>
-                    </Link>
+                        <p className="button-text">Rooms</p>
+                    </Box>
                 </Button>
-                <Button variant="text"> 
-                    <Link className="link" to='/schedule'>
+                <Button variant="text" onClick={()=>{setCurrentPage('schedule')}}>
+                    <Box>
                         <CalendarTodayIcon color="secondary"/>
-                        <p>Schedule</p>
-                    </Link>
+                        <p className="button-text">Schedule</p>
+                    </Box>
                 </Button>
 
                 <Box></Box>

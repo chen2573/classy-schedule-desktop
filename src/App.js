@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
-import Home from './components/HomePage.js';
+import HomePage from './components/HomePage.js';
 import CoursePage from './components/CourseAddPage.js';
 import ProfessorPage from './components/ProfessorAddPage.js';
 import RoomPage from './components/RoomAddPage.js'
-import Solution from './components/SolutionPage.js';
+import SolutionPage from './components/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleProfessors, sampleRooms } from './utils/sampleData';
@@ -332,24 +332,25 @@ function App() {
   });
 
 
+  //Conditionally render pages
+  const [currentPage, setCurrentPage] = useState('');
+  function routePages (currentPage)
+  {
+    console.log(currentPage)
+    if (currentPage === 'course') {return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>}
+    else if (currentPage === 'professor') {return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors}/>;}
+    else if (currentPage === 'room') {return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;}
+    else if (currentPage === 'schedule') {return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;}
+    else {return <HomePage courses={courses} professors={professors} rooms={rooms}/>;}
+  }
 
   return (
     <ThemeProvider theme={theme}>
-      <Router>
         <div className="App">
-          <Routes>
-            <Route path='/' element={<Home courses={courses} professors={professors} rooms={rooms}/>} />
-            <Route path='/course' element={<CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs} />} />
-            <Route path='/professor' element={<ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} />} />
-            <Route path='/room' element={<RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms} />} />
-            <Route path='/schedule' element={<Solution professors={professors} courses={courses} rooms={rooms} />} />
-          </Routes>
-
-          {/*<button onClick={decribeDatabaseTable}>Get Table Details</button> */}
+          {routePages(currentPage)}
         </div>
 
-        <div className='menu-container'><MenuBar /></div>
-      </Router>
+        <div className='menu-container'><MenuBar setCurrentPage={setCurrentPage}/></div>
     </ThemeProvider>
   );
 }

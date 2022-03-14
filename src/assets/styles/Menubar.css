@@ -1,10 +1,10 @@
-.link
+.button-text
 {
     text-decoration: none;
     color: #ffffff;
 }
 
-.link:hover
+.button-text:hover
 {
     color: #777777;
 }
