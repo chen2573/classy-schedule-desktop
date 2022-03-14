@@ -4,6 +4,7 @@ const path = require('path');
 const shell = require('electron').shell;
 const mysql = require('mysql');
 const fs = require('fs');
+const isDev = require('electron-is-dev');
 const {
     ipcRenderer
 } = require('electron');
@@ -37,14 +38,17 @@ function createMainWindow() {
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js')
         },
-        width: 1000,
-        height: 800
+        width: 1281,
+        height: 800,
+        minWidth: 1281,
+        minHeight: 800,
+        icon: './../src/assets/icons/png/logo-desktop.png'
     });
 
     // Load main.html into window
     // This syntax is just //__dirname/mainWindow.html
     // __dirname gets the relative path of THIS file (main.js)
-    mainWindow.loadURL('http://localhost:3000');
+    mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
 
     // Quit entire application when main process is closed
     mainWindow.on('closed', function () {
