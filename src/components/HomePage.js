@@ -67,7 +67,7 @@ export function HomePage ({courses, professors, rooms})
         <TopBar></TopBar>
         <br />
         <br />
-        <div class="container-top-text">
+        <div className="container-top-text">
             <h4> Hello User, here are your latest stats...</h4>
         </div>
         <div className="container-home">
