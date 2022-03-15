@@ -1,7 +1,7 @@
 {
   "name": "classy-schedule-desktop",
   "productName": "ClassySchedule",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "public/electron.js",
   "private": true,
   "author": "CISC480 Desktop Team",
@@ -37,7 +37,7 @@
     "electron-build": "electron-builder",
     "release": "yarn react-build && electron-builder --publish=always",
     "build": "yarn react-build && yarn electron-build",
-    "electron-pack": "electron-builder -mwl -c.extraMetadata.main=build/main.js"
+    "electron-pack": "electron-builder -mwl -c.extraMetadata.main=build/electron.js"
   },
   "eslintConfig": {
     "extends": [
