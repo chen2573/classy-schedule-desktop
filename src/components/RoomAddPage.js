@@ -65,29 +65,23 @@ const RoomAdd = ({onAddRoom}) => {
             </div>
             <h4>Select Technology in this Room</h4>
             <div className='form-control'>
-                <label for="desktop">Desktop Computers
-                    <input type="checkbox" id="desktop" name="desktop" value="Desktop"/>
-                </label>
+                <select multiple={true} onChange={(e) => setRTech([...e.target.selectedOptions].map(option => option.value))}>
+                    <option >Desktop Computers</option>
+                    <option >Laptop Computers</option>
+                    <option >Projector</option>
+                    <option >Whiteboard</option>
+                    <option >Chalkboard</option>
+                    <option >Robots</option>
+                    <option >Zoom peripherals</option>
+                    <option >Instrucor Computer</option>
+                    <option >Net Controls</option>
 
-                <label for="laptop">Laptop Computers
-                    <input type="checkbox" id="laptop" name="laptop" value="Laptop"/>
-                </label>
-
-                <label for="projector">Projector
-                    <input type="checkbox" id="projector" name="projector" value="Projector"/> 
-                </label>
-
-                <label for="whiteboard">Whiteboard
-                    <input type="checkbox" id="whiteboard" name="whiteboard" value="Whiteboard"/>
-                </label>
-
-                <label for="chalkboard">Chalkboard
-                    <input type="checkbox" id="chalkboard" name="chalkboard" value="Chalkboard"/>
-                </label>
+                </select>
                 {/*Need to add robots, online meeting capabilities, instructor computer, computer control
                 ALSO DO THIS IN LAB
                 */}
             </div>
+            
             <input type="submit" value='Save Room' className='btn btn-block'/>
             </form>
         </div>
@@ -116,7 +110,8 @@ const RoomListItem = ({room, onDelete}) => {
     <div className='item'>
         {/* this needs to change to a location if more than one building is used number is not unique*/}
         <h3>Room: {room.rnumber} <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(room.id)} /></h3>
-        <p><em>Building: {room.rbuilding}</em></p>
+        <p><em>Building: </em> {room.rbuilding}<br />
+        <em>Tech: </em>{room.rtech}</p>
         {/*Do we want to add a subheader like the video*/}
     </div>
     );

@@ -79,25 +79,18 @@ const LabAdd = ({onAddLab, courses}) => {
             </div>
             <h4>Select Technology Required for this Lab</h4>
             <div className='form-control'>
-                <label for="desktop">Desktop Computers
-                    <input type="checkbox" id="desktop" name="desktop" value="Desktop"/>
-                </label>
+                <select multiple={true} onChange={(e) => setLTech([...e.target.selectedOptions].map(option => option.value))}>
+                    <option >Desktop Computers</option>
+                    <option >Laptop Computers</option>
+                    <option >Projector</option>
+                    <option >Whiteboard</option>
+                    <option >Chalkboard</option>
+                    <option >Robots</option>
+                    <option >Zoom peripherals</option>
+                    <option >Instrucor Computer</option>
+                    <option >Net Controls</option>
 
-                <label for="laptop">Laptop Computers
-                    <input type="checkbox" id="laptop" name="laptop" value="Laptop"/>
-                </label>
-
-                <label for="projector">Projector
-                    <input type="checkbox" id="projector" name="projector" value="Projector"/> 
-                </label>
-
-                <label for="whiteboard">Whiteboard
-                    <input type="checkbox" id="whiteboard" name="whiteboard" value="Whiteboard"/>
-                </label>
-
-                <label for="chalkboard">Chalkboard
-                    <input type="checkbox" id="chalkboard" name="chalkboard" value="Chalkboard"/>
-                </label>
+                </select>       
             </div>
             <div className='form-control'>
                 <label>Associated Course:</label>
