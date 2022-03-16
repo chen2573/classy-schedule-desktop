@@ -84,6 +84,9 @@ const RoomAdd = ({onAddRoom}) => {
                 <label for="chalkboard">Chalkboard
                     <input type="checkbox" id="chalkboard" name="chalkboard" value="Chalkboard"/>
                 </label>
+                {/*Need to add robots, online meeting capabilities, instructor computer, computer control
+                ALSO DO THIS IN LAB
+                */}
             </div>
             <input type="submit" value='Save Room' className='btn btn-block'/>
             </form>

@@ -24,13 +24,19 @@ const TopBar = () => {
     )
 }
 
-const ComponentsInfo = ({courses, professors, rooms}) => {
+const ComponentsInfo = ({courses, labs, professors, rooms}) => {
     return (
         <div className="featured">
             <div className="featuredItem">
                 <span className="featuredTitle">Courses</span>
                 <div className="featuredInfo">
                     <span className="featuredValue">{courses.length}</span>
+                </div>
+            </div>
+            <div className="featuredItem">
+                <span className="featuredTitle">Labs</span>
+                <div className="featuredInfo">
+                    <span className="featuredValue">{labs.length}</span>
                 </div>
             </div>
             <div className="featuredItem">
@@ -50,15 +56,15 @@ const ComponentsInfo = ({courses, professors, rooms}) => {
 
 }
 
-const Dashboard = ({courses, professors, rooms}) => {
+const Dashboard = ({courses, labs, professors, rooms}) => {
     return (
         <div className="home">
-            <ComponentsInfo courses={courses} professors={professors} rooms={rooms}/>
+            <ComponentsInfo courses={courses} labs={labs} professors={professors} rooms={rooms}/>
         </div>
     )
 }
 
-export function HomePage ({courses, professors, rooms})
+export function HomePage ({courses, labs, professors, rooms})
 {
     
     return (
@@ -71,7 +77,7 @@ export function HomePage ({courses, professors, rooms})
             <h4> Hello User, here are your latest stats...</h4>
         </div>
         <div className="container-home">
-            <Dashboard courses={courses} professors={professors} rooms={rooms}/>
+            <Dashboard courses={courses} labs={labs} professors={professors} rooms={rooms}/>
         </div>
     </div>
     );

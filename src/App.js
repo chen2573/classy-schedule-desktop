@@ -3,13 +3,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
 import HomePage from './components/HomePage.js';
 import CoursePage from './components/CourseAddPage.js';
+import LabPage from './components/LabAddPage.js';
 import ProfessorPage from './components/ProfessorAddPage.js';
 import RoomPage from './components/RoomAddPage.js'
 import SolutionPage from './components/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { sampleCourses, samplePrograms, sampleProfessors, sampleRooms } from './utils/sampleData';
+import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms } from './utils/sampleData';
 import varValueConvert from 'cross-env/src/variable';
+import LabAddPage from './components/LabAddPage';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -30,7 +32,8 @@ const {
   FETCH_ALL_PROGRAM_DATA,
   FETCH_ALL_COURSE_DATA,
   FETCH_ALL_PROFESSOR_DATA,
-  FETCH_ALL_ROOM_DATA
+  FETCH_ALL_ROOM_DATA,
+  FETCH_ALL_LAB_DATA
 } = require('./utils/queries');
 
 /**
@@ -44,7 +47,9 @@ const {
   CHANNEL_PROFESSOR_TO_MAIN,
   CHANNEL_PROFESSOR_FROM_MAIN,
   CHANNEL_ROOM_TO_MAIN,
-  CHANNEL_ROOM_FROM_MAIN
+  CHANNEL_ROOM_FROM_MAIN,
+  CHANNEL_LAB_TO_MAIN,
+  CHANNEL_LAB_FROM_MAIN
 } = require('./utils/ipcChannels')
 //#endregion
 
@@ -54,6 +59,7 @@ function App() {
   const [courses, setCourses] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [labs, setLabs] = useState([]);
 
   //#region Course crud operations
   const addCourse = (course) => {
@@ -112,6 +118,18 @@ function App() {
     setRooms(rooms.filter((room) => room.id !== id));
   };
 
+  const addLab = (lab) => {
+    const id = Math.floor(Math.random() * 10000) + 1;
+
+    const newLab = { id, ...lab }
+    setLabs([...labs, newLab]);
+  };
+
+  const deleteLab = (id) => {
+    console.log('delete', id);
+    setLabs(labs.filter((lab) => lab.id !== id));
+  };
+
   /**
  * Gets the latest data for all entities when a new page is loaded.
  */
@@ -122,6 +140,7 @@ function App() {
     getLatestCourses();
     getLatestProfessors();
     getLatestRooms();
+    getLatestLabs();
   };
 
   /**
@@ -312,7 +331,52 @@ function App() {
 
           stateRooms.push(newRoom);
         });
-        setCourses(stateRooms);
+        setRooms(stateRooms);
+      });
+    }
+  }
+
+  function getLatestLabs() {
+
+    let stateLabs = [];
+
+    // Update when DB team has implemented tables
+    if (window.DB === undefined || DEVELOPMENT_MODE || true) {
+      console.log('Using sample data');
+
+      sampleLabs.map((lab) => {
+        let lname = lab.lname;
+        let lcapacity = lab.lcapacity;
+        let ltech = lab.ltech;
+        let lcourse = lab.lcourse;
+        let id = Math.floor(Math.random() * 10000) + 1;
+
+        var newLab = { id, lname, lcapacity, ltech, lcourse};
+        stateLabs.push(newLab);
+      })
+      setLabs(stateLabs);
+    }
+    else {
+      console.log(FETCH_ALL_LAB_DATA);
+
+      window.DB.send("toMain", FETCH_ALL_LAB_DATA);
+
+      window.DB.receive("fromMain", (dataRows) => {
+        console.log(dataRows);
+        console.log(typeof dataRows);
+
+        dataRows.map((data) => {
+          let lname = data.lname;
+          let lcapacity = data.lcapacity;
+          let ltech = data.ltech;
+          let lcourse = data.lcourse;
+          const id = Math.floor(Math.random() * 10000) + 1
+
+          let newLab = { lname };
+
+          stateLabs.push(newLab);
+        });
+        setLabs(stateLabs);
       });
     }
   }
@@ -338,10 +402,11 @@ function App() {
   {
     console.log(currentPage)
     if (currentPage === 'course') {return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>}
+    else if (currentPage === 'lab') {return <LabPage onDelete={deleteLab} onAddLab={addLab} labs={labs} courses={courses}/>;}
     else if (currentPage === 'professor') {return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} courses={courses} programs={programs}/>;}
     else if (currentPage === 'room') {return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;}
     else if (currentPage === 'schedule') {return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;}
-    else {return <HomePage courses={courses} professors={professors} rooms={rooms}/>;}
+    else {return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms}/>;}
   }
 
   return (

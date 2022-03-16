@@ -54,6 +54,15 @@ export const samplePrograms = [
         "name": "MUSC"
     }
 ]
+/**
+ * Sample data for labs.
+ */
+export const sampleLabs = [
+    {
+        "lname": "Intro to Programming",
+        "lcourse": "CISC 131"
+    }
+]
 
 /**
  * Sample data for professors.
