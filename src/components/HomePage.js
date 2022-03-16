@@ -1,6 +1,8 @@
-import {React} from 'react';
+import React from 'react';
 import './../assets/styles/HomePage.css'
-import { NotificationsNone, Settings } from '@mui/icons-material'
+import { NotificationsNone, Settings} from '@mui/icons-material';
+import {Button, Typography} from '@mui/material';
+import DataViewer from './DataViewer.js';
 
 const TopBar = () => {
     return (
@@ -32,6 +34,7 @@ const ComponentsInfo = ({courses, labs, professors, rooms}) => {
                 <div className="featuredInfo">
                     <span className="featuredValue">{courses.length}</span>
                 </div>
+
             </div>
             <div className="featuredItem">
                 <span className="featuredTitle">Labs</span>
@@ -51,6 +54,15 @@ const ComponentsInfo = ({courses, labs, professors, rooms}) => {
                     <span className="featuredValue">{rooms.length}</span>
                 </div>
             </div>
+
+            
+            { courses[0] != undefined ?
+            <DataViewer id={courses[0].id} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                <Button variant="contained">
+                    <Typography variant="text" color="secondary">Test data viewer</Typography>
+                </Button>
+            </DataViewer>:null
+            }
         </div>
     )
 
