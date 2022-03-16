@@ -37,7 +37,8 @@
     "electron-build": "electron-builder",
     "release": "yarn react-build && electron-builder --publish=always",
     "build": "yarn react-build && yarn electron-build",
-    "electron-pack": "electron-builder -mwl -c.extraMetadata.main=build/electron.js"
+    "electron-pack": "electron-builder -mwl -c.extraMetadata.main=build/electron.js",
+    "electron-dev": "concurrently \"cross-env BROWSER=none && npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": [
