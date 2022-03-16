@@ -3,17 +3,54 @@ import { ListItem } from '@mui/material';
 import { React, useState } from 'react';
 import {FaTimes} from 'react-icons/fa';
 
+
+/**
+ * 
+ * @param courses - 
+ */
+const CreateCourseList = ({ courses }) => {
+  let canTeachList = courses.map(p => {
+      return (<option key={p.id} value={p.name}>{p.name}</option>);
+  });
+
+  return (
+      <>
+          {canTeachList}
+      </>
+  );
+}
+
+/**
+ * 
+ * @param programs - 
+ */
+const ProgramSelectItems = ({ programs }) => {
+  let programsList = programs.map(p => {
+      return (<option key={p.id} value={p.programName}>{p.programName}</option>);
+  });
+
+  return (
+      <>
+          {programsList}
+      </>
+  );
+}
+
 /**
  * This component represents the form that will be used by the user to enter in new professor data.
  * @param onAddProfessor - the addSubmit function that is passed down from App.js
+ * @param courses -
+ * @param programs -
  */
-const ProfessorAdd = ({onAddProfessor}) => {
+const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const [department, setDepartment] = useState('');
   const [name, setName] = useState('');
   const [teach_load, setTeachLoad] = useState('');
   const [time_block, setTimeBlock] = useState('');
   const [can_teach, setCanTeach] = useState([]);
   const [want_teach, setWantTeach] = useState([]);
+
+  console.log(can_teach)
 
   const onSubmit = (e) => {
       e.preventDefault();
@@ -61,9 +98,7 @@ const ProfessorAdd = ({onAddProfessor}) => {
                   <label>Department</label>
                   <select onChange={(e) => setDepartment(e.target.value)}>
                       <option value=""></option>
-                      <option value="cisc">CISC</option>
-                      <option value="stat">STAT</option>
-                      <option value="math">MATH</option>
+                      <ProgramSelectItems programs={programs} />
                   </select>
               </div>
 
@@ -92,19 +127,19 @@ const ProfessorAdd = ({onAddProfessor}) => {
 
               <div className='form-control'>
                   <label>Courses Professor Can Teach</label>
-                  <select multiple={true} onChange={(e) => setCanTeach(e.target.value)}>
-                    <option value="ai">Artificial Intelligence</option>
-                    <option value="capstone">Capstone</option>
-                    <option value="algo">Algorithms</option>
+                  <select multiple={true} onChange={(e) => setCanTeach([...e.target.selectedOptions].map(option => 
+                    {
+                      return (<option key={option.key} value={option.value}>{option.value}</option>);
+                    }))}>
+
+                    <CreateCourseList courses={courses} />
                   </select>
               </div>
 
               <div className='form-control'>
                   <label>Courses Professor Want to Teach</label>
-                  <select multiple={true} onChange={(e) => setWantTeach(e.target.value)}>
-                    <option value="ai">Artificial Intelligence</option>
-                    <option value="capstone">Capstone</option>
-                    <option value="algo">Algorithms</option>
+                  <select multiple={true} onChange={(e) => setWantTeach([...e.target.selectedOptions].map(option => option.value))}>
+                    <>{can_teach}</>
                   </select>
               </div>
 
@@ -112,7 +147,7 @@ const ProfessorAdd = ({onAddProfessor}) => {
           </form>
       </div>
   );
-}
+}                                         // Getting an error about unique ids, but it seems to run fine
 
 
 /**
@@ -151,11 +186,11 @@ const ProfessorListItem = ({professor, onDelete}) => {
  * @param onAddProfessor - the function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
  * @param professors - the state of professors passed from App.js
  */
-const ProfessorAddPage = ({onAddProfessor, professors, onDelete}) => {
+const ProfessorAddPage = ({onAddProfessor, professors, onDelete, courses, programs}) => {
   return (
     <div>
         <div className='element-page'>
-            <ProfessorAdd onAddProfessor={onAddProfessor}/>
+            <ProfessorAdd onAddProfessor={onAddProfessor} courses={courses} programs={programs}/>
             <ProfessorList onDelete={onDelete} professors={professors}/>
             
         </div>

@@ -338,7 +338,7 @@ function App() {
   {
     console.log(currentPage)
     if (currentPage === 'course') {return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>}
-    else if (currentPage === 'professor') {return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors}/>;}
+    else if (currentPage === 'professor') {return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} courses={courses} programs={programs}/>;}
     else if (currentPage === 'room') {return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;}
     else if (currentPage === 'schedule') {return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;}
     else {return <HomePage courses={courses} professors={professors} rooms={rooms}/>;}
