@@ -10,7 +10,7 @@ import {FaTimes} from 'react-icons/fa';
  */
 const CreateCourseList = ({ courses }) => {
   let canTeachList = courses.map(p => {
-      return (<option key={p.id} value={p.name}>{p.name}</option>);
+      return (<option key={p.id} value={p.id}>{p.name}</option>);
   });
 
   return (
@@ -50,11 +50,9 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const [can_teach, setCanTeach] = useState([]);
   const [want_teach, setWantTeach] = useState([]);
 
-  console.log(can_teach)
-
   const onSubmit = (e) => {
       e.preventDefault();
-
+      e.target.reset();
       if (!department) {
           alert('Please enter a department');
           return;
@@ -86,6 +84,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
 
       setDepartment('');
       setName('');
+      setTeachLoad('');
       // Find a way to set the default value of teach load to 6
   }
 
