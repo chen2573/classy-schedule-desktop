@@ -5,7 +5,7 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 export function DataViewer ({id, dataState, sx, children})
 {
-    var displayData = ['No data to display'];
+    var displayData = [];
     if (dataState.filter((item) => item.id === id)[0] != undefined) {displayData = Object.entries(dataState.filter((item) => item.id === id)[0]);}  //get data entry by id
     
     return (
