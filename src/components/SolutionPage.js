@@ -112,9 +112,10 @@ export function SolutionPage ({professors, courses, rooms})
     const [value, setValue] = useState(0);
     const handleChange = (event, newValue) => {setValue(newValue);};
 
+    //tabs for different days
     function TabPanel(props)
     {
-        const { children, value, index, ...other } = props;
+        const { children, value, index, ...other } = props;     //load props and children wrapped within TabPanel
       
         return (
           <div
