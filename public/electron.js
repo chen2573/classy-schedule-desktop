@@ -20,15 +20,15 @@ const {
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
 
-// Global variables for the scope of our app. This represents the main window and any additional windows.
+// Global variables for the scope of our app. This represents the main window and any additional windows plus our top menu.
 let mainWindow;
 let addWindow;
+let mainMenuTemplate;
 
 // Listen for app to ready
 app.on('ready', function () {
     createMainWindow();
     createIPCChannels();
-    adjustMenuTemplate();
 });
 
 /**
@@ -63,6 +63,7 @@ function createMainWindow() {
     });
 
     // Build menu from template
+    buildMainMenuTemplate();
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
 
     // Insert menu
@@ -101,8 +102,12 @@ function createAddWindow() {
     });
 }
 
-// The template that is used for our menu at the top of our application.
-const mainMenuTemplate = [{
+/**
+ * Builds the top menu that will be used by our electron app.
+ */
+function buildMainMenuTemplate() {
+    // The template that is used for our menu at the top of our application.
+    mainMenuTemplate = [{
         label: 'File',
         submenu: [{
                 label: 'Add Item',
@@ -138,14 +143,8 @@ const mainMenuTemplate = [{
 
         }]
     }
+    ];
 
-];
-
-/**
- * Have to make adjustments to the menu template depending on the OS.
- * Also adds a 'Developers Tools' menu item if application is in dev mode.
- */
-function adjustMenuTemplate() {
     // If mac, add empty object to menu template
     if (process.platform == 'dawrwin') {
         mainMenuTemplate.unshift({});
@@ -168,6 +167,7 @@ function adjustMenuTemplate() {
             ]
         });
     }
+
 }
 
 /**
@@ -194,6 +194,7 @@ function createIPCChannels() {
 
 
 // ============ DataBase functions ======================== 
+
 /**
  * This function creates a new DB connection with given credentials.
  * This may be modified when we start using Swagger endpoints.
