@@ -1,3 +1,6 @@
+/**
+ * Constants that are used for making queries.
+ */
 module.exports = {
     FETCH_TABLE_INFO: "SELECT TABLE_NAME,TABLE_ROWS,TABLE_TYPE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='classyschedule'",
     FETCH_ALL_PROGRAM_DATA: 'SELECT * FROM department',
