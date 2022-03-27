@@ -4,6 +4,10 @@ import { NotificationsNone, Settings} from '@mui/icons-material';
 import {Button, Typography} from '@mui/material';
 import DataViewer from './DataViewer.js';
 
+/**
+ * Create a topbar for the application that includes a Name, logo, and profile image.
+ * @returns the TopBar component.
+ */
 const TopBar = () => {
     return (
         <div className="topbar">
@@ -26,6 +30,13 @@ const TopBar = () => {
     )
 }
 
+/**
+ * This component builds and returns the boxes that displays info on the current state on the homepage.
+ * @param courses - the courses state.
+ * @param labs - the labs state.
+ * @param professors - the professors state.
+ * @param rooms - the rooms state.
+ */
 const ComponentsInfo = ({courses, labs, professors, rooms}) => {
     return (
         <div className="featured">
@@ -68,6 +79,9 @@ const ComponentsInfo = ({courses, labs, professors, rooms}) => {
 
 }
 
+/**
+ * This component creates and styles the dashboard.
+ */
 const Dashboard = ({courses, labs, professors, rooms}) => {
     return (
         <div className="home">
