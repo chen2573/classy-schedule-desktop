@@ -3,6 +3,11 @@ import { ListItem } from '@mui/material';
 import { React, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
+/**
+ * This component populates and returns a list of programs from the database.
+ * @param programs - The programs that were passed down from App.js for the DB
+ * @returns - The List of programs in the DB
+ */
 const ProgramSelectItems = ({ programs }) => {
     let programsList = programs.map(p => {
         return (<option key={p.id} value={p.programName}>{p.programName}</option>);
@@ -18,6 +23,8 @@ const ProgramSelectItems = ({ programs }) => {
 /**
  * This component represents the form that will be used by the user to enter in new course data.
  * @param onAddCourse - the addSubmit function that is passed down from App.js
+ * @param programs - the programs that is passed down from App.js
+ * @returns - the component that represents the form that will be used by the user to enter in new course data.
  */
 const CourseAdd = ({ onAddCourse, programs }) => {
     const [program, setProgram] = useState('');
@@ -59,6 +66,10 @@ const CourseAdd = ({ onAddCourse, programs }) => {
             alert('Please enter the course capacity');
             return;
         }
+        if (!lab) {
+            alert('Please enter if it has a lab');
+            return;
+        }
         // if (!length) {
         //     alert('Please enter a course meeting time');
         //     return;
@@ -72,7 +83,7 @@ const CourseAdd = ({ onAddCourse, programs }) => {
         //     return;
         // }
 
-        onAddCourse({program, number, name, courseID, credits, capacity,});
+        onAddCourse({program, number, name, courseID, credits, capacity, lab});
 
         setCapacity('');
         setProgram('');
@@ -81,6 +92,7 @@ const CourseAdd = ({ onAddCourse, programs }) => {
         setCourseID('');
         setCredits('');
         setLength('');
+        setLab('');
     }
 
     return (
@@ -125,27 +137,16 @@ const CourseAdd = ({ onAddCourse, programs }) => {
                     <input type="number" placeholder='Enter length of course' value={length} onChange={(e) => setLength(e.target.value)} />
                 </div>
 
-                {/* <h4>Course days</h4>
+                <div className='form-control'>
+                    <label>Lab Required</label>
+                    <select onChange={(e) => setLab(e.target.value)}>
+                        <option value=""></option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
 
-              <label for="monday">Monday
-                  <input type="checkbox" id="monday" name="monday" value="monday" />
-              </label>
-
-              <label for="tuesday">Tuesday
-                  <input type="checkbox" id="tuesday" name="tuesday" value="tuesday" />
-              </label>
-
-              <label for="wednesday">Wednesday
-                  <input type="checkbox" id="wednesday" name="wednesday" value="wednesday" />
-              </label>
-
-              <label for="thursday">Thursday
-                  <input type="checkbox" id="thursday" name="thursday" value="thursday" />
-              </label>
-
-              <label for="friday">Friday
-                  <input type="checkbox" id="friday" name="cfriday" value="friday" />
-              </label>
+                {/* 
 
               <h4>Select Technology Needed for this Course</h4>
 
@@ -186,6 +187,8 @@ const CourseAdd = ({ onAddCourse, programs }) => {
 /**
  * This component is a view that lists out individual CourseListItems.
  * @param courses - The state of courses that is passed down from App.js
+ * @param onDelete - The delete function that is passed down from App.js
+ * @returns - The component that is a view listing out the CourseListItems
  */
 const CourseList = ({ courses, onDelete }) => {
     return (
@@ -202,6 +205,8 @@ const CourseList = ({ courses, onDelete }) => {
 /**
  * The component that will display an individual course. These components will populate the CourseList component.
  * @param course - an individual course
+ * @param onDelete - The delete function that is passed down from App.js
+ * @returns - The component displaying an individual course.
  */
 const CourseListItem = ({ course, onDelete }) => {
     return (
@@ -217,10 +222,13 @@ const CourseListItem = ({ course, onDelete }) => {
 }
 
 /**
- * The that will be exported. This page will have an Add form and list the Courses that have been added and
+ * The component that will be exported. This page will have an Add form and list the Courses that have been added and
  * the courses that are in the database.
  * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
  * @param courses - the state of courses passed from App.js
+ * @param onDelete - the function 'onDelete' from App.js that will fire when the onclick happens
+ * @param programs - the state of programs passed from App.js
+ * @returns - The exported component
  */
 const CourseAddPage = ({ onAddCourse, courses, onDelete, programs }) => {
     return (
