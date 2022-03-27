@@ -4,6 +4,10 @@ import { NotificationsNone, Settings} from '@mui/icons-material';
 import {Button, Typography} from '@mui/material';
 import DataViewer from './DataViewer.js';
 
+/**
+ * Create a topbar for the application that includes a Name, logo, and profile image.
+ * @returns the TopBar component.
+ */
 const TopBar = () => {
     return (
         <div className="topbar">
@@ -19,13 +23,20 @@ const TopBar = () => {
                     <div className="topBarIconContainer">
                         <Settings/>
                     </div>
-                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Favatarfiles.alphacoders.com%2F114%2Fthumb-1920-114874.jpg&f=1&nofb=1" alt="" className="topAvatar" />
+                    <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffree-profile-pics.com%2Fprofile-pictures%2F01262014%2Fdownload%2Fyoda-profile-picture-512x512.png&f=1&nofb=1" alt="" className="topAvatar" />
                 </div>
             </div>
         </div>
     )
 }
 
+/**
+ * This component builds and returns the boxes that displays info on the current state on the homepage.
+ * @param courses - the courses state.
+ * @param labs - the labs state.
+ * @param professors - the professors state.
+ * @param rooms - the rooms state.
+ */
 const ComponentsInfo = ({courses, labs, professors, rooms}) => {
     return (
         <div className="featured">
@@ -68,6 +79,9 @@ const ComponentsInfo = ({courses, labs, professors, rooms}) => {
 
 }
 
+/**
+ * This component creates and styles the dashboard.
+ */
 const Dashboard = ({courses, labs, professors, rooms}) => {
     return (
         <div className="home">
@@ -76,6 +90,9 @@ const Dashboard = ({courses, labs, professors, rooms}) => {
     )
 }
 
+/**
+ * The main component that will be exported by this class.
+ */
 export function HomePage ({courses, labs, professors, rooms})
 {
     

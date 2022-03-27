@@ -1,3 +1,6 @@
+/**
+ * A list of constants that will be used for Inter Process Communication.
+ */
 module.exports = {
     CHANNEL_PROGRAM_TO_MAIN: 'toMain:Program',
     CHANNEL_PROGRAM_FROM_MAIN: 'fromMain:Program',

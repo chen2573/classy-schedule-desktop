@@ -1,3 +1,7 @@
+/***
+ * This is where all our sample data is housed.
+ */
+
 /**
  * Sample Data for Courses. Feel free to add and adjust
  */

@@ -20,14 +20,21 @@ const {
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
 
+// Global variables for the scope of our app. This represents the main window and any additional windows plus our top menu.
 let mainWindow;
 let addWindow;
+let mainMenuTemplate;
 
 // Listen for app to ready
 app.on('ready', function () {
     createMainWindow();
+    createIPCChannels();
 });
 
+/**
+ * Create the main window for our main process. Most of the application interaction 
+ * will be from this window.
+ */
 function createMainWindow() {
     // Create new window
     mainWindow = new BrowserWindow({
@@ -56,14 +63,17 @@ function createMainWindow() {
     });
 
     // Build menu from template
+    buildMainMenuTemplate();
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
 
     // Insert menu
     Menu.setApplicationMenu(mainMenu);
 }
 
-// Handle create add window 
-
+/**
+ * We are not using this currently. We may be able to add functionality 
+ * later on or just remove this.
+ */
 function createAddWindow() {
     addWindow = new BrowserWindow({
         // This is to allow node code to run in html
@@ -92,8 +102,12 @@ function createAddWindow() {
     });
 }
 
-// Create menu template
-const mainMenuTemplate = [{
+/**
+ * Builds the top menu that will be used by our electron app.
+ */
+function buildMainMenuTemplate() {
+    // The template that is used for our menu at the top of our application.
+    mainMenuTemplate = [{
         label: 'File',
         submenu: [{
                 label: 'Add Item',
@@ -129,49 +143,65 @@ const mainMenuTemplate = [{
 
         }]
     }
+    ];
 
-];
+    // If mac, add empty object to menu template
+    if (process.platform == 'dawrwin') {
+        mainMenuTemplate.unshift({});
+    }
 
-// If mac, add empty object to menu template
-if (process.platform == 'dawrwin') {
-    mainMenuTemplate.unshift({});
-}
-
-// Add developer tools item if not in production
-if (process.env.NODE_ENV !== 'production') {
-    mainMenuTemplate.push({
-        label: 'Developer Tools',
-        submenu: [{
-                label: 'Toggle Dev Tools',
-                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I', // Adds hotkey of I
-                click(item, focusedWindow) {
-                    focusedWindow.toggleDevTools();
+    // Add developer tools item if not in production
+    if (process.env.NODE_ENV !== 'production') {
+        mainMenuTemplate.push({
+            label: 'Developer Tools',
+            submenu: [{
+                    label: 'Toggle Dev Tools',
+                    accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I', // Adds hotkey of I
+                    click(item, focusedWindow) {
+                        focusedWindow.toggleDevTools();
+                    }
+                },
+                {
+                    role: 'reload'
                 }
-            },
-            {
-                role: 'reload'
-            }
-        ]
+            ]
+        });
+    }
+
+}
+
+/**
+ * Inter Process Communication is used to communicate to our UI which
+ * is our React App. The channels for the IPC channels are set up in public/preload.js.
+ */
+function createIPCChannels() {
+    // IPC for Program/Departments
+    ipcMain.on("toMain:Program", (event, args) => {
+        console.log('Main recieved Program info', args);
+        queryDatabase(args).then((data) => {
+            mainWindow.webContents.send('fromMain:Program', data)
+        });
+    });
+    
+    // IPC channel for courses.
+    ipcMain.on("toMain:Course", (event, args) => {
+        console.log('Main recieved Course info', args);
+        queryDatabase(args).then((data) => {
+            mainWindow.webContents.send('fromMain:Course', data)
+        });
     });
 }
 
-// ============ Inter Process Communication ==============
-ipcMain.on("toMain:Program", (event, args) => {
-    console.log('Main recieved Program info', args);
-    queryDatabase(args).then((data) => {
-        mainWindow.webContents.send('fromMain:Program', data)
-    });
-});
-
-ipcMain.on("toMain:Course", (event, args) => {
-    console.log('Main recieved Course info', args);
-    queryDatabase(args).then((data) => {
-        mainWindow.webContents.send('fromMain:Course', data)
-    });
-});
 
 // ============ DataBase functions ======================== 
-const connectToSever = () => {
+
+/**
+ * This function creates a new DB connection with given credentials.
+ * This may be modified when we start using Swagger endpoints.
+ * 
+ * @returns promise - contains an open DB connection
+ */
+function connectToSever() {
     return new Promise((resolve, reject) => {
         var config = {
             host: 'capstonedb01.mysql.database.azure.com',
@@ -197,6 +227,11 @@ const connectToSever = () => {
 
 }
 
+/**
+ * This function queries our database
+ * @param query - a vaild MySql database query created in our React App 
+ * @returns 
+ */
 function queryDatabase(query) {
     return new Promise((resolve, reject) => {
         connectToSever().then(conn => {
