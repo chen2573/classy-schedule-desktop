@@ -23,7 +23,7 @@ const TopBar = () => {
                     <div className="topBarIconContainer">
                         <Settings/>
                     </div>
-                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Favatarfiles.alphacoders.com%2F114%2Fthumb-1920-114874.jpg&f=1&nofb=1" alt="" className="topAvatar" />
+                    <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffree-profile-pics.com%2Fprofile-pictures%2F01262014%2Fdownload%2Fyoda-profile-picture-512x512.png&f=1&nofb=1" alt="" className="topAvatar" />
                 </div>
             </div>
         </div>
@@ -90,6 +90,9 @@ const Dashboard = ({courses, labs, professors, rooms}) => {
     )
 }
 
+/**
+ * The main component that will be exported by this class.
+ */
 export function HomePage ({courses, labs, professors, rooms})
 {
     
