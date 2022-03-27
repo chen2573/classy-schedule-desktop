@@ -21,7 +21,7 @@ import LabAddPage from './components/LabAddPage';
  * will always use sample data.
  * 
  */
-const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dummy data.
+const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
 
 //#region constants
 /**
@@ -53,7 +53,12 @@ const {
 } = require('./utils/ipcChannels')
 //#endregion
 
-
+/**
+ * This function is the highest level of our application. It is used as a component and mounted to
+ * index.js found in public/index.js. All of our database functions are found here and are used by
+ * other components.
+ * @returns the entire ClassySchedule application as a component.
+ */
 function App() {
   const [programs, setPrograms] = useState([]); //This has to be an Array for some reason.
   const [courses, setCourses] = useState([]);
@@ -94,6 +99,10 @@ function App() {
 
   //#endregion  
 
+  /**
+   * Adds a professor to the local state or to the DB if in production.
+   * @param professor - the professor object that is being added. 
+   */
   const addProfessor = (professor) => {
     const id = Math.floor(Math.random() * 10000) + 1;
 
@@ -101,11 +110,19 @@ function App() {
     setProfessors([...professors, newProfessor]);
   };
 
+  /**
+   * Deletes a professor from the local state or from the DB if in production.
+   * @param id - the professor id that is being deleted. 
+   */
   const deleteProfessor = (id) => {
     console.log('delete', id);
     setProfessors(professors.filter((professor) => professor.id !== id));
   };
 
+  /**
+   * Adds a room to the local state or to the DB if in production.
+   * @param room - the room object that is being added. 
+   */
   const addRoom = (room) => {
     const id = Math.floor(Math.random() * 10000) + 1;
 
@@ -113,11 +130,19 @@ function App() {
     setRooms([...rooms, newRoom]);
   };
 
+  /**
+   * Deletes a room from the local state or from the DB if in production.
+   * @param id - the room id that is being deleted. 
+   */
   const deleteRoom = (id) => {
     console.log('delete', id);
     setRooms(rooms.filter((room) => room.id !== id));
   };
 
+  /**
+   * Adds a lab to the local state or to the DB if in production.
+   * @param lab - the lab object that is being added. 
+   */
   const addLab = (lab) => {
     const id = Math.floor(Math.random() * 10000) + 1;
 
@@ -125,17 +150,19 @@ function App() {
     setLabs([...labs, newLab]);
   };
 
+  /**
+   * Deletes a lab from the local state or from the DB if in production.
+   * @param id - the lab id that is being deleted. 
+   */
   const deleteLab = (id) => {
     console.log('delete', id);
     setLabs(labs.filter((lab) => lab.id !== id));
   };
 
   /**
- * Gets the latest data for all entities when a new page is loaded.
- */
-  useEffect(updateAllStates, []);
-
-  function updateAllStates() {
+   * Gets the latest data for all the states and refreshes the cooresponding states.
+   */
+   const updateAllStates = () => {
     getLatestPrograms();
     getLatestCourses();
     getLatestProfessors();
@@ -144,13 +171,12 @@ function App() {
   };
 
   /**
-   * Gets the latest data for courses.
+   * Gets the latest data for programs.
    */
-  function getLatestPrograms() {
+  const getLatestPrograms = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
-
     let statePrograms = [];
 
     if (window.DB === undefined || DEVELOPMENT_MODE) {
@@ -191,7 +217,7 @@ function App() {
   /**
    * Gets the latest data for courses.
    */
-  function getLatestCourses() {
+  const getLatestCourses = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
@@ -246,7 +272,7 @@ function App() {
   /**
    * Gets the latest data for professors.
    */
-  function getLatestProfessors() {
+  const getLatestProfessors = () => {
 
     let stateProfessors = [];
 
@@ -289,9 +315,9 @@ function App() {
   }
 
   /**
-   * Get the lates room data
+   * Get the latest room data.
    */
-  function getLatestRooms() {
+  const getLatestRooms = () => {
 
     let stateRooms = [];
 
@@ -336,7 +362,10 @@ function App() {
     }
   }
 
-  function getLatestLabs() {
+  /**
+   * Get the latest lab data.
+   */
+  const getLatestLabs = () => {
 
     let stateLabs = [];
 
@@ -380,8 +409,17 @@ function App() {
       });
     }
   }
+  
+  /**
+  * Gets the latest data for all entities when a new page is loaded. 
+  * The useEffect method runs the updateAllStates method once a page is refreshed.
+  */
+  useEffect(updateAllStates, []);
 
-  function decribeDatabaseTable() {
+  /**
+   * This function is used for debugging to get an idea of how the database looks like.
+   */
+  const decribeDatabaseTable = () => {
     window.DB.send(CHANNEL_COURSE_TO_MAIN, "Desc class");
 
     window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (data) => {
@@ -398,15 +436,26 @@ function App() {
 
   //Conditionally render pages
   const [currentPage, setCurrentPage] = useState('');
-  function routePages (currentPage)
-  {
+  const routePages = (currentPage) => {
     console.log(currentPage)
-    if (currentPage === 'course') {return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>}
-    else if (currentPage === 'lab') {return <LabPage onDelete={deleteLab} onAddLab={addLab} labs={labs} courses={courses}/>;}
-    else if (currentPage === 'professor') {return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} courses={courses} programs={programs}/>;}
-    else if (currentPage === 'room') {return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;}
-    else if (currentPage === 'schedule') {return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;}
-    else {return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms}/>;}
+    if (currentPage === 'course') {
+      return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>
+    }
+    else if (currentPage === 'lab') {
+      return <LabPage onDelete={deleteLab} onAddLab={addLab} labs={labs} courses={courses}/>;
+    }
+    else if (currentPage === 'professor') {
+      return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} courses={courses} programs={programs}/>;
+    }
+    else if (currentPage === 'room') {
+      return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;
+    }
+    else if (currentPage === 'schedule') {
+      return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;
+    }
+    else {
+      return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms}/>;
+    }
   }
 
   return (
