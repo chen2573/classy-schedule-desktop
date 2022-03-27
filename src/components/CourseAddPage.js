@@ -3,6 +3,11 @@ import { ListItem } from '@mui/material';
 import { React, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
+/**
+ * Renders the items that will show up in the drop down menu for programs.
+ * @param programs - the state of current programs.
+ * @returns a ProgramSelectItems component.
+ */
 const ProgramSelectItems = ({ programs }) => {
     let programsList = programs.map(p => {
         return (<option key={p.id} value={p.programName}>{p.programName}</option>);
@@ -217,7 +222,7 @@ const CourseListItem = ({ course, onDelete }) => {
 }
 
 /**
- * The that will be exported. This page will have an Add form and list the Courses that have been added and
+ * The main component that will be exported by this class. This page will have an Add form and list the Courses that have been added and
  * the courses that are in the database.
  * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
  * @param courses - the state of courses passed from App.js
