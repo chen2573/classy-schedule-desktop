@@ -5,6 +5,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import '../assets/styles/Solution.css';
 
+
+//this component will very likely be removed
 const PopoverItem = ({anchor, popoverTarget, open, handleClose, id, dataState}) =>
 {
     var popoverContent;  //content within popover element
@@ -36,12 +38,20 @@ const PopoverItem = ({anchor, popoverTarget, open, handleClose, id, dataState}) 
             </Popover>;
 }
 
+
+/**
+ * automatically populates solutions items
+ * @param courseEntries courses assigned to a time slot by the GenerateSolutions component
+ * @param time the time slot
+ * @returns a table row item containing all courses entry in a time slot
+ */
 const SolutionItem = ({courseEntries, time}) =>
 {
     //handle table items click event
     const [anchorEl, setAnchorEl] = useState(null);
     const [popoverTarget, setPopoverTarget] = useState(null);
 
+    //handle click events, this might be updated to be more automatic
     const handleClickCourse = (event) =>
     {
         setAnchorEl(event.currentTarget);
@@ -60,7 +70,7 @@ const SolutionItem = ({courseEntries, time}) =>
     const handleClose = () => {setAnchorEl(null);};
 
 
-    //generate items
+    //populate items in the time slot row
     const item = <tr key={time} className="row">
                     <th scope="row">{time}</th>
 
@@ -73,7 +83,7 @@ const SolutionItem = ({courseEntries, time}) =>
                                     <Button className="entry-button" variant="text" onClick={handleClickCourse} color="inherit">
                                         {entry.course}
                                     </Button>
-                            </td></tr></tbody></table>})}
+                                </td></tr></tbody></table>})}
                     </td>}
 
                     {<td className="room-container">      {courseEntries.map((entry) => {
@@ -81,20 +91,30 @@ const SolutionItem = ({courseEntries, time}) =>
                                     <Button className="entry-button" variant="text" onClick={handleClickRoom} color="inherit">
                                         {entry.room}
                                     </Button>
-                                                                                                </td></tr></tbody></table>})}
+                                </td></tr></tbody></table>})}
                     </td>}
                     {<td className="professor-container"> {courseEntries.map((entry) => {
                         return <table key={entry.professor}><tbody><tr><td>
                                     <Button className="entry-button" variant="text" onClick={handleClickProfessor} color="inherit">
                                         {entry.professor}
                                     </Button>
-                            </td></tr></tbody></table>})} </td>}
+                                </td></tr></tbody></table>})} </td>}
                 </tr>;
 
 
     return item;
 }
 
+
+/**
+ * This is the main component of the page. It returns the whole solutions page
+ * it calls GenerateSolutions and populates the solutions table within each of the
+ * weekdays.
+ * @param professors professors state
+ * @param courses courses state
+ * @param rooms rooms state
+ * @returns the solutions page
+ */
 export function SolutionPage ({professors, courses, rooms})
 {
     const dummyCourseEntries = {"8:15am - 9:20am": [{course:"CISC 131", room:"OSS 432", professor:"Dr. Hardt"},
@@ -112,7 +132,8 @@ export function SolutionPage ({professors, courses, rooms})
     const [value, setValue] = useState(0);
     const handleChange = (event, newValue) => {setValue(newValue);};
 
-    //tabs for different days
+
+    //tab panels for different days
     function TabPanel(props)
     {
         const { children, value, index, ...other } = props;     //load props and children wrapped within TabPanel

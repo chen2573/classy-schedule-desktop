@@ -9,6 +9,12 @@ import ScienceIcon from '@mui/icons-material/Science';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
+
+/**
+ * This is a menubar component for switching pages
+ * @param setCurrentPage function to set the currentPage state in parent that controls the current page
+ * @returns a menubar for page switching
+ */
 export function MenuBar ({setCurrentPage})
 {
     return (
@@ -23,37 +29,42 @@ export function MenuBar ({setCurrentPage})
                         <p className="button-text">Home</p>
                     </Box>
                 </Button>
+
                 <Button variant="text" onClick={()=>{setCurrentPage('professor')}}>
                     <Box>
                         <PersonIcon color="secondary" size="large"/>
                         <p className="button-text">Professors</p>
                     </Box>
                 </Button>
+
                 <Button variant="text" onClick={()=>{setCurrentPage('course')}}>
                     <Box>
                         <ClassIcon color="secondary"/>
                         <p className="button-text">Courses</p>
                     </Box>
                 </Button>
+
                 <Button variant="text" onClick={()=>{setCurrentPage('lab')}}>
                     <Box>
                         <ScienceIcon color="secondary"/>
                         <p className="button-text">Labs</p>
                     </Box>
                 </Button>
+
                 <Button variant="text" onClick={()=>{setCurrentPage('room')}}>
                     <Box>
                         <MeetingRoomIcon color="secondary"/>
                         <p className="button-text">Rooms</p>
                     </Box>
                 </Button>
+
                 <Button variant="text" onClick={()=>{setCurrentPage('schedule')}}>
                     <Box>
                         <CalendarTodayIcon color="secondary"/>
                         <p className="button-text">Schedule</p>
                     </Box>
                 </Button>
-
+                
                 <Box></Box>
             </Box>
         </AppBar>
