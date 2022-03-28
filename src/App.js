@@ -435,29 +435,36 @@ function App() {
 
 
   //Conditionally render pages
-  const [currentPage, setCurrentPage] = useState('');
-  const routePages = (currentPage) => {
-    console.log(currentPage)
-    if (currentPage === 'course') {
+  const [currentPage, setCurrentPage] = useState(''); //state holding the current page
+  const routePages = (currentPage) =>
+  {
+    if (currentPage === 'course')
+    {
       return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>
     }
-    else if (currentPage === 'lab') {
+    else if (currentPage === 'lab')
+    {
       return <LabPage onDelete={deleteLab} onAddLab={addLab} labs={labs} courses={courses}/>;
     }
-    else if (currentPage === 'professor') {
+    else if (currentPage === 'professor')
+    {
       return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} courses={courses} programs={programs}/>;
     }
-    else if (currentPage === 'room') {
+    else if (currentPage === 'room')
+    {
       return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;
     }
-    else if (currentPage === 'schedule') {
+    else if (currentPage === 'schedule')
+    {
       return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;
     }
-    else {
+    else
+    {
       return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms}/>;
     }
-  }
+  }//route pages according to the currentPage state, returns the pages accordingly
 
+  
   return (
     <ThemeProvider theme={theme}>
         <div className="App">
