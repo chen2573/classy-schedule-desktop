@@ -170,6 +170,8 @@ function buildMainMenuTemplate() {
 
 }
 
+const DatabaseApi = require('./../src/utils/databaseFunctions');
+
 /**
  * Inter Process Communication is used to communicate to our UI which
  * is our React App. The channels for the IPC channels are set up in public/preload.js.
@@ -178,9 +180,14 @@ function createIPCChannels() {
     // IPC for Program/Departments
     ipcMain.on("toMain:Program", (event, args) => {
         console.log('Main recieved Program info', args);
-        queryDatabase(args).then((data) => {
-            mainWindow.webContents.send('fromMain:Program', data)
+        DatabaseApi.getPrograms().then((payload) => {
+            mainWindow.webContents.send('fromMain:Program', payload.data);
+        }).catch((error) => {
+            console.log('Error with programs: ' + error);
         });
+        /*queryDatabase(args).then((data) => {
+            mainWindow.webContents.send('fromMain:Program', data)
+        });*/
     });
     
     // IPC channel for courses.
@@ -194,6 +201,8 @@ function createIPCChannels() {
 
 
 // ============ DataBase functions ======================== 
+
+
 
 /**
  * This function creates a new DB connection with given credentials.
