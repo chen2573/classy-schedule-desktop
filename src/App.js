@@ -21,7 +21,7 @@ import LabAddPage from './components/LabAddPage';
  * will always use sample data.
  * 
  */
-const DEVELOPMENT_MODE = false; // Change to true when you want to debug with dummy data.
+const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dummy data.
 
 //#region constants
 /**
