@@ -17,13 +17,12 @@ import LabAddPage from './components/LabAddPage';
  * Toggle to get data from database or use sample data.
  * true - gets data from sample data.
  * false - gets data from database.
- * **Note** If you are looking at the the localhost verion of our app, it
+ * !!Note!! If you are looking at the the localhost verion of our app through browser, it
  * will always use sample data.
  * 
  */
 const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dummy data.
 
-//#region constants
 /**
  * Constants we will use to make our database queries.
  */
@@ -66,38 +65,55 @@ function App() {
   const [rooms, setRooms] = useState([]);
   const [labs, setLabs] = useState([]);
 
-  //#region Course crud operations
+  /**
+   * Adds a course. This method is passed down through the components.
+   * @param course - the course that will be added. 
+   */
   const addCourse = (course) => {
+    //BUG: Database has changed their scheme for departments, so adding courses
+    // in non-dev mode will cause problems.
     let programIdArray = programs.filter((program) => {
       if (program.programName === course.program) {
         return program.programId;
       }
 
     });
-    let programId = programIdArray[0].programId;
+    console.log(programIdArray)
+    if (programIdArray.length === 0){
+      window.alert('Uh-oh! There is a bug here. We are working on it :)');
+    }
+    else {
+      var programId = programIdArray[0].programId;
+    }
 
     const newCourse = { programId, ...course }
     console.log(newCourse);
     setCourses([...courses, newCourse]);
 
     if (!DEVELOPMENT_MODE) {
-      let query = createSqlQuery('Add', newCourse.programId, newCourse.number, newCourse.name, newCourse.credits, newCourse.capacity);
-      window.DB.send(CHANNEL_COURSE_TO_MAIN, query);
+      
+      //let query = createSqlQuery('Add', newCourse.programId, newCourse.number, newCourse.name, newCourse.credits, newCourse.capacity);
+      //window.DB.send(CHANNEL_COURSE_TO_MAIN, query);
     }
   };
 
+  /**
+   * Deletes a course. This method is passed down through the components.
+   * @param id - the id of the course that is being deleted 
+   */
   const deleteCourse = (id) => {
     console.log(id);
     setCourses(courses.filter((course) => course.id !== id));
   };
 
+  /**
+   * This is a temp method, when we were quering right to the database. Will be removed soon.
+   */
   const createSqlQuery = (operation, programId, number, name, credits, capacity) => {
     if (operation == 'Add') {
-      return `Insert Into class (dept_id, class_num, class_name, credits, capacity) VALUES (\'${programId}', \'${number}\', \'${name}\', \'${credits}\', \'${capacity}\')`
+      return `Insert Into class (dept_id, class_num, class_name, credits, capacity) VALUES ('${programId}', '${number}', '${name}', '${credits}', '${capacity}')`
     }
   };
-
-  //#endregion  
 
   /**
    * Adds a professor to the local state or to the DB if in production.
