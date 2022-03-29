@@ -33,9 +33,7 @@ const CourseAdd = ({ onAddCourse, programs }) => {
     const [credits, setCredits] = useState('');
     const [capacity, setCapacity] = useState('');
     const [length, setLength] = useState('');
-    const [days, setDays] = useState('');
     const [tech, setTech] = useState('');
-    const [lab, setLab] = useState(false);
     const [courseID, setCourseID] = useState('');
 
     const onSubmit = (e) => {
@@ -66,24 +64,16 @@ const CourseAdd = ({ onAddCourse, programs }) => {
             alert('Please enter the course capacity');
             return;
         }
-        if (!lab) {
-            alert('Please enter if it has a lab');
+        if (!tech) {
+            alert('Please enter the technology the course will need');
             return;
         }
-        // if (!length) {
-        //     alert('Please enter a course meeting time');
-        //     return;
-        // }
-        // if (!days) {
-        //     alert('Please enter the days the course will be meeting');
-        //     return;
-        // }
-        // if (!tech) {
-        //     alert('Please enter the tecnology the course will need');
-        //     return;
-        // }
+        if (!length) {
+            alert('Please enter the meeting length for the course');
+            return;
+        }
 
-        onAddCourse({program, number, name, courseID, credits, capacity, lab});
+        onAddCourse({program, number, name, courseID, credits, capacity, tech, length});
 
         setCapacity('');
         setProgram('');
@@ -92,7 +82,7 @@ const CourseAdd = ({ onAddCourse, programs }) => {
         setCourseID('');
         setCredits('');
         setLength('');
-        setLab('');
+        setTech('');
     }
 
     return (
@@ -136,48 +126,20 @@ const CourseAdd = ({ onAddCourse, programs }) => {
                     <label>Meeting Length</label>
                     <input type="number" placeholder='Enter length of course' value={length} onChange={(e) => setLength(e.target.value)} />
                 </div>
-
+                <h4>Select Technology Required for this Lab</h4>
                 <div className='form-control'>
-                    <label>Lab Required</label>
-                    <select onChange={(e) => setLab(e.target.value)}>
-                        <option value=""></option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <select multiple={true} onChange={(e) => setTech([...e.target.selectedOptions].map(option => option.value+" "))}>
+                        <option >Desktop Computers</option>
+                        <option >Laptop Computers</option>
+                        <option >Projector</option>
+                        <option >Whiteboard</option>
+                        <option >Chalkboard</option>
+                        <option >Robots</option>
+                        <option >Zoom peripherals</option>
+                        <option >Instrucor Computer</option>
+                        <option >Net Controls</option>
+                    </select>       
                 </div>
-
-                {/* 
-
-              <h4>Select Technology Needed for this Course</h4>
-
-              <label for="desktop">Desktop Computers
-                  <input type="checkbox" id="desktop" name="desktop" value="Desktop" />
-              </label>
-
-              <label for="laptop">Laptop Computers
-                  <input type="checkbox" id="laptop" name="laptop" value="Laptop"/>
-              </label>
-
-              <label for="projector">Projector
-                  <input type="checkbox" id="projector" name="projector" value="Projector"/>
-              </label>
-
-              <label for="whiteboard">Whiteboard
-                  <input type="checkbox" id="whiteboard" name="whiteboard" value="Whiteboard" />
-              </label>
-
-              <label for="chalkboard">Chalkboard
-                  <input type="checkbox" id="chalkboard" name="chalkboard" value="Chalkboard" />
-              </label>
-
-              <h4>Lab Attached</h4>
-
-              <label for="lab">Lab Required
-                  <select name="lab" id="lab">
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                  </select>
-              </label><br></br> */}
                 <input type="submit" value='Save Course' className='btn btn-block' />
             </form>
         </div>
@@ -216,7 +178,8 @@ const CourseListItem = ({ course, onDelete }) => {
             <p><em>Class ID</em> : {course.courseID} <br />
                 <em>Course Name</em> : {course.name}<br />
                 <em>Credits</em> : {course.credits}<br />
-                <em>Capacity</em> : {course.capacity}</p>
+                <em>Capacity</em> : {course.capacity}<br />
+                <em>Tech: </em>{course.tech}</p>
         </div>
     );
 }
