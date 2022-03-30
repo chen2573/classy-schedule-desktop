@@ -444,13 +444,20 @@ function App() {
   }
 
 
-  //global styling
+  /**
+   * global styling
+   * This variable controls the color styling of all the MUI components
+   * It can be updated to control other styling elements if needed
+   * */
   const theme = createTheme({
     palette: { primary: { main: "#90a4ae", dark: '#546e7a' }, secondary: { main: "#ffffff", dark: '#cfd8dc' } }
   });
 
 
-  //Conditionally render pages
+  /**
+   * conditionally render pages based on the currentPage state
+   * currentPage is updated by the Menubar
+   */
   const [currentPage, setCurrentPage] = useState(''); //state holding the current page
   const routePages = (currentPage) =>
   {
@@ -478,7 +485,7 @@ function App() {
     {
       return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms}/>;
     }
-  }//route pages according to the currentPage state, returns the pages accordingly
+  }
 
   
   return (

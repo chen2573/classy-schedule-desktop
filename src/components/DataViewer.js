@@ -3,13 +3,28 @@ import {Box, Popover, Typography} from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 
+/**
+ * This is a universal component for viewing data items within the data states.
+ * It wraps the component that will trigger the popover (probably a button). When
+ * any of the children wrapped inside are clicked they trigger the popover.
+ * 
+ * For example,
+ * <DataViewer id={1} dataState={courses} sx={{}}>
+        <Button></Button>
+    </DataViewer>
+    will find the item in courses that has an id of 1 and display all attributes in it when Button is clicked.
+ * @param id unique identifier/primary key to locate item in the state
+ * @param state data state where the item is located
+ * @param sx MUI styling prop to style the component where the child is wrapped in
+ * @param children automatically passed prop when wrapping elements in this component
+ */
 export function DataViewer ({id, dataState, sx, children})
 {
     var displayData = [];   //set display data to empty in case item is not found
     if (dataState.filter((item) => item.id === id)[0] != undefined) {displayData = Object.entries(dataState.filter((item) => item.id === id)[0]);}  //get data entry by id
     
+    //wrapper to bind popover state   
     return (
-        //wrapper to bind popover state   
         <PopupState variant="popover">
         {(popupState) => (
             <React.Fragment>

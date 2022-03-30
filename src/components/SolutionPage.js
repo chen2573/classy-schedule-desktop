@@ -133,7 +133,12 @@ export function SolutionPage ({professors, courses, rooms})
     const handleChange = (event, newValue) => {setValue(newValue);};
 
 
-    //tab panels for different days
+    
+    /**
+     * This is an individual tabpanel page
+     * @param props 
+     * @returns a tabpannel page with elements wrapped inside
+     */
     function TabPanel(props)
     {
         const { children, value, index, ...other } = props;     //load props and children wrapped within TabPanel
@@ -150,9 +155,9 @@ export function SolutionPage ({professors, courses, rooms})
             {value === index && (<Box sx={{ p: 3 }}>{children}</Box>)}
           </div>
         );
-      }
+    }
       
-      TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
+    TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
     
                                 
     return (
@@ -165,6 +170,7 @@ export function SolutionPage ({professors, courses, rooms})
 
 
             <div className="schedule-container">
+                {/* Tabs */}
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="Monday-Wednesday-Friday" {...a11yProps(0)} />
                 <Tab label="Monday-Wednesday" {...a11yProps(1)} />
@@ -173,6 +179,8 @@ export function SolutionPage ({professors, courses, rooms})
 
             
 
+            {/* Tab panels switched based on Tabs.
+                They display schedules for different weekdays*/}
             <TabPanel value={value} index={0}>
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">

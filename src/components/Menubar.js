@@ -17,8 +17,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
  */
 export function MenuBar ({setCurrentPage})
 {
+    //return list of buttons for navigating to different pages
     return (
-        // return list of buttons for navigating to different pages
         <AppBar position="fixed" sx={{ top: 'auto', bottom: 0}} color="primary">
             <Box sx={{display: 'flex', justifyContent: 'space-evenly', borderRadius: 1}}>
                 <Box></Box>

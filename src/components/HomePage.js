@@ -67,7 +67,8 @@ const ComponentsInfo = ({courses, labs, professors, rooms}) => {
             </div>
 
             
-            { courses[0] != undefined ?
+            {/* This ternary is just temporary. It will be removed once the demo button is removed.*/}
+            {courses[0] != undefined ?
             <DataViewer id={courses[0].id} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
                 <Button variant="contained">
                     <Typography variant="text" color="secondary">Test data viewer</Typography>
