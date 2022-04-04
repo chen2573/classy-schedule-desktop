@@ -4,6 +4,7 @@ import {Popover, Button, Tabs, Tab, Box, Typography, Accordion, AccordionSummary
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import '../assets/styles/Solution.css';
+const solutionData = require("../solution-data/solution.json");
 
 
 //this component will very likely be removed
@@ -124,6 +125,7 @@ export function SolutionPage ({professors, courses, rooms})
                                                     {course:"CISC 420", room:"OSS 429", professor:"Dr. Marrinan"}],
                                 };
     const keys = Object.keys(dummyCourseEntries);
+    
 
 
     //tab states and functions
@@ -181,7 +183,7 @@ export function SolutionPage ({professors, courses, rooms})
 
             {/* Tab panels switched based on Tabs.
                 They display schedules for different weekdays*/}
-            <TabPanel value={value} index={0}>
+            {/* <TabPanel value={value} index={0}> */}
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
                         <Typography color="primary.dark">Solution 1</Typography>
@@ -249,46 +251,7 @@ export function SolutionPage ({professors, courses, rooms})
                         </table>
                     </AccordionDetails>
                 </Accordion>
-            </TabPanel>
-
-
-
-            <TabPanel value={value} index={1}>
-                <table className="schedule">
-                    <tbody>
-                        <tr className="row">
-                            <th scope="col">Time</th>
-                            <th scope="col">Course</th>
-                            <th scope="col">Room</th>
-                            <th scope="col">Professor</th>
-                        </tr>
-
-                        {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
-                    </tbody>
-                </table>
-
-                <h1>MW</h1>
-            </TabPanel>
-
-
-
-            <TabPanel value={value} index={2}>
-                <table className="schedule">
-                    <tbody>
-                        <tr className="row">
-                            <th scope="col">Time</th>
-                            <th scope="col">Course</th>
-                            <th scope="col">Room</th>
-                            <th scope="col">Professor</th>
-                        </tr>
-
-                        {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
-                    </tbody>
-                </table>
-
-                <h1>TR</h1>
-            </TabPanel>
-
+            {/* </TabPanel> */}
 
 
             <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
