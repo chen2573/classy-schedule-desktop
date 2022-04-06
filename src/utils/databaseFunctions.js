@@ -2,6 +2,17 @@ const axios = require("axios");
 
 const API_BASE = 'https://capstonedbapi.azurewebsites.net/'
 
+function authenticateUser(user, pass) {
+    return axios({
+        method: 'POST',
+        url: API_BASE + '/Users/authenticate',
+        parameters: {
+            'username': user,
+            'password': pass
+        }
+    });
+}
+
 function getPrograms() {
     return axios({
         method: 'GET',
@@ -54,4 +65,4 @@ function getSchedules() {
 }
 */
 
-module.exports = { getPrograms }
+module.exports = { getPrograms, authenticateUser }
