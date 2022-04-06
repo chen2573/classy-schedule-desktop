@@ -10,18 +10,24 @@
 </head>
 <body>
     <div class="container">
-        <form action="#">
+        <form action="#" id="loginForm">
             <div class="title">Login</div>
             <div class="form-control">
-                <input type="text" placeholder="Enter Your Email">
+                <input type="text" placeholder="Enter Your Email" id="username" maxlength="50">
                 <div class="underline"></div>
             </div>
             <div class="form-control">
-                <input type="password" placeholder="Enter Your Password">
+                <input type="password" placeholder="Enter Your Password" id="password" maxlength="50">
                 <div class="underline"></div>
             </div>
             <input type="submit" value="Continue" class="btn btn-block">
+            <div class="end-label">
+                <label>Don't have an account? </label><a href="">Create Account</a>
+            </div>
+            
         </form>
     </div>
+
+    <script src="login.js"></script>
 </body>
 </html>

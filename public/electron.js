@@ -83,7 +83,8 @@ function createMainWindow() {
         webPreferences: {
             nodeIntegration: false,
             enableRemoteModule: true,
-            contextIsolation: true
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
         },
         width: 700,
         height: 450,
@@ -223,6 +224,12 @@ function createIPCChannels() {
         queryDatabase(args).then((data) => {
             mainWindow.webContents.send('fromMain:Course', data)
         });
+    });
+
+    ipcMain.on("toMain:Auth", (event, args) => {
+        console.log(args)
+        console.log('Email:' + args.email);
+        console.log('Email:' + args.password);
     });
 }
 
