@@ -23,12 +23,14 @@ const {
 // Global variables for the scope of our app. This represents the main window and any additional windows plus our top menu.
 let mainWindow;
 let addWindow;
+let logInWindow;
 let mainMenuTemplate;
 
 // Listen for app to ready
 app.on('ready', function () {
     createMainWindow();
     createIPCChannels();
+    createLogInWindow();
 });
 
 /**
@@ -68,6 +70,31 @@ function createMainWindow() {
 
     // Insert menu
     Menu.setApplicationMenu(mainMenu);
+}
+
+/**
+ * Create the main window for our main process. Most of the application interaction 
+ * will be from this window.
+ */
+ function createLogInWindow() {
+    // Create new window
+    logInWindow = new BrowserWindow({
+        // This is to allow node code to run in html
+        webPreferences: {
+            nodeIntegration: false,
+            enableRemoteModule: true,
+            contextIsolation: true
+        },
+        width: 700,
+        height: 450,
+        minWidth: 700,
+        minHeight: 450,
+        maxWidth: 700,
+        maxHeight: 450,
+        icon: './../src/assets/icons/png/logo-desktop.png'
+    });
+
+    logInWindow.loadURL(`file://${path.join(__dirname, '/views/login/login.html')}`);
 }
 
 /**
