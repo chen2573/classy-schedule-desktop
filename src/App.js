@@ -479,7 +479,7 @@ function App() {
     }
     else if (currentPage === 'schedule')
     {
-      return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;
+      return <SolutionPage professors={[]} courses={[]} rooms={[]}/>;
     }
     else
     {

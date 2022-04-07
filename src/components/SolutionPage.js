@@ -3,41 +3,9 @@ import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography, Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import DataViewer from './DataViewer.js';
 import '../assets/styles/Solution.css';
 const solutionData = require("../solution-data/solution.json");
-
-
-//this component will very likely be removed
-const PopoverItem = ({anchor, popoverTarget, open, handleClose, id, dataState}) =>
-{
-    var popoverContent;  //content within popover element
-
-    //for future updates, popoverContent can be set to elements that are fetched according to popoverTarget
-    if (popoverTarget == 'course')
-    {
-        popoverContent = <h2>Course info</h2>;
-    }
-    else if (popoverTarget == 'room')
-    {
-        popoverContent = <h2>Room info</h2>;
-    }
-    else
-    {
-        popoverContent = <h2>Professor info</h2>;
-    }
-
-
-    return <Popover
-                id={id}
-                open={open}
-                anchorEl={anchor}
-                onClose={handleClose}
-                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                transformOrigin={{vertical: 'top', horizontal: 'center'}}
-            >
-                {popoverContent}
-            </Popover>;
-}
 
 
 /**
@@ -46,60 +14,80 @@ const PopoverItem = ({anchor, popoverTarget, open, handleClose, id, dataState}) 
  * @param time the time slot
  * @returns a table row item containing all courses entry in a time slot
  */
-const SolutionItem = ({courseEntries, time}) =>
+const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
 {
-    //handle table items click event
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [popoverTarget, setPopoverTarget] = useState(null);
-
-    //handle click events, this might be updated to be more automatic
-    const handleClickCourse = (event) =>
-    {
-        setAnchorEl(event.currentTarget);
-        setPopoverTarget('course');
-    };
-    const handleClickRoom = (event) =>
-    {
-        setAnchorEl(event.currentTarget);
-        setPopoverTarget('room');
-    };
-    const handleClickProfessor = (event) =>
-    {
-        setAnchorEl(event.currentTarget);
-        setPopoverTarget('professor');
-    };
-    const handleClose = () => {setAnchorEl(null);};
-
-
     //populate items in the time slot row
     const item = <tr key={time} className="row">
                     <th scope="row">{time}</th>
 
+                    {<td className="course-container">
+                        {courseEntries.map((entry) =>
+                            {
+                                //get course name
+                                var name;
+                                if (courses.filter((item) => item.id === entry.course)[0] != undefined)
+                                {
+                                    name = Object.entries(courses.filter((item) => item.id === entry.course)[0]);
+                                    name = name[1][1];
+                                }
 
-                    {<PopoverItem anchor={anchorEl} popoverTarget={popoverTarget} open={Boolean(anchorEl)} handleClose={handleClose} id={0} dataState={null}/>}
-
-
-                    {<td className="course-container">    {courseEntries.map((entry) => {
-                        return <table key={entry.course}><tbody><tr key={entry.course} ><td>
-                                    <Button className="entry-button" variant="text" onClick={handleClickCourse} color="inherit">
-                                        {entry.course}
-                                    </Button>
-                                </td></tr></tbody></table>})}
+                                //return table entry
+                                return <table key={entry.course}><tbody><tr key={entry.course} ><td>
+                                            <DataViewer id={entry.course} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                <Button className="entry-button" variant="text"color="inherit">
+                                                    {name}
+                                                </Button>
+                                            </DataViewer>
+                                    </td></tr></tbody></table>
+                            })
+                        }
                     </td>}
 
-                    {<td className="room-container">      {courseEntries.map((entry) => {
-                        return <table key={entry.room}><tbody><tr><td>
-                                    <Button className="entry-button" variant="text" onClick={handleClickRoom} color="inherit">
-                                        {entry.room}
-                                    </Button>
-                                </td></tr></tbody></table>})}
+                    {<td className="room-container">
+                        {courseEntries.map((entry) =>
+                            {
+                                //get room name
+                                var name;
+                                if (rooms.filter((item) => item.id === entry.room)[0] != undefined)
+                                {
+                                    name = Object.entries(rooms.filter((item) => item.id === entry.room)[0]);
+                                    name = name[1][1];
+                                }
+
+                                //return table entry
+                                return <table key={entry.room}><tbody><tr key={entry.room} ><td>
+                                            <DataViewer id={entry.room} dataState={rooms} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                <Button className="entry-button" variant="text"color="inherit">
+                                                    {name}
+                                                </Button>
+                                            </DataViewer>
+                                    </td></tr></tbody></table>
+                                })
+                        }
                     </td>}
-                    {<td className="professor-container"> {courseEntries.map((entry) => {
-                        return <table key={entry.professor}><tbody><tr><td>
-                                    <Button className="entry-button" variant="text" onClick={handleClickProfessor} color="inherit">
-                                        {entry.professor}
-                                    </Button>
-                                </td></tr></tbody></table>})} </td>}
+
+                    {<td className="professor-container">
+                        {courseEntries.map((entry) =>
+                            {
+                                //get professor name
+                                var name;
+                                if (professors.filter((item) => item.id === entry.professor)[0] != undefined)
+                                {
+                                    name = Object.entries(professors.filter((item) => item.id === entry.professor)[0]);
+                                    name = name[1][1];
+                                }
+
+                                //return table entry
+                                return <table key={entry.professor}><tbody><tr key={entry.professor} ><td>
+                                            <DataViewer id={entry.professor} dataState={professors} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                <Button className="entry-button" variant="text"color="inherit">
+                                                    {name}
+                                                </Button>
+                                            </DataViewer>
+                                    </td></tr></tbody></table>
+                                })
+                        }
+                    </td>}
                 </tr>;
 
 
@@ -116,26 +104,116 @@ const SolutionItem = ({courseEntries, time}) =>
  * @param rooms rooms state
  * @returns the solutions page
  */
-export function SolutionPage ({professors, courses, rooms})
-{
-    const dummyCourseEntries = {"8:15am - 9:20am": [{course:"CISC 131", room:"OSS 432", professor:"Dr. Hardt"},
-                                                    {course:"CISC 480", room:"OSS 415", professor:"Dr. Sawin"}],
-                                "9:35am - 10:40am":[{course:"CISC 230", room:"OSS 432", professor:"Dr. Hardt"},
-                                                    {course:"CISC 130", room:"OSS 431", professor:"Dr. Yilek"},
-                                                    {course:"CISC 420", room:"OSS 429", professor:"Dr. Marrinan"}],
-                                };
-    const keys = Object.keys(dummyCourseEntries);
+export function SolutionPage ({professors, courses, rooms, times})
+{  
+    //dummy data
+    professors = 
+    [
+        {
+            "id": 1,
+            "name": "Dr. Hardt",
+            "canTeach": [],
+            "courseLoad": "16"
+        },
+
+        {
+            "id": 2,
+            "name": "Dr. Marrinan",
+            "canTeach": [],
+            "courseLoad": "8"
+        }
+    ];
+
+    courses = 
+    [
+        {
+            "id": 1,
+            "name": "data",
+            "credits": "4",
+            "capacity": "23",
+            "sections": "2"
+        },
+        {
+            "id": 2,
+            "name": "capstone",
+            "credits": "4",
+            "capacity": "20",
+            "sections": "1"
+        }
+    ];
+
+    rooms = 
+    [
+        {
+            "id": 1,
+            "name": "room 1",
+            "capacity": "22",
+            "tech": []
+        },
+
+        {
+            "id": 2,
+            "name": "room 2",
+            "capacity": "25",
+            "tech": []
+        }
+    ];
+
+    times = 
+    [
+        {
+            "id": 1,
+            "time": "MWF 8:15am",
+            "partOfDay": "morning"
+        },
+
+        {
+            "id": 2,
+            "time": "TR 1:30pm",
+            "partOfDay": "afternoon"
+        }
+    ];
     
+    //get solutions entries
+    const solutionEntries = [];
+    for (let i=0; i<solutionData.length; i++)
+    {
+        if (i > 10) {break;}
+        solutionEntries.push({"solutionNum": i, "entry": solutionData[i]});
+    }
+
+    const getTimes = (solution) =>
+    {
+        let solutionTimes = [];
+
+        for (let time of times)
+        {
+            solutionTimes.push({"id":time.id, "time": time.time, "entries":[]});
+        }//get all entries in times
+
+        for (let solutionTime of solutionTimes)
+        {
+            for (let entry of solution)
+            {
+                if (entry.time == solutionTime.id)
+                {
+                    solutionTime.entries.push(entry);
+                }
+            }
+        }
+
+        return solutionTimes;
+    }
 
 
     //tab states and functions
+
+
     function a11yProps(index) {return {id: `simple-tab-${index}`, 'aria-controls': `simple-tabpanel-${index}`,}}
-    
-    const [value, setValue] = useState(0);
-    const handleChange = (event, newValue) => {setValue(newValue);};
 
+    const [page, setPage] = useState(0);
+    const handleChange = (event, newPage) => {setPage(newPage);};
 
-    
     /**
      * This is an individual tabpanel page
      * @param props 
@@ -169,114 +247,75 @@ export function SolutionPage ({professors, courses, rooms})
                 <hr/>
             </Box>
 
-
-
             <div className="schedule-container">
                 {/* Tabs */}
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab label="Monday-Wednesday-Friday" {...a11yProps(0)} />
-                <Tab label="Monday-Wednesday" {...a11yProps(1)} />
-                <Tab label="Tuesday-Thursday" {...a11yProps(2)} />
-            </Tabs>
+                <Tabs value={page} onChange={handleChange} aria-label="basic tabs example">
+                    {solutionEntries.map((solution) =>
+                    {
+                        const tabName = "Solution " + (solution.solutionNum + 1);
+                        return <Tab label={tabName} {...a11yProps(solution.solutionNum)} />;
+                    })}
+                </Tabs>
 
-            
+                
 
-            {/* Tab panels switched based on Tabs.
-                They display schedules for different weekdays*/}
-            {/* <TabPanel value={value} index={0}> */}
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
-                        <Typography color="primary.dark">Solution 1</Typography>
-                        <Typography color="primary" sx={{marginLeft:'1.5vw'}}>Score: 0</Typography>
-                    </AccordionSummary>
+                {/* Tab panels switched based on Tabs.
+                    They display different schedule solutions */}
+                {solutionEntries.map((solution) =>
+                    {
+                        
+                        let solutionTimes = getTimes(solution.entry);
 
-                    <AccordionDetails>
-                        <table className="schedule">
-                            <tbody>
-                                <tr className="row">
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Course</th>
-                                    <th scope="col">Room</th>
-                                    <th scope="col">Professor</th>
-                                </tr>
+                        return <TabPanel value={page} index={solution.solutionNum}>
+                                    <table className="schedule">
+                                        <tbody>
+                                            <tr className="row">
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Course</th>
+                                                <th scope="col">Room</th>
+                                                <th scope="col">Professor</th>
+                                            </tr>
 
-                                {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
-                            </tbody>
-                        </table>
-                    </AccordionDetails>
-                </Accordion>
-
-
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
-                        <Typography color="primary.dark">Solution 2</Typography>
-                        <Typography color="primary" sx={{marginLeft:'1.5vw'}}>Score: 0</Typography>
-                    </AccordionSummary>
-
-                    <AccordionDetails>
-                        <table className="schedule">
-                            <tbody>
-                                <tr className="row">
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Course</th>
-                                    <th scope="col">Room</th>
-                                    <th scope="col">Professor</th>
-                                </tr>
-
-                                {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
-                            </tbody>
-                        </table>
-                    </AccordionDetails>
-                </Accordion>
-
-
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
-                        <Typography color="primary.dark">Solution 3</Typography>
-                        <Typography color="primary" sx={{marginLeft:'1.5vw'}}>Score: 0</Typography>
-                    </AccordionSummary>
-
-                    <AccordionDetails>
-                        <table className="schedule">
-                            <tbody>
-                                <tr className="row">
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Course</th>
-                                    <th scope="col">Room</th>
-                                    <th scope="col">Professor</th>
-                                </tr>
-
-                                {keys.map((key) => {return <SolutionItem courseEntries={dummyCourseEntries[key]} time={key}/>})}
-                            </tbody>
-                        </table>
-                    </AccordionDetails>
-                </Accordion>
-            {/* </TabPanel> */}
-
-
-            <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                <Typography variant="text" color="secondary">Generate Schedule</Typography>
-            </Button>
-
-
-
-            <PopupState variant="popover">
-                {(popupState) => (
-                    <React.Fragment>
-                    <Button variant="contained"
-                            {...bindTrigger(popupState)} 
-                            sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                        <Typography variant="text" color="secondary">Settings</Typography>
-                    </Button>
-
-                    <Popover {...bindMenu(popupState)}
-                          anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                          transformOrigin={{vertical: 'bottom', horizontal: 'left'}}>
-                              
-                    </Popover>
-                    </React.Fragment>
+                                            {solutionTimes.map((solutionTime) =>
+                                                {
+                                                    return <SolutionItem courseEntries={solutionTime.entries}
+                                                                         time={solutionTime.time}
+                                                                         professors={professors}
+                                                                         courses={courses}
+                                                                         rooms={rooms}
+                                                            />
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </TabPanel>;
+                    }
                 )}
-            </PopupState>
+
+                {/* generate schedule button */}
+                <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
+                    <Typography variant="text" color="secondary">Generate Schedule</Typography>
+                </Button>
+
+
+                {/* settings */}
+                <PopupState variant="popover">
+                    {(popupState) => (
+                        <React.Fragment>
+                            <Button variant="contained"
+                                    {...bindTrigger(popupState)} 
+                                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                <Typography variant="text" color="secondary">Settings</Typography>
+                            </Button>
+
+                            <Popover {...bindMenu(popupState)}
+                                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                                transformOrigin={{vertical: 'bottom', horizontal: 'left'}}>
+                                    
+                            </Popover>
+                        </React.Fragment>
+                    )}
+                </PopupState>
             </div>
         </div>
     );

@@ -21,7 +21,10 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 export function DataViewer ({id, dataState, sx, children})
 {
     var displayData = [];   //set display data to empty in case item is not found
-    if (dataState.filter((item) => item.id === id)[0] != undefined) {displayData = Object.entries(dataState.filter((item) => item.id === id)[0]);}  //get data entry by id
+    if (dataState.filter((item) => item.id === id)[0] != undefined)
+    {
+        displayData = Object.entries(dataState.filter((item) => item.id === id)[0]);
+    }  //get data entry by id
     
     //wrapper to bind popover state   
     return (
@@ -36,8 +39,8 @@ export function DataViewer ({id, dataState, sx, children})
                 <Popover
                         id={id}
                         {...bindMenu(popupState)}
-                        anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                        transformOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                        anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                        transformOrigin={{vertical: 'top', horizontal: 'left'}}
                 >
                     
                     {displayData.map((attribute) =>
