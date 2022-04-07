@@ -9,28 +9,14 @@
  * @author Joseph Heimel
  */
 
- import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput } from '@mui/material';
+ import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField } from '@mui/material';
  import { React, useState } from 'react';
  import {FaTimes} from 'react-icons/fa';
  
  
- /**
-  * Creates a mapped list of program/department names to be used dynamically on the html page
-  * 
-  * @param programs - state variable containing program objects
-  * @returns - Mapped list of program names
-  */
- const ProgramSelectItems = ({ programs }) => {
-   let programsList = programs.map(p => {
-       return (<option key={p.id} value={p.programName}>{p.programName}</option>);
-   });
- 
-   return (
-       <>
-           {programsList}
-       </>
-   );
- }
+const validate = (validateFN, stateSetter) => e => {
+  stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
+}
  
  /**
   * This component represents the form that will be used by the user to enter in new professor data.
@@ -40,13 +26,21 @@
   * @param programs - State variable containing program objects
   * @returns - React component div used to enter and submit professor information
   */
- const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
-   const [department, setDepartment] = useState('');
-   const [name, setName] = useState('');
-   const [teach_load, setTeachLoad] = useState('');
-   const [time_block, setTimeBlock] = useState('');
-   const [can_teach, setCanTeach] = useState([]);
-   const [want_teach, setWantTeach] = useState([]);
+const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
+  const [department, setDepartment] = useState('');
+  const [name, setName] = useState('');
+  const [teach_load, setTeachLoad] = useState('6');
+  const [time_block, setTimeBlock] = useState('');
+  const [can_teach, setCanTeach] = useState([]);
+  const [want_teach, setWantTeach] = useState([]);
+
+  const validTeachingLoad = value => (new Array(21).fill(true).map((e, i) => `${i}`).concat("")).includes(value);
+  const validateTeachLoad = validate(validTeachingLoad, setTeachLoad);
+   
+  const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').includes(c));
+  const validNameLength = name => name.length < 31;
+  const validName = name => validNameChars(name) && validNameLength(name);
+  const validateName = validate(validName, setName);
  
    const ITEM_HEIGHT = 48;
    const ITEM_PADDING_TOP = 8;
@@ -58,26 +52,31 @@
        },
      },
    };
+
+   const handleCanClick = courseInfo => e => {
+     setCanTeach(oldValue => {
+        if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
+          return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
+        }
+        const newValue = [...oldValue, courseInfo]
+        return newValue;
+      })
+   }
+
+   const handleWantClick = courseInfo => e => {
+     console.log(e)
+    setWantTeach(oldValue => {
+      if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
+        return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
+      }
+      const newValue = [...oldValue, courseInfo]
+      return newValue;
+     })
+  }
  
-   const handleCanChange = (e) => {
-     const {
-       target: { value },
-     } = e;
-     setCanTeach(
-       // On autofill we get a stringified value.
-       typeof value === 'string' ? value.split(',') : value,
-     );
-   };
+
  
-   const handleWantChange = (e) => {
-     const {
-       target: { value },
-     } = e;
-     setWantTeach(
-       // On autofill we get a stringified value.
-       typeof value === 'string' ? value.split(',') : value,
-     );
-   };
+
  
    const onSubmit = (e) => {
        e.preventDefault();
@@ -119,61 +118,93 @@
  
    return (
        <div className='container'>
-           <h2>Add A Professor</h2>
+          <h2>Add A Professor</h2>
            <form onSubmit={onSubmit}>
-               <div className='form-control'>
-                   <label>Department</label>
-                   <select onChange={(e) => setDepartment(e.target.value)}>
-                       <option value=""></option>
-                       <ProgramSelectItems programs={programs} />
-                   </select>
-               </div>
+
+            <br></br>
+
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="label">Department</InputLabel>
+                      <Select
+                        labelId="label"
+                        id='department_dropdown'
+                        value={department}
+                        label="Department"
+                        onChange={(e) => setDepartment(e.target.value)}
+                      >
+                      <MenuItem value=""></MenuItem>
+                      {programs.map(p => (
+                        <MenuItem 
+                          key={p.id} 
+                          value={p.programName}
+                        >
+                          {p.programName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
+
+                <br></br>
+                
+                <Box>
+                  <TextField fullWidth='true' id="enter_name" label="Professor Name" variant="outlined" value={name} onChange={validateName}/>
+                </Box>
+                
+                <br></br>
+
+                <Box>
+                  <TextField fullWidth='true' id="enter_teach_load" label="Teach Load" variant="outlined" value={teach_load} onChange={validateTeachLoad}/>
+                </Box>
+
+                <br></br>
+
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="label">Preferred Time Block</InputLabel>
+                      <Select
+                        labelId="label"
+                        id='time_block_dropdown'
+                        value={time_block}
+                        label="Preferred Time Block"
+                        onChange={(e) => setTimeBlock(e.target.value)}
+                      >
+                      <MenuItem value=""></MenuItem>
+                      <MenuItem value="mwf_morning">MWF Morning</MenuItem>
+                      <MenuItem value="mwf_afternoon">MWF Afternoon</MenuItem>
+                      <MenuItem value="mwf_night">MWF Night</MenuItem>
+                      <MenuItem value="tr_morning">TR Morning</MenuItem>
+                      <MenuItem value="tr_afternoon">TR Afternoon</MenuItem>
+                      <MenuItem value="tr_night">TR Night</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <br></br>
  
-               <div className='form-control'>
-                   <label>Professor Name</label>
-                   <input type="text" placeholder='Enter professor name' value={name} onChange={(e) => setName(e.target.value)}/>
-               </div>
- 
-               <div className='form-control'>
-                   <label>Teach Load</label>
-                   <input type="number" placeholder='Enter desired teach load' value={teach_load} onChange={(e) => setTeachLoad(e.target.value)}/>
-               </div>
- 
-               <div className='form-control'>
-                   <label>Preferred Time Block</label>
-                   <select onChange={(e) => setTimeBlock(e.target.value)}>
-                     <option value=""></option>
-                     <option value="mwf_morning">MWF Morning</option>
-                     <option value="mwf_afternoon">MWF Afternoon</option>
-                     <option value="mwf_night">MWF Night</option>
-                     <option value="tr_morning">TR Morning</option>
-                     <option value="tr_afternoon">TR Afternoon</option>
-                     <option value="tr_night">TR Night</option>
-                   </select>
-               </div>
- 
-               <Box sx={{ minWidth: 120 }}>
+                <Box sx={{ minWidth: 120 }}>
                  <FormControl fullWidth>
                    <InputLabel id="label">Courses Professor Can Teach</InputLabel>
                      <Select
-                       labelId="label"
-                       id='can_teach_dropdown'
-                       multiple
-                       value={can_teach}
-                       label="Courses Professor Can Teach"
-                       onChange={handleCanChange}
-                       input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Can Teach" />}
-                       renderValue={(selected) => (
-                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                           {selected.map((value) => (
-                             <Chip key={value} label={value} />
-                           ))}
-                         </Box>
-                       )}
-                       MenuProps={MenuProps}
+                        labelId="label"
+                        id='can_teach_dropdown'
+                        multiple
+                        value={can_teach.map(e => e.name)}
+                        label="Courses Professor Can Teach"
+                        input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Can Teach" />}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value} />
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
                      >
                      {courses.map(p => (
                        <MenuItem 
+                        onClick={handleCanClick(p)}
                          key={p.id} 
                          value={p.name}
                        >
@@ -186,28 +217,38 @@
  
                <br></br>
                
-               <Box sx={{ minWidth: 120 }}>
-                 <FormControl fullWidth>
-                   <InputLabel id="label">Courses Professor Want to Teach</InputLabel>
-                     <Select
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="label">Courses Professor Want to Teach</InputLabel>
+                      <Select
                        labelId="label"
                        id='want_teach_dropdown'
                        multiple
-                       value={want_teach}
+                       value={want_teach.map(e => e.name)}
                        label="Courses Professor Want to Teach"
-                       onChange={handleWantChange}
+                       input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Want to Teach" />}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value} />
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
                      >
                      {can_teach.map(p => (
                        <MenuItem 
-                         key={p.key} 
-                         value={p.value}
+                        onClick={handleWantClick(p)}
+                         key={p.id} 
+                         value={p.name}
                        >
-                         {p.key}
+                         {p.name}
                        </MenuItem>
                      ))}
                    </Select>
                  </FormControl>
                </Box>
+               <br></br>
  
                <input type="submit" value='Save Professor' className='btn btn-block'/>
            </form>
