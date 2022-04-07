@@ -182,6 +182,7 @@ export function SolutionPage ({professors, courses, rooms, times})
         solutionEntries.push({"solutionNum": i, "entry": solutionData[i]});
     }
 
+    //get solutions items sorted by time so we can display them chronologically in the table
     const getTimes = (solution) =>
     {
         let solutionTimes = [];
