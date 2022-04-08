@@ -105,59 +105,13 @@ function displayMainWindow() {
 }
 
 /**
- * We are not using this currently. We may be able to add functionality 
- * later on or just remove this.
- */
-function createAddWindow() {
-    addWindow = new BrowserWindow({
-        // This is to allow node code to run in html
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-        },
-        width: 300,
-        height: 200,
-        title: 'Add Shopping List Item',
-        parent: mainWindow,
-        modal: true
-    });
-
-    // Load main.html into window
-    // This syntax is just //__dirname/mainWindow.html
-    addWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'addWindow.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-
-    // Garbage collection handle
-    addWindow.on('close', function () {
-        addWindow = null;
-    });
-}
-
-/**
  * Builds the top menu that will be used by our electron app.
  */
 function buildMainMenuTemplate() {
     // The template that is used for our menu at the top of our application.
     mainMenuTemplate = [{
         label: 'File',
-        submenu: [{
-                label: 'Add Item',
-                click() {
-                    createAddWindow();
-                }
-            },
-            {
-                label: 'Clear Items',
-                click() {
-                    mainWindow.webContents.send('item:clear');
-                }
-            },
-            {
-                type: 'separator'
-            },
+        submenu: [
             {
                 label: 'Quit',
                 accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q', // Adds hotkey of Q
@@ -169,13 +123,95 @@ function buildMainMenuTemplate() {
     },
     {
         label: 'Help',
-        submenu: [{
-            label: 'About',
-            click() {
-                shell.openExternal('https://github.com/chen2573/CapstoneDesktopDev01#readme');
+        submenu: [
+            {
+                label: 'Pages',
+                submenu: [
+                    {
+                        label: 'Professors',
+                        click() {
+                            
+                        }
+                    },
+                    {
+                        label: 'Courses',
+                        click() {
+                            
+                        }
+                    },
+                    {
+                        label: 'Labs',
+                        click() {
+                            
+                        }
+                    },
+                    {
+                        label: 'Rooms',
+                        click() {
+                            
+                        }
+                    },
+                    {
+                        label: 'Schedule',
+                        click() {
+                            
+                        }
+                    }
+                ]
+            },
+            {
+                label: 'Documentation',
+                click() {
+                    shell.openExternal('https://github.com/chen2573/CapstoneDesktopDev01#readme');
+                }
             }
+        ]
+    },
+    {
+        label: 'About',
+        submenu: [
+            {
+                label: 'Visit our Site',
+                click() {
+                    shell.openExternal('https://github.com/chen2573/CapstoneDesktopDev01#readme');
+                }
+            },
+            {
+                label: 'Our Developers',
+                submenu: [
+                    {
+                        label: 'Glennon Langan',
+                        click() {
 
-        }]
+                        }
+                    },
+                    {
+                        label: 'Joe Heimel',
+                        click() {
+
+                        }
+                    },
+                    {
+                        label: 'Samuel Swanson',
+                        click() {
+
+                        },
+                    },
+                    {
+                        label: 'Tianzhi Chen',
+                        click() {
+
+                        }
+                    },
+                    {
+                        label: 'Anshul Bharath',
+                        click() {
+
+                        },
+                    }
+                ]
+            }
+        ]
     }
     ];
 
