@@ -293,7 +293,9 @@ function createIPCChannels() {
             //DB.invalidateToken();
             //console.log(DB.getAuthenticationToken());
         }).catch((error) => {
-            dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
+            //dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
+            logInWindow.webContents.send('fromMain:AuthLogIn', error);
+
             console.log('USER AUTH LOG--> Error authenticating user: ' + error);
         });
     });
