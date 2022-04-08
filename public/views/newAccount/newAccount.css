@@ -24,7 +24,7 @@ body {
   
   .container {
     max-width: 500px;
-    margin: 55px auto;
+    margin: 40px auto;
     overflow: auto;
     min-height: 300px;
     border: 1px solid steelblue;
@@ -103,7 +103,3 @@ body {
     align-items: center;
     justify-content: center;
   }
-
-  
-
-  

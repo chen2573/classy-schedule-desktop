@@ -13,12 +13,11 @@ var _payload = {
 };
 
 window.DB.send('toMain:AuthLogIn', _payload);
-// const { token, errors } = await createSession(email.value, password.value)
-// if (errors) {
-//   const [{ title, detail }] = errors
 
-//   alert(`${title}: ${detail}`)
+window.DB.receive("fromMain:AuthLogIn", (error) => {
+    window.alert("Incorrect Username or Password. Try Again!")
+    password.value = '';
+});
 
-//   return false
-// }
+
 });
