@@ -12,7 +12,7 @@ var _payload = {
     password: password.value
 };
 
-window.DB.send('toMain:Auth', _payload);
+window.DB.send('toMain:AuthLogIn', _payload);
 // const { token, errors } = await createSession(email.value, password.value)
 // if (errors) {
 //   const [{ title, detail }] = errors
