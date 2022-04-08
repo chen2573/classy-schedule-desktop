@@ -3,7 +3,7 @@ const API_BASE = 'https://capstonedbapi.azurewebsites.net/'
 
 class DatabaseService {
     constructor() {
-        this.authenticationToken = '';
+        this.authenticationToken = 'tokenInvalid';
     }
     
     authenticateUser(user, pass) {
@@ -26,7 +26,7 @@ class DatabaseService {
     }
 
     invalidateToken() {
-        this.authenticationToken = 'tokenInvalidated';
+        this.authenticationToken = 'tokenInvalid';
     }
 }
 

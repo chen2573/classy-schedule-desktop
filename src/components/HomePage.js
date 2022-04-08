@@ -107,14 +107,18 @@ const HomePageContent = ({courses, labs, professors, rooms, openNav}) => {
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginRight = "250px";
-  }
-  
-  /* Set the width of the side navigation to 0 and the right margin of the page content to 0, and the background color of body to white */
-  function closeNav() {
+}
+
+/* Set the width of the side navigation to 0 and the right margin of the page content to 0, and the background color of body to white */
+function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginRight = "0";
     document.body.style.backgroundColor = "white";
-  }
+}
+
+function logoutFromApplication() {
+    window.DB.send('toMain:AuthLogOut', "");
+}
 
 /**
  * The main component that will be exported by this class.
@@ -131,7 +135,7 @@ function openNav() {
             <a class="link-pages" href="#">Contact</a>
             <br />
             <br />
-            <a class="link-pages logout" href="#"><strong>Logout</strong></a>
+            <a class="link-pages logout" href="#" onClick={logoutFromApplication}><strong>Logout</strong></a>
         </div>
          
 
