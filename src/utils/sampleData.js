@@ -64,7 +64,14 @@ export const samplePrograms = [
 export const sampleLabs = [
     {
         "lname": "Intro to Programming",
-        "lcourse": "CISC 131"
+        "lcourse": [{
+            "program": "CISC",
+            "number": 131,
+            "name": "Intro to Programming",
+            "courseID": 1234,
+            "credits": 4,
+            "capacity": 20
+        }]
     }
 ]
 
@@ -74,15 +81,15 @@ export const sampleLabs = [
 export const sampleProfessors = [
     {
         "name": "Jason Sawin",
-        "department": "CISC"
+        "program": "CISC"
     },
     {
         "name": "Sarah Miracle",
-        "department": "CISC"
+        "program": "CISC"
     },
     {
         "name": "Amelia McNamara",
-        "department": "STAT"
+        "program": "STAT"
     }
 ]
 
