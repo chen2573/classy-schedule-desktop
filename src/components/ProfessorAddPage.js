@@ -11,6 +11,12 @@
 import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField } from '@mui/material';
 import { React, useState } from 'react';
 import {FaTimes} from 'react-icons/fa';
+
+import './../assets/styles/HomePage.css';
+import './../assets/styles/SideNav.css';
+import './../assets/styles/AddPages.css';
+import SideNavigation from './SideNavigation.js';
+import TopBar from './TopBar.js'
  
 
 // Styling
@@ -335,9 +341,30 @@ const ProfessorListItem = ({professor, onDelete}) => {
     </div>
   );
 }
- 
+
 /**
- * The that will be exported. This page will have an Add form and list the Professors that have been added and
+ * This page will have an Add form and list the Professors that have been added and
+ * the professors that are in the database.
+ * 
+ * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
+ * @param professors - The state of professors passed from App.js
+ * @param onDelete - Handler function that deletes an individual item from the list
+ * @param courses - State variable containing course objects
+ * @param programs - State variable containing program objects
+ */
+ const ProfessorAddPageContent = ({onAddProfessor, professors, onDelete, courses, programs}) => {
+  return (
+    <div className="home">
+      <div className='element-page'>
+        <ProfessorAdd onAddProfessor={onAddProfessor} courses={courses} programs={programs}/>
+        <ProfessorList onDelete={onDelete} professors={professors}/> 
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The comonent that will be exported. This page will have an Add form and list the Professors that have been added and
  * the professors that are in the database.
  * 
  * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
@@ -349,9 +376,16 @@ const ProfessorListItem = ({professor, onDelete}) => {
 const ProfessorAddPage = ({onAddProfessor, professors, onDelete, courses, programs}) => {
   return (
     <div>
-      <div className='element-page'>
-        <ProfessorAdd onAddProfessor={onAddProfessor} courses={courses} programs={programs}/>
-        <ProfessorList onDelete={onDelete} professors={professors}/> 
+      <SideNavigation></SideNavigation>
+
+      <div id="main">
+          <div className="main-div">
+              <TopBar></TopBar>
+
+              <div className="container-home">
+                <ProfessorAddPageContent onAddProfessor={onAddProfessor} professors={professors} onDelete={onDelete} courses={courses} programs={programs}></ProfessorAddPageContent>
+              </div>
+          </div>
       </div>
     </div>
   );
