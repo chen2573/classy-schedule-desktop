@@ -198,7 +198,9 @@ function buildMainMenuTemplate() {
 
 }
 
-const DatabaseApi = require('./../src/utils/databaseFunctions');
+const DatabaseService = require('../src/utils/services/databaseService');
+
+let DB;
 
 /**
  * Inter Process Communication is used to communicate to our UI which
@@ -230,6 +232,24 @@ function createIPCChannels() {
         console.log(args)
         console.log('Email:' + args.email);
         console.log('Email:' + args.password);
+
+        DB = new DatabaseService();
+        DB.authenticateUser(args.email, args.password).then((payload) => {
+            console.log(payload.data.token);
+            DB.setAuthenticationToken(payload.data.token);
+            console.log(DB.getAuthenticationToken());
+            DB.invalidateToken();
+            console.log(DB.getAuthenticationToken());
+        }).catch((error) => {
+            console.log('Error authenticating user: ' + error);
+        });
+
+        /*DatabaseApi.authenticateUser(args.email, args.password).then((payload) => {
+            console.log(payload.data);
+        }).catch((error) => {
+            console.log('Error authenticating user: ' + error);
+        });*/
+
     });
 }
 

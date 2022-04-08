@@ -1,17 +1,35 @@
 const axios = require("axios");
-
 const API_BASE = 'https://capstonedbapi.azurewebsites.net/'
 
-function authenticateUser(user, pass) {
-    return axios({
-        method: 'POST',
-        url: API_BASE + '/Users/authenticate',
-        parameters: {
-            'username': user,
-            'password': pass
-        }
-    });
+class DatabaseService {
+    constructor() {
+        this.authenticationToken = '';
+    }
+    
+    authenticateUser(user, pass) {
+        return axios({
+            method: 'POST',
+            url: API_BASE + 'Users/authenticate',
+            data: {
+                'username': user,
+                'password': pass
+            }
+        });
+    }
+
+    setAuthenticationToken(token) {
+        this.authenticationToken = token;
+    }
+
+    getAuthenticationToken() {
+        return this.authenticationToken;
+    }
+
+    invalidateToken() {
+        this.authenticationToken = 'tokenInvalidated';
+    }
 }
+
 
 function getPrograms() {
     return axios({
@@ -65,4 +83,4 @@ function getSchedules() {
 }
 */
 
-module.exports = { getPrograms, authenticateUser }
+module.exports = DatabaseService;
