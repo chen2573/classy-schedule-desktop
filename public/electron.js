@@ -5,16 +5,14 @@ const shell = require('electron').shell;
 const mysql = require('mysql');
 const fs = require('fs');
 const isDev = require('electron-is-dev');
-const {
-    ipcRenderer
-} = require('electron');
 
 // Objects coming from electron
 const {
     app,
     BrowserWindow,
     Menu,
-    ipcMain
+    ipcMain,
+    dialog
 } = electron;
 
 // !!! SET process environment. Comment this out if packaging for development!!!
@@ -26,18 +24,21 @@ let addWindow;
 let logInWindow;
 let mainMenuTemplate;
 
+//This variable is a global variable that keeps track of a user session
+let userLoggedIn = false;
+
 // Listen for app to ready
 app.on('ready', function () {
-    createMainWindow();
     createIPCChannels();
-    createLogInWindow();
+
+    displayLogInWindow();
 });
 
 /**
  * Create the main window for our main process. Most of the application interaction 
  * will be from this window.
  */
-function createMainWindow() {
+function displayMainWindow() {
     // Create new window
     mainWindow = new BrowserWindow({
         // This is to allow node code to run in html
@@ -57,11 +58,13 @@ function createMainWindow() {
     // Load main.html into window
     // This syntax is just //__dirname/mainWindow.html
     // __dirname gets the relative path of THIS file (main.js)
-    mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+    if(userLoggedIn) {
+        mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+    }
 
     // Quit entire application when main process is closed
     mainWindow.on('closed', function () {
-        app.quit();
+        //app.quit();
     });
 
     // Build menu from template
@@ -76,7 +79,7 @@ function createMainWindow() {
  * Create the main window for our main process. Most of the application interaction 
  * will be from this window.
  */
- function createLogInWindow() {
+ function displayLogInWindow() {
     // Create new window
     logInWindow = new BrowserWindow({
         // This is to allow node code to run in html
@@ -94,8 +97,9 @@ function createMainWindow() {
         maxHeight: 450,
         icon: './../src/assets/icons/png/logo-desktop.png'
     });
-
-    logInWindow.loadURL(`file://${path.join(__dirname, '/views/login/login.html')}`);
+    if(!userLoggedIn){
+        logInWindow.loadURL(`file://${path.join(__dirname, '/views/login/login.html')}`);
+    }
 }
 
 /**
@@ -198,7 +202,10 @@ function buildMainMenuTemplate() {
 
 }
 
-const DatabaseApi = require('./../src/utils/databaseFunctions');
+const DatabaseService = require('../src/utils/services/databaseService');
+
+// This is the object that handles all database/API requests
+let DB = new DatabaseService();
 
 /**
  * Inter Process Communication is used to communicate to our UI which
@@ -226,10 +233,44 @@ function createIPCChannels() {
         });
     });
 
-    ipcMain.on("toMain:Auth", (event, args) => {
+    ipcMain.on("toMain:AuthLogIn", (event, args) => {
         console.log(args)
         console.log('Email:' + args.email);
         console.log('Email:' + args.password);
+
+        DB.authenticateUser(args.email, args.password).then((payload) => {
+            console.log("USER AUTH LOG--> Token:" + payload.data.token);
+            if(payload.data.token === 'tokenInvalid'){
+                window.alert("Invalid Username or Password")
+            }
+            else {
+                DB.setAuthenticationToken(payload.data.token);
+                console.log("USER AUTH LOG--> User Successfully loggin in:" + DB.getAuthenticationToken());
+                logInWindow.close();
+
+                userLoggedIn = true;
+                displayMainWindow();
+            }
+            
+            //DB.invalidateToken();
+            //console.log(DB.getAuthenticationToken());
+        }).catch((error) => {
+            dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
+            console.log('USER AUTH LOG--> Error authenticating user: ' + error);
+        });
+    });
+
+    ipcMain.on("toMain:AuthLogOut", (event, args) => {
+
+        DB.invalidateToken();
+        console.log("USER AUTH LOG--> User has logged out: " + DB.getAuthenticationToken());
+
+        userLoggedIn = false;
+        displayLogInWindow();
+        
+        mainWindow.close();
+
+        
     });
 }
 
