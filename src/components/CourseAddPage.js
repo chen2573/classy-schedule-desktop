@@ -2,6 +2,13 @@ import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, Te
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import './../assets/styles/HomePage.css';
+import './../assets/styles/SideNav.css';
+import './../assets/styles/AddPages.css';
+import SideNavigation from './SideNavigation.js';
+import TopBar from './TopBar.js'
+
+
 
 // Styling
 const ITEM_HEIGHT = 48;
@@ -243,6 +250,26 @@ const CourseListItem = ({ course, onDelete }) => {
 }
 
 /**
+ * This page will have an Add form and list the Courses that have been added and
+ * the courses that are in the database.
+ * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
+ * @param courses - the state of courses passed from App.js
+ * @param onDelete - the function 'onDelete' from App.js that will fire when the onclick happens
+ * @param programs - the state of programs passed from App.js
+ * @returns - The exported component
+ */
+ const CourseAddPageContent = ({ onAddCourse, courses, onDelete, programs }) => {
+    return (
+        <div className="home">
+            <div className='element-page'>
+                <CourseAdd onAddCourse={onAddCourse} programs={programs} />
+                <CourseList onDelete={onDelete} courses={courses} />
+            </div>
+        </div>
+    );
+}
+
+/**
  * The component that will be exported. This page will have an Add form and list the Courses that have been added and
  * the courses that are in the database.
  * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
@@ -254,9 +281,17 @@ const CourseListItem = ({ course, onDelete }) => {
 const CourseAddPage = ({ onAddCourse, courses, onDelete, programs }) => {
     return (
         <div>
-            <div className='element-page'>
-                <CourseAdd onAddCourse={onAddCourse} programs={programs} />
-                <CourseList onDelete={onDelete} courses={courses} />
+            <SideNavigation></SideNavigation>
+
+            <div id="main">
+                <div className="main-div">
+                    <TopBar></TopBar>
+
+                    <div className="container-home">
+                    <CourseAddPageContent onAddCourse={onAddCourse} courses={courses} onDelete={onDelete} programs={programs}></CourseAddPageContent>
+
+                    </div>
+                </div>
             </div>
         </div>
     );

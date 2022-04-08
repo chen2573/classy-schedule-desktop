@@ -2,6 +2,12 @@ import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, Outline
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
+import './../assets/styles/HomePage.css';
+import './../assets/styles/SideNav.css';
+import './../assets/styles/AddPages.css';
+import SideNavigation from './SideNavigation.js';
+import TopBar from './TopBar.js'
+ 
 
 
 // Styling
@@ -169,22 +175,47 @@ const RoomListItem = ({room, onDelete}) => {
     </div>
     );
 }
+
 /**
- * The that will be exported. This page will have an Add form and list the Rooms that have been added and
+ * This page will have an Add form and list the Rooms that have been added and
  * the rooms that are in the database.
  * @param onAddRoom - the function 'addRoom' from App.js that will fire when the RoomAddPage is submitted
  * @param rooms - the state of rooms passed from App.js
  */
- const RoomAddPage = ({onAddRoom, rooms, onDelete}) => {
+ const RoomAddPageContent = ({onAddRoom, rooms, onDelete}) => {
     return (
-      <div>
+      <div className="home">
           <div className='element-page'>
               <RoomAdd onAddRoom={onAddRoom}/>
               <RoomList onDelete={onDelete} rooms={rooms}/>
           </div>
       </div>
     );
-  }
+}
+
+/**
+ * The component that will be exported. This page will have an Add form and list the Rooms that have been added and
+ * the rooms that are in the database.
+ * @param onAddRoom - the function 'addRoom' from App.js that will fire when the RoomAddPage is submitted
+ * @param rooms - the state of rooms passed from App.js
+ */
+ const RoomAddPage = ({onAddRoom, rooms, onDelete}) => {
+    return (
+    <div>
+        <SideNavigation></SideNavigation>
+  
+        <div id="main">
+            <div className="main-div">
+                <TopBar></TopBar>
+  
+                <div className="container-home">
+                  <RoomAddPageContent onAddRoom={onAddRoom} rooms={rooms} onDelete={onDelete} ></RoomAddPageContent>
+                </div>
+            </div>
+        </div>
+      </div>
+    );
+}
 
 
 export default RoomAddPage

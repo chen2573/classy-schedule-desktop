@@ -2,6 +2,11 @@ import { linkClasses, ListItem, Box, InputLabel, FormControl, MenuItem, Select, 
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
+import './../assets/styles/HomePage.css';
+import './../assets/styles/SideNav.css';
+import './../assets/styles/AddPages.css';
+import SideNavigation from './SideNavigation.js';
+import TopBar from './TopBar.js'
 
 
 // Styling
@@ -211,23 +216,47 @@ const LabListItem = ({lab, onDelete}) => {
     );
 }
 
- 
-    /**
-     * The that will be exported. This page will have an Add form and list the Labs that have been added and
-     * the labs that are in the database.
-     * @param onAddLab - the function 'addLab' from App.js that will fire when the LabAddPage is submitted
-     * @param labs - the state of labs passed from App.js
-     */
-     const LabAddPage = ({onAddLab, labs, onDelete, courses}) => {
-        return (
-          <div>
-              <div className='element-page'>
-                  <LabAdd onAddLab={onAddLab} courses={courses}/>
-                  <LabList onDelete={onDelete} labs={labs}/>
-              </div>
-          </div>
-        );
-      }
+/**
+ * This page will have an Add form and list the Labs that have been added and
+ * the labs that are in the database.
+ * @param onAddLab - the function 'addLab' from App.js that will fire when the LabAddPage is submitted
+ * @param labs - the state of labs passed from App.js
+ */
+ const LabAddPageContent = ({onAddLab, labs, onDelete, courses}) => {
+    return (
+        <div className="home">
+            <div className='element-page'>
+                <LabAdd onAddLab={onAddLab} courses={courses}/>
+                <LabList onDelete={onDelete} labs={labs}/>
+            </div>
+        </div>
+    );
+}
+
+/**
+ * The component that will be exported. This page will have an Add form and list the Labs that have been added and
+ * the labs that are in the database.
+ * @param onAddLab - the function 'addLab' from App.js that will fire when the LabAddPage is submitted
+ * @param labs - the state of labs passed from App.js
+ */
+const LabAddPage = ({onAddLab, labs, onDelete, courses}) => {
+    return (
+        <div>
+            <SideNavigation></SideNavigation>
+
+            <div id="main">
+                <div className="main-div">
+                    <TopBar></TopBar>
+
+                    <div className="container-home">
+                    <LabAddPageContent onAddLab={onAddLab} labs={labs} onDelete={onDelete} courses={courses}></LabAddPageContent>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
     
     
-    export default LabAddPage
+export default LabAddPage
