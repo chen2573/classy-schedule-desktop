@@ -89,17 +89,19 @@ function displayMainWindow() {
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js')
         },
-        width: 700,
-        height: 450,
-        minWidth: 700,
-        minHeight: 450,
-        maxWidth: 700,
-        maxHeight: 450,
+        width: 600,
+        height: 700,
+        resizable: false,
+        center: true,
         icon: './../src/assets/icons/png/logo-desktop.png'
     });
     if(!userLoggedIn){
         logInWindow.loadURL(`file://${path.join(__dirname, '/views/login/login.html')}`);
     }
+
+    logInWindow.on('close', function () {
+        addWindow = null;
+    });
 }
 
 /**
