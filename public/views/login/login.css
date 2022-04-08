@@ -35,6 +35,7 @@ body {
   .title {
       font-size: 30px;
       font-weight: bold;
+      text-align: center;
   }
   
   .btn {
@@ -90,6 +91,17 @@ body {
   .end-label {
     margin-top: 15px;
     text-align: center;
+  }
+
+  .logo {
+    height: 200px;
+    width: 200px;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   
