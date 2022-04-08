@@ -21,9 +21,6 @@ const TopBar = ({openNav}) => {
                         <NotificationsNone/>
                         <span className="topIconBadge">2</span>
                     </div>
-                    <div className="topBarIconContainer">
-                        <Settings/>
-                    </div>
                     <a href="#"><img onClick={openNav} src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffree-profile-pics.com%2Fprofile-pictures%2F01262014%2Fdownload%2Fyoda-profile-picture-512x512.png&f=1&nofb=1" alt="" className="topAvatar"/></a>
                 </div>
             </div>
@@ -133,6 +130,7 @@ function logoutFromApplication() {
             <a class="link-pages" href="#">Account</a>
             <a class="link-pages" href="#">Services</a>
             <a class="link-pages" href="#">Contact</a>
+            <a class="link-pages" href="#">Settings</a>
             <br />
             <br />
             <a class="link-pages logout" href="#" onClick={logoutFromApplication}><strong>Logout</strong></a>
