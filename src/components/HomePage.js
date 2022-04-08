@@ -1,32 +1,11 @@
 import React from 'react';
 import './../assets/styles/HomePage.css';
 import './../assets/styles/SideNav.css';
-import { NotificationsNone, Settings} from '@mui/icons-material';
+import { NotificationsNone} from '@mui/icons-material';
 import {Button, Typography} from '@mui/material';
 import DataViewer from './DataViewer.js';
-
-/**
- * Create a topbar for the application that includes a Name, logo, and profile image.
- * @returns the TopBar component.
- */
-const TopBar = ({openNav}) => {
-    return (
-        <div className="topbar">
-            <div className="topbarWrapper">
-                <div className="topLeft">
-                    <span className="logo">ClassySchedule</span>
-                </div>
-                <div className="topRight">
-                    <div className="topBarIconContainer">
-                        <NotificationsNone/>
-                        <span className="topIconBadge">2</span>
-                    </div>
-                    <a href="#"><img onClick={openNav} src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffree-profile-pics.com%2Fprofile-pictures%2F01262014%2Fdownload%2Fyoda-profile-picture-512x512.png&f=1&nofb=1" alt="" className="topAvatar"/></a>
-                </div>
-            </div>
-        </div>
-    )
-}
+import SideNavigation from './SideNavigation.js';
+import TopBar from './TopBar.js'
 
 /**
  * This component builds and returns the boxes that displays info on the current state on the homepage.
@@ -82,12 +61,12 @@ const Dashboard = ({courses, labs, professors, rooms}) => {
 /**
  * The main component that will be exported by this class.
  */
-const HomePageContent = ({courses, labs, professors, rooms, openNav}) => {
+const HomePageContent = ({courses, labs, professors, rooms}) => {
     
     return (
         
     <div className="main-div">
-        <TopBar openNav={openNav}></TopBar>
+        <TopBar></TopBar>
         <br />
         <br />
         <div className="container-top-text">
@@ -100,23 +79,6 @@ const HomePageContent = ({courses, labs, professors, rooms, openNav}) => {
     );
 }
 
-/* Set the width of the side navigation to 250px and the right margin of the page content to 250px and add a black background color to body */
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginRight = "250px";
-}
-
-/* Set the width of the side navigation to 0 and the right margin of the page content to 0, and the background color of body to white */
-function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main").style.marginRight = "0";
-    document.body.style.backgroundColor = "white";
-}
-
-function logoutFromApplication() {
-    window.DB.send('toMain:AuthLogOut', "");
-}
-
 /**
  * The main component that will be exported by this class.
  */
@@ -125,20 +87,10 @@ function logoutFromApplication() {
      return (
          
      <div>
-         <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
-            <a class="link-pages" href="#">Account</a>
-            <a class="link-pages" href="#">Services</a>
-            <a class="link-pages" href="#">Contact</a>
-            <a class="link-pages" href="#">Settings</a>
-            <br />
-            <br />
-            <a class="link-pages logout" href="#" onClick={logoutFromApplication}><strong>Logout</strong></a>
-        </div>
+         <SideNavigation></SideNavigation>
          
-
          <div id="main">
-            <HomePageContent courses={courses} labs={labs} professors={professors} rooms={rooms} openNav={openNav}></HomePageContent>
+            <HomePageContent courses={courses} labs={labs} professors={professors} rooms={rooms}></HomePageContent>
          </div>
          
      </div>
