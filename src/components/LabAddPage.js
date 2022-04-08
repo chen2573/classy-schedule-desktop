@@ -1,23 +1,21 @@
-import { linkClasses, ListItem } from '@mui/material'
+import { linkClasses, ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField } from '@mui/material'
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
 
-/**
- * 
- * @param courses - 
- */
-const CreateAsscoCourse = ({ courses }) => {
-    let associatedCourse = courses.map(l => {
-        return (<option key={l.id} value={l.name}>{l.name}</option>);
-    });
-  
-    return (
-        <>
-            {associatedCourse}
-        </>
-    );
-  }
+
+// Styling
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 /**
  * This component represents the form that will be used by the user to enter in new lab data.
  * @param onAddLab - the addSubmit function that is passed down from App.js
@@ -26,11 +24,45 @@ const LabAdd = ({onAddLab, courses}) => {
     const [lname, setLName] = useState('')
     const [lcapacity, setLCapacity] = useState('')
     const [lprofessor, setLProfessor] = useState('')
-    const [ltech, setLTech] = useState('')
+    const [ltech, setLTech] = useState([])
     const [llength, setLLength] = useState('');
     const [ldays, setLDays] = useState('');
     const [ltimes, setLTimes] = useState('');
-    const [lcourse, setLCourse] = useState('');
+    const [lcourse, setLCourse] = useState([]);
+
+
+    /**
+     * This function handles changes on the Technology dropdown
+     * 
+     * @param e - onChange event
+     */
+    const handleTechChange = (e) => {
+        const {
+          target: { value },
+        } = e;
+        setLTech(
+          // On autofill we get a stringified value.
+          typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+
+    /**
+     * This function handles unique list items and removal of list items
+     * 
+     * @param courseInfo - Object containing all relevant course information
+     * @returns - newValue with old state and specified course added, or oldValue with specified course removed
+     */
+    const handleAssociatedCourseClick = courseInfo => e => {
+        setLCourse(oldValue => {
+            if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
+                console.log({oldValue});
+                return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
+            }
+            const newValue = [courseInfo]
+            return newValue;
+        })
+    }
+
     const onSubmit = (e) => {
         e.preventDefault()
         e.target.reset()
@@ -42,71 +74,113 @@ const LabAdd = ({onAddLab, courses}) => {
             alert('Please enter the student capacity')
             return;
         }
-        {/*
-        UNCOMMENT ONCE CHECKBOX FORM IS FIXED - GLENN
+        {
         if (!ltech) {
             alert('Please enter the tech required for this lab')
             return;
         }
-        */}
-        {/*
-        UNCOMMENT ONCE COURSE ASSOCIATION IS DETERMINED - GLENN
+        }
+        {
         if (!lcourse){
             alert('A lab must be associated with a course. Pick an existing one or create a new one before creating this lab')
             return;
         }
-        */}
+        }
+
 
         onAddLab({lname, lcapacity, ltech, lcourse});
         setLName('');
         setLCapacity('');
-        setLTech('');
-        setLCourse('');
+        setLTech([]);
+        setLCourse([]);
     }
     return (
     <div className = 'container'>
         <h1> Add Lab </h1>
         <form onSubmit={onSubmit}>
-            <div className='form-control'>
-            <label> Name:</label>
-                <input type="text" placeholder="Enter the name of the Lab" value={lname} 
-                onChange={(e)=> setLName(e.target.value)}/>
-            </div>
-            <div className='form-control'>
-                <label>Lab Capacity:</label>
-                    <input type="number" placeholder= "Enter the Lab Capacity" value={lcapacity} 
-                    onChange={(e)=> setLCapacity(e.target.value)}/>
-            </div>
-            <h4>Select Technology Required for this Lab</h4>
-            <div className='form-control'>
-                <select multiple={true} onChange={(e) => setLTech([...e.target.selectedOptions].map(option => option.value))}>
-                    <option >Desktop Computers</option>
-                    <option >Laptop Computers</option>
-                    <option >Projector</option>
-                    <option >Whiteboard</option>
-                    <option >Chalkboard</option>
-                    <option >Robots</option>
-                    <option >Zoom peripherals</option>
-                    <option >Instrucor Computer</option>
-                    <option >Net Controls</option>
 
-                </select>       
-            </div>
-            <div className='form-control'>
-                <label>Associated Course:</label>
-                <select onChange={(e) => setLCourse([...e.target.selectedOptions].map(option => 
-                    {
-                      return (<option key={option.key} value={option.value}>{option.value}</option>);
-                    }))}>
+            <br></br>
 
-                    <CreateAsscoCourse courses={courses} />
-                  </select>
-            </div>
+            <Box>
+                <TextField fullWidth id="enter_lab_name" label="Lab Name" variant="outlined" value={lname} onChange={(e)=> setLName(e.target.value)}/>
+            </Box>
+
+            <br></br>
+
+            <Box>
+                <TextField fullWidth id="enter_lab_capacity" label="Lab Capacity" variant="outlined" value={lcapacity} onChange={(e)=> setLCapacity(e.target.value)}/>
+            </Box>
+
+            <br></br>
+
+            <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                    <InputLabel id="label">Required Technology</InputLabel>
+                    <Select
+                    labelId="label"
+                    id='technology_dropdown'
+                    multiple
+                    onChange={handleTechChange}
+                    value={ltech}
+                    label="Required Technology"
+                    input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                        ))}
+                        </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    >
+                        <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
+                        <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
+                        <MenuItem value="Projector" >Projector</MenuItem>
+                        <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
+                        <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
+                        <MenuItem value="Robots" >Robots</MenuItem>
+                        <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
+                        <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
+                        <MenuItem value="Net Controls" >Net Controls</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+
+            <br></br>
+
+            <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                    <InputLabel id="label">Associated Course</InputLabel>
+                    <Select
+                    labelId="label"
+                    id='associated_course_dropdown'
+                    value={lcourse.map(e => e.name)}
+                    label="Associated Course"
+                    >
+                        {courses.map(p => (
+                            <MenuItem 
+                                onClick={handleAssociatedCourseClick(p)}
+                                key={p.id} 
+                                value={p.name}
+                            >
+                                {p.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Box>
+
+            <br></br>
+
+
             <input type="submit" value='Save Lab' className='btn btn-block'/>
             </form>
         </div>
     );
 }
+
+
+
     /**
  * This component is a view that lists out individual LabListItems.
  * @param labs - The state of labs that is passed down from App.js
@@ -129,7 +203,7 @@ const LabListItem = ({lab, onDelete}) => {
     return(
     <div className='item'>
         <h3>Lab: {lab.lname} <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(lab.id)} /></h3>
-        <p><em>Course: {lab.lcourse}</em></p>
+        <p><em>Course: {lab.lcourse[0].name}</em></p>
         {/*What do we want this course part to show
         Maybe the course object that we can pop out?
         */}

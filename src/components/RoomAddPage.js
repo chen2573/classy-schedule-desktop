@@ -1,7 +1,20 @@
-import { ListItem } from '@mui/material'
+import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField  } from '@mui/material'
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
+
+
+// Styling
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 /**
  * This component represents the form that will be used by the user to enter in new room data.
@@ -12,9 +25,27 @@ const RoomAdd = ({onAddRoom}) => {
     const [rbuilding, setRBuilding] = useState('')
     const [rnumber, setRNumber] = useState('')
     const [rcapacity, setRCapacity] = useState('')
-    const [rtech, setRTech] = useState('')
+    const [rtech, setRTech] = useState([])
     const [rtime, setRTime] = useState('')
     const [rclasstime, setRClassTime] = useState('')
+
+
+    /**
+     * This function handles changes on the Technology dropdown
+     * 
+     * @param e - onChange event
+     */
+    const handleTechChange = (e) => {
+        const {
+            target: { value },
+        } = e;
+        setRTech(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+
+
     const onSubmit = (e) => {
         e.preventDefault()
         e.target.reset()
@@ -42,45 +73,67 @@ const RoomAdd = ({onAddRoom}) => {
         setRBuilding('');
         setRNumber('');
         setRCapacity('');
-        setRTech('');
+        setRTech([]);
     }
     return (
     <div className = 'container'>
         <h1> Add Room </h1>
         <form onSubmit={onSubmit}>
-            <div className='form-control'>
-            <label> Building:</label>
-                <input type="text" placeholder="Enter Three Character Code for the Building" value={rbuilding} 
-                onChange={(e)=> setRBuilding(e.target.value)}/>
-            </div>
-            <div className='form-control'>
-                <label>Room Number:</label>
-                <input type="number" placeholder="Enter the Room Number" value={rnumber} 
-                onChange={(e)=> setRNumber(e.target.value)}/>
-            </div>
-            <div className='form-control'>
-                <label>Room Capacity:</label>
-                    <input type="number" placeholder= "Enter the Room Capacity" value={rcapacity} 
-                    onChange={(e)=> setRCapacity(e.target.value)}/>
-            </div>
-            <h4>Select Technology in this Room</h4>
-            <div className='form-control'>
-                <select multiple={true} onChange={(e) => setRTech([...e.target.selectedOptions].map(option => option.value))}>
-                    <option >Desktop Computers</option>
-                    <option >Laptop Computers</option>
-                    <option >Projector</option>
-                    <option >Whiteboard</option>
-                    <option >Chalkboard</option>
-                    <option >Robots</option>
-                    <option >Zoom peripherals</option>
-                    <option >Instrucor Computer</option>
-                    <option >Net Controls</option>
 
-                </select>
-                {/*Need to add robots, online meeting capabilities, instructor computer, computer control
-                ALSO DO THIS IN LAB
-                */}
-            </div>
+            <br></br>
+
+            <Box>
+                <TextField fullWidth id="enter_building_code" label="Enter Three Character Code for the Building" variant="outlined" value={rbuilding} onChange={(e)=> setRBuilding(e.target.value)}/>
+            </Box>
+
+            <br></br>
+
+            <Box>
+                <TextField fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={rnumber} onChange={(e)=> setRNumber(e.target.value)}/>
+            </Box>
+
+            <br></br>
+
+            <Box>
+                <TextField fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={rcapacity} onChange={(e)=> setRCapacity(e.target.value)}/>
+            </Box>
+
+            <br></br>
+
+            <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                    <InputLabel id="label">Required Technology</InputLabel>
+                    <Select
+                    labelId="label"
+                    id='technology_dropdown'
+                    multiple
+                    onChange={handleTechChange}
+                    value={rtech}
+                    label="Required Technology"
+                    input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                        ))}
+                        </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    >
+                        <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
+                        <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
+                        <MenuItem value="Projector" >Projector</MenuItem>
+                        <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
+                        <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
+                        <MenuItem value="Robots" >Robots</MenuItem>
+                        <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
+                        <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
+                        <MenuItem value="Net Controls" >Net Controls</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+
+            <br></br>
             
             <input type="submit" value='Save Room' className='btn btn-block'/>
             </form>
