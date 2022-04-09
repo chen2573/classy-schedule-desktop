@@ -23,6 +23,17 @@ const MenuProps = {
 };
 
 /**
+ * This function works in tandem to other validating functions
+ * This updates state with the passed state setter iff the passed validate function returns true
+ * 
+ * @param validateFN  - Validating function
+ * @param stateSetter - State updating function
+ */
+ const validate = (validateFN, stateSetter) => e => {
+    stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
+  }
+
+/**
  * This component represents the form that will be used by the user to enter in new course data.
  * @param onAddCourse - the addSubmit function that is passed down from App.js
  * @param programs - the programs that is passed down from App.js
@@ -38,6 +49,38 @@ const CourseAdd = ({ onAddCourse, programs }) => {
     const [tech, setTech] = useState([]);
     const [courseID, setCourseID] = useState('');
 
+    // Course Name must be less than 50 characters and have no numbers
+    const validNameLength = name => name.length < 51;
+    const validNameChar = val => [...val.matchAll(/(^[^0-9]+$)?/g)].some(x => x[0] == val) || val === '';
+    const validName = name => validNameLength(name) && validNameChar(name)
+    // This function calls passes other functions to validate
+    const validateName = validate(validName, setName);
+
+    // Course Number must be a value between 100 and 999
+    // FIX LOWER BOUND
+    const validNumber = val => [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateNumber = validate(validNumber, setNumber);
+
+    // Credits must be a integer between 0 and 4
+    const validCredits = val => [...val.matchAll(/([0-4])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateCredits = validate(validCredits, setCredits);
+
+    // Course Capacity must be a value between 0 and 1000
+    const validCapacity = val => [...val.matchAll(/(1000|[1-9][0-9][0-9]|[1-9][0-9]|[0-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateCapacity = validate(validCapacity, setCapacity);
+
+    // Meeting Length (I'm not sure what constraints are for this)
+    const validLength = val => [...val.matchAll(/(200|1[0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateLength = validate(validLength, setLength);
+
+    // Course ID (4 digits?)
+    const validID = val => [...val.matchAll(/([1-9][0-9][0-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateID = validate(validID, setCourseID);
 
     /**
      * This function handles changes on the Technology dropdown
@@ -135,37 +178,37 @@ const CourseAdd = ({ onAddCourse, programs }) => {
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_course_id" label="Course ID" variant="outlined" value={courseID} onChange={(e)=> setCourseID(e.target.value)}/>
+                    <TextField fullWidth id="enter_course_id" label="Course ID" variant="outlined" value={courseID} onChange={validateID}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_course_number" label="Course Number" variant="outlined" value={number} onChange={(e)=> setNumber(e.target.value)}/>
+                    <TextField fullWidth id="enter_course_number" label="Course Number" variant="outlined" value={number} onChange={validateNumber}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_course_name" label="Course Name" variant="outlined" value={name} onChange={(e)=> setName(e.target.value)}/>
+                    <TextField fullWidth id="enter_course_name" label="Course Name" variant="outlined" value={name} onChange={validateName}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_number_of_credits" label="Credits" variant="outlined" value={credits} onChange={(e)=> setCredits(e.target.value)}/>
+                    <TextField fullWidth id="enter_number_of_credits" label="Credits" variant="outlined" value={credits} onChange={validateCredits}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={(e)=> setCapacity(e.target.value)}/>
+                    <TextField fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={validateCapacity}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={(e)=> setLength(e.target.value)}/>
+                    <TextField fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
                 </Box>
 
                 <br></br>

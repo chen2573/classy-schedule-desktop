@@ -22,6 +22,10 @@ const MenuProps = {
   },
 };
 
+
+const validate = (validateFN, stateSetter) => e => {
+    stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
+}
 /**
  * This component represents the form that will be used by the user to enter in new room data.
  * @param onAddRoom - the addSubmit function that is passed down from App.js
@@ -35,6 +39,22 @@ const RoomAdd = ({onAddRoom}) => {
     const [rtime, setRTime] = useState('')
     const [rclasstime, setRClassTime] = useState('')
 
+    // Building Code must be all uppercase 3 letter code
+    const validRBuilding = val => [...val.matchAll(/([A-Z][A-Z][A-Z]|[A-Z][A-Z]|[A-Z])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateRBuilidng = validate(validRBuilding, setRBuilding);
+    
+    // Room number must be a value between 100 and 999
+    // FIX LOWER BOUND
+    const validRNumber = val => [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateRNumber = validate(validRNumber, setRNumber);
+
+    // Room Capacity must be a value between 5 and 300
+    // FIX FOR THE LOWER BOUND OF 5
+    const validRCapacity = val => [...val.matchAll(/(1[0-9][0-9]|2[0-9][0-9]|300|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateRCapacity = validate(validRCapacity, setRCapacity);
 
     /**
      * This function handles changes on the Technology dropdown
@@ -50,8 +70,6 @@ const RoomAdd = ({onAddRoom}) => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-
-
     const onSubmit = (e) => {
         e.preventDefault()
         e.target.reset()
@@ -80,6 +98,9 @@ const RoomAdd = ({onAddRoom}) => {
         setRNumber('');
         setRCapacity('');
         setRTech([]);
+        
+
+        
     }
     return (
     <div className = 'container'>
@@ -89,19 +110,19 @@ const RoomAdd = ({onAddRoom}) => {
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_building_code" label="Enter Three Character Code for the Building" variant="outlined" value={rbuilding} onChange={(e)=> setRBuilding(e.target.value)}/>
+                <TextField fullWidth id="enter_building_code" label="Enter Three Character Code for the Building" variant="outlined" value={rbuilding} onChange={validateRBuilidng}/>
             </Box>
 
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={rnumber} onChange={(e)=> setRNumber(e.target.value)}/>
+                <TextField fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={rnumber} onChange={validateRNumber}/>
             </Box>
 
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={rcapacity} onChange={(e)=> setRCapacity(e.target.value)}/>
+                <TextField fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={rcapacity} onChange={validateRCapacity}/>
             </Box>
 
             <br></br>
