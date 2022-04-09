@@ -12,6 +12,8 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms } from './utils/sampleData';
 import varValueConvert from 'cross-env/src/variable';
 import LabAddPage from './components/LabAddPage';
+import SolutionGenerate from './components/AddSolution';
+import AddSolution from './components/AddSolution.js';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -484,6 +486,10 @@ function App() {
     else if (currentPage === 'schedule')
     {
       return <SolutionPage professors={[]} courses={[]} rooms={[]}/>;
+    }
+    else if(currentPage === 'AddSolution')
+    {
+      return <AddSolution courses={courses} rooms={rooms} professors={professors} labs={labs} setCurrentPage={setCurrentPage}/>;
     }
     else
     {

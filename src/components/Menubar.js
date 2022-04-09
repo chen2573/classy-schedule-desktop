@@ -8,6 +8,7 @@ import ClassIcon from '@mui/icons-material/Class';
 import ScienceIcon from '@mui/icons-material/Science';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AddIcon from '@mui/icons-material/Add';
 
 
 /**
@@ -55,6 +56,13 @@ export function MenuBar ({setCurrentPage})
                     <Box>
                         <MeetingRoomIcon color="secondary"/>
                         <p className="button-text">Rooms</p>
+                    </Box>
+                </Button>
+
+                <Button variant="text" onClick={()=>{setCurrentPage('AddSolution')}}>
+                    <Box>
+                        <AddIcon color="secondary"/>
+                        <p className="button-text">Generate Schedule</p>
                     </Box>
                 </Button>
 
