@@ -28,7 +28,7 @@ import TopBar from './TopBar.js';
      * The component that will display an individual lab. These components will populate the LabList component.
      * @param lab - an individual lab
      */
-    const LabListItem = ({lab, onDelete}) => {
+    const LabListItem = ({lab}) => {
         return(
         <div className='item'>
             <h3>Lab: {lab.lname}</h3>
@@ -41,9 +41,8 @@ import TopBar from './TopBar.js';
     }
     
     /**
-     * This page will have an Add form and list the Labs that have been added and
+     * This page will have a list of Labs that have been added and
      * the labs that are in the database.
-     * @param onAddLab - the function 'addLab' from App.js that will fire when the LabAddPage is submitted
      * @param labs - the state of labs passed from App.js
      */
      const LabAddPageContent = ({ labs }) => {
@@ -59,7 +58,6 @@ import TopBar from './TopBar.js';
  * This component is a view that lists out individual ProfessorListItems.
  * 
  * @param professors - The state of professors that is passed down from App.js
- * @param onDelete   - Handler function that deletes an individual item from the list
  * @returns          - React component that lists viewable professor components
  */
  const ProfessorList = ({professors}) => {
@@ -78,7 +76,6 @@ import TopBar from './TopBar.js';
    * The component that will display an individual professor. These components will populate the ProfessorList component.
    * 
    * @param professor - An individual professor
-   * @param onDelete  - Handler function that deletes an individual item from the list
    * @returns         - React component that displays a single professor component
    */
   const ProfessorListItem = ({professor}) => {
@@ -92,14 +89,10 @@ import TopBar from './TopBar.js';
   }
   
   /**
-   * This page will have an Add form and list the Professors that have been added and
+   * This page will have a list of the Professors that have been added and
    * the professors that are in the database.
    * 
-   * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
    * @param professors     - The state of professors passed from App.js
-   * @param onDelete       - Handler function that deletes an individual item from the list
-   * @param courses        - State variable containing course objects
-   * @param programs       - State variable containing program objects
    */
    const ProfessorAddPageContent = ({professors}) => {
     return (
@@ -143,9 +136,8 @@ import TopBar from './TopBar.js';
     }
     
     /**
-     * This page will have an Add form and list the Rooms that have been added and
+     * This page will have a list of the Rooms that have been added and
      * the rooms that are in the database.
-     * @param onAddRoom - the function 'addRoom' from App.js that will fire when the RoomAddPage is submitted
      * @param rooms - the state of rooms passed from App.js
      */
      const RoomAddPageContent = ({ rooms }) => {
@@ -160,7 +152,6 @@ import TopBar from './TopBar.js';
 /**
  * This component is a view that lists out individual CourseListItems.
  * @param courses - The state of courses that is passed down from App.js
- * @param onDelete - The delete function that is passed down from App.js
  * @returns - The component that is a view listing out the CourseListItems
  */
  const CourseList = ({ courses}) => {
@@ -178,7 +169,6 @@ import TopBar from './TopBar.js';
 /**
  * The component that will display an individual course. These components will populate the CourseList component.
  * @param course - an individual course
- * @param onDelete - The delete function that is passed down from App.js
  * @returns - The component displaying an individual course.
  */
 const CourseListItem = ({ course }) => {
@@ -196,12 +186,9 @@ const CourseListItem = ({ course }) => {
 }
 
 /**
- * This page will have an Add form and list the Courses that have been added and
+ * This page will have a list of the Courses that have been added and
  * the courses that are in the database.
- * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
  * @param courses - the state of courses passed from App.js
- * @param onDelete - the function 'onDelete' from App.js that will fire when the onclick happens
- * @param programs - the state of programs passed from App.js
  * @returns - The exported component
  */
  const CourseAddPageContent = ({ courses }) => {
@@ -215,12 +202,13 @@ const CourseListItem = ({ course }) => {
 }
 
 /**
- * The component that will be exported. This page will have an Add form and list the Courses that have been added and
- * the courses that are in the database.
- * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
+ * The component that will be exported. This page will 4 lists of the Courses, professors, rooms, and labs that have been added and
+ * that are in the database.
  * @param courses - the state of courses passed from App.js
- * @param onDelete - the function 'onDelete' from App.js that will fire when the onclick happens
- * @param programs - the state of programs passed from App.js
+ * @param rooms - the state of rooms passed from App.js
+ * @param professors - the state of professors passed from App.js
+ * @param labs - the state of labs passed from App.js
+ * @param setCurrentPage - the function passed to redirect to the solution page
  * @returns - The exported component
  */
 const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
