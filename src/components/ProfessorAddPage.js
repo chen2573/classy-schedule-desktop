@@ -32,10 +32,11 @@ const MenuProps = {
 };
 
 /**
+ * This function works in tandem to other validating functions
+ * This updates state with the passed state setter iff the passed validate function returns true
  * 
- * @param validateFN 
- * @param stateSetter 
- * @returns 
+ * @param validateFN  - Validating function
+ * @param stateSetter - State updating function
  */
 const validate = (validateFN, stateSetter) => e => {
   stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
@@ -45,9 +46,9 @@ const validate = (validateFN, stateSetter) => e => {
  * This component represents the form that will be used by the user to enter in new professor data.
  * 
  * @param onAddProfessor - The addSubmit function that is passed down from App.js
- * @param courses - State variable containing course objects
- * @param programs - State variable containing program objects
- * @returns - React component div used to enter and submit professor information
+ * @param courses        - State variable containing course objects
+ * @param programs       - State variable containing program objects
+ * @returns              - React component div used to enter and submit professor information
  */
 const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const [program, setProgram] = useState('');
@@ -57,39 +58,56 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const [can_teach, setCanTeach] = useState([]);
   const [want_teach, setWantTeach] = useState([]);
 
+
+
+                        // Input Validation
   /**
+   * This function enforces that the input is an int 0-20, with a .5, and an empty string
    * 
-   * @param value 
-   * @returns 
+   * The comment included function only handles ints 0-20
+   * //const validTeachingLoad = value => (new Array(21).fill(true).map((e, i) => `${i}`)              ).includes(value);
+   *              This addition to the above function accounts for an empty string   ->   .concat("")
+   * 
+   * @param val - Input value
+   * @returns   - True if the input is valid, otherwise false
    */
-  const validTeachingLoad = value => (new Array(21).fill(true).map((e, i) => `${i}`).concat("")).includes(value);
-  //
+  const validTeachingLoad = val => [...val.matchAll(/(1[0-9]|20|[0-9])?(\.[5]{0,1})?/g)].some(x => x[0] == val) || val === '';
+
+  // This function calls passes other functions to validate
   const validateTeachLoad = validate(validTeachingLoad, setTeachLoad);
    
   /**
-   * 
-   * @param name 
-   * @returns 
+   * This function enforces that the input is alphanumeric lower or upper case or '.'
+   * @param name - Input value
+   * @returns    - True if the input is valid, otherwise false
    */
-  const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').includes(c));
+  const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').includes(c));
+  
   /**
-   * 
-   * @param name 
-   * @returns 
+   *  This function enforces that the input is less than 30 characters
+   * @param name - Input value
+   * @returns    - True if the input is valid, otherwise false
    */
   const validNameLength = name => name.length < 31;
-  //
+  
+  // This function combines two different validate functions
   const validName = name => validNameChars(name) && validNameLength(name);
-  //
+  
+  // This function calls passes other functions to validate
   const validateName = validate(validName, setName);
 
+
+
+
   /**
+   * This function handles addition of unique list items and removal of present list items
+   * The imbedded stateSetter updates the state object in one of these ways
    * 
-   * @param courseInfo 
-   * @returns 
+   * @param courseInfo  - Object containing all relevant course information
+   * @param stateSetter - State updating function
    */
-  const handleCanClick = courseInfo => e => {
-    setCanTeach(oldValue => {
+  const handleClick = (courseInfo, stateSetter) => e => {
+    stateSetter(oldValue => {
       if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
         console.log({oldValue});
 
@@ -99,30 +117,15 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
       return newValue;
     })
   }
-
-  /**
-   * This function handles unique list items and removal of list items
-   * 
-   * @param courseInfo - Object containing all relevant course information
-   * @returns - newValue with old state and specified course added, or oldValue with specified course removed
-   */
-  const handleWantClick = courseInfo => e => {
-    setWantTeach(oldValue => {
-      if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
-        return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
-      }
-      const newValue = [...oldValue, courseInfo]
-      return newValue;
-    })
-  }
  
 
- 
 
   /**
+   * This function alerts the user if they are missing necessary data,
+   * if all necessary data is present, it passes the data and resets to default
    * 
-   * @param e - event object
-   * @returns
+   * @param e - Event object
+   * @returns - Alert to user
    */
   const onSubmit = (e) => {
     e.preventDefault();
@@ -154,7 +157,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
  
        
  
-    onAddProfessor({program, name});
+    onAddProfessor({program, name, teach_load, time_block, can_teach, want_teach});
  
     setProgram('');
     setName('');
@@ -252,7 +255,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
             >
               {courses.map(p => (
                 <MenuItem 
-                  onClick={handleCanClick(p)}
+                  onClick={handleClick(p, setCanTeach)}
                   key={p.id} 
                   value={p.name}
                 >
@@ -286,7 +289,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
             >
               {can_teach.map(p => (
                 <MenuItem 
-                  onClick={handleWantClick(p)}
+                  onClick={handleClick(p, setWantTeach)}
                   key={p.id} 
                   value={p.name}
                 >
@@ -310,8 +313,8 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
  * This component is a view that lists out individual ProfessorListItems.
  * 
  * @param professors - The state of professors that is passed down from App.js
- * @param onDelete - Handler function that deletes an individual item from the list
- * @returns - React component that lists viewable professor components
+ * @param onDelete   - Handler function that deletes an individual item from the list
+ * @returns          - React component that lists viewable professor components
  */
 const ProfessorList = ({professors, onDelete}) => {
   return (
@@ -329,8 +332,8 @@ const ProfessorList = ({professors, onDelete}) => {
  * The component that will display an individual professor. These components will populate the ProfessorList component.
  * 
  * @param professor - An individual professor
- * @param onDelete - Handler function that deletes an individual item from the list
- * @returns - React component that displays a single professor component
+ * @param onDelete  - Handler function that deletes an individual item from the list
+ * @returns         - React component that displays a single professor component
  */
 const ProfessorListItem = ({professor, onDelete}) => {
   return (
@@ -347,10 +350,10 @@ const ProfessorListItem = ({professor, onDelete}) => {
  * the professors that are in the database.
  * 
  * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
- * @param professors - The state of professors passed from App.js
- * @param onDelete - Handler function that deletes an individual item from the list
- * @param courses - State variable containing course objects
- * @param programs - State variable containing program objects
+ * @param professors     - The state of professors passed from App.js
+ * @param onDelete       - Handler function that deletes an individual item from the list
+ * @param courses        - State variable containing course objects
+ * @param programs       - State variable containing program objects
  */
  const ProfessorAddPageContent = ({onAddProfessor, professors, onDelete, courses, programs}) => {
   return (
@@ -364,14 +367,14 @@ const ProfessorListItem = ({professor, onDelete}) => {
 }
 
 /**
- * The comonent that will be exported. This page will have an Add form and list the Professors that have been added and
+ * The component that will be exported. This page will have an Add form and list the Professors that have been added and
  * the professors that are in the database.
  * 
  * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
- * @param professors - The state of professors passed from App.js
- * @param onDelete - Handler function that deletes an individual item from the list
- * @param courses - State variable containing course objects
- * @param programs - State variable containing program objects
+ * @param professors     - The state of professors passed from App.js
+ * @param onDelete       - Handler function that deletes an individual item from the list
+ * @param courses        - State variable containing course objects
+ * @param programs       - State variable containing program objects
  */
 const ProfessorAddPage = ({onAddProfessor, professors, onDelete, courses, programs}) => {
   return (
