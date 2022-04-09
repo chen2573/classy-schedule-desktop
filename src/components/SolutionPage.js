@@ -293,10 +293,10 @@ export function SolutionPage ({professors, courses, rooms, times})
                     }
                 )}
 
-                {/* generate schedule button */}
+                {/*{/* generate schedule button }
                 <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
                     <Typography variant="text" color="secondary">Generate Schedule</Typography>
-                </Button>
+                </Button>*/}
 
 
                 {/* settings */}
