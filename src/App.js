@@ -197,7 +197,7 @@ function App() {
     //setCourses('')
     let statePrograms = [];
 
-    if (window.DB === undefined || DEVELOPMENT_MODE) {
+    if (window.DB === undefined && DEVELOPMENT_MODE) {
       console.log('Using sample data');
 
       samplePrograms.map((program) => {
@@ -213,7 +213,7 @@ function App() {
     else {
       //console.log(FETCH_ALL_PROGRAM_DATA);
       // Send a query to main
-      window.DB.send(CHANNEL_PROGRAM_TO_MAIN, FETCH_ALL_PROGRAM_DATA); // Add constants
+      window.DB.send(CHANNEL_PROGRAM_TO_MAIN, "Request for PROGRAMS from RENDERER"); // Add constants
 
       // Recieve the results
       window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
