@@ -15,6 +15,9 @@ const {
     dialog
 } = electron;
 
+// Module that contains the database object
+const DatabaseService = require(path.join(__dirname, 'services/databaseService.js'));
+
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
 
@@ -100,7 +103,7 @@ function displayMainWindow() {
     }
 
     logInWindow.on('close', function () {
-        addWindow = null;
+        logInWindow = null;
     });
 }
 
@@ -240,7 +243,7 @@ function buildMainMenuTemplate() {
 
 }
 
-const DatabaseService = require('../src/utils/services/databaseService');
+
 
 // This is the object that handles all database/API requests
 let DB = new DatabaseService();
@@ -250,60 +253,36 @@ let DB = new DatabaseService();
  * is our React App. The channels for the IPC channels are set up in public/preload.js.
  */
 function createIPCChannels() {
-    // IPC for Program/Departments
-    ipcMain.on("toMain:Program", (event, args) => {
-        console.log('Main recieved Program info', args);
-        DatabaseApi.getPrograms().then((payload) => {
-            mainWindow.webContents.send('fromMain:Program', payload.data);
-        }).catch((error) => {
-            console.log('Error with programs: ' + error);
-        });
-        /*queryDatabase(args).then((data) => {
-            mainWindow.webContents.send('fromMain:Program', data)
-        });*/
-    });
     
-    // IPC channel for courses.
-    ipcMain.on("toMain:Course", (event, args) => {
-        console.log('Main recieved Course info', args);
-        queryDatabase(args).then((data) => {
-            mainWindow.webContents.send('fromMain:Course', data)
-        });
-    });
-
+    // LogIn logic.
     ipcMain.on("toMain:AuthLogIn", (event, args) => {
-        console.log(args)
-        console.log('Email:' + args.email);
-        console.log('Email:' + args.password);
-
         DB.authenticateUser(args.email, args.password).then((payload) => {
             console.log("USER AUTH LOG--> Token:" + payload.data.token);
             if(payload.data.token === 'tokenInvalid'){
-                window.alert("Invalid Username or Password")
+                window.alert("Invalid Username or Password");
+                console.log("USER AUTH LOG--> User entered incorrect password \n");
             }
             else {
                 DB.setAuthenticationToken(payload.data.token);
-                console.log("USER AUTH LOG--> User Successfully loggin in:" + DB.getAuthenticationToken());
+                console.log("USER AUTH LOG--> User Successfully loggin in:" + DB.getAuthenticationToken() + '\n');
                 logInWindow.close();
 
                 userLoggedIn = true;
                 displayMainWindow();
             }
-            
-            //DB.invalidateToken();
-            //console.log(DB.getAuthenticationToken());
         }).catch((error) => {
             //dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
             logInWindow.webContents.send('fromMain:AuthLogIn', error);
 
-            console.log('USER AUTH LOG--> Error authenticating user: ' + error);
+            console.log('USER AUTH LOG--> Error authenticating user: ' + error + '\n');
         });
     });
 
+    // Logout Logic and flow.
     ipcMain.on("toMain:AuthLogOut", (event, args) => {
 
         DB.invalidateToken();
-        console.log("USER AUTH LOG--> User has logged out: " + DB.getAuthenticationToken());
+        console.log("USER AUTH LOG--> User has logged out: " + DB.getAuthenticationToken() + '\n');
 
         userLoggedIn = false;
         displayLogInWindow();
@@ -312,61 +291,18 @@ function createIPCChannels() {
 
         
     });
-}
 
+    // Get all Programs
+    ipcMain.on("toMain:Program", (event, args) => {
+        console.log("DATABASE LOG --> " + args)
+        console.log("DATABASE LOG --> " + "Making request for all PROGRAMS")
 
-// ============ DataBase functions ======================== 
-
-
-
-/**
- * This function creates a new DB connection with given credentials.
- * This may be modified when we start using Swagger endpoints.
- * 
- * @returns promise - contains an open DB connection
- */
-function connectToSever() {
-    return new Promise((resolve, reject) => {
-        var config = {
-            host: 'capstonedb01.mysql.database.azure.com',
-            user: 'desktopteam',
-            password: 'desktoppass',
-            database: 'classyschedule',
-            port: 3306,
-            //ssl: {ca: fs.readFileSync(path.join(__dirname, 'DBCertificate', 'DigiCertGlobalRootCA.crt.pem'))}
-        };
-
-        const conn = new mysql.createConnection(config);
-
-        conn.connect(
-            function (err) {
-                if (err) {
-                    console.log("!!! Cannot connect !!! Error:");
-                    reject(err)
-                } else {
-                    resolve(conn)
-                }
-            });
-    })
-
-}
-
-/**
- * This function queries our database
- * @param query - a vaild MySql database query created in our React App 
- * @returns 
- */
-function queryDatabase(query) {
-    return new Promise((resolve, reject) => {
-        connectToSever().then(conn => {
-            conn.query(query, function (err, results, fields) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
-            })
-
-        })
-    })
+        DB.getPrograms().then((payload) => {
+            console.log("DATABASE LOG--> Successfully returned the following rows\n" + payload.data + + '\n');
+            mainWindow.webContents.send('fromMain:Program', payload.data);
+                
+        }).catch((error) => {
+            console.log('DATABASE LOG--> ERROR returning Programs: ' + error + + '\n');
+        });
+    });
 }
