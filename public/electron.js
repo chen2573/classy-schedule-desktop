@@ -16,7 +16,7 @@ const {
 } = electron;
 
 // Module that contains the database object
-const DatabaseService = require(path.join(__dirname, '../src/utils/services/databaseService'));
+const DatabaseService = require(path.join(__dirname, '/services/databaseService'));
 
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
