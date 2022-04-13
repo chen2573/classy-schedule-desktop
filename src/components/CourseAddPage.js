@@ -14,12 +14,17 @@ import TopBar from './TopBar.js'
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+    sx: {
+        "&& .Mui-selected": {
+            backgroundColor: "#92afdb"
+        }
     },
-  },
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    }
 };
 
 /**
@@ -155,10 +160,16 @@ const CourseAdd = ({ onAddCourse, programs }) => {
 
                 <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
-                        <InputLabel id="label">Program</InputLabel>
+                        <InputLabel shrink id="label">Program</InputLabel>
                         <Select
                         labelId="label"
                         id='program_dropdown'
+                        notched
+                        MenuProps={{sx: {
+                            "&& .Mui-selected": {
+                              backgroundColor: "#92afdb"
+                            }
+                        }}}
                         value={program}
                         label="Program"
                         onChange={(e) => setProgram(e.target.value)}
@@ -178,48 +189,49 @@ const CourseAdd = ({ onAddCourse, programs }) => {
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_course_id" label="Course ID" variant="outlined" value={courseID} onChange={validateID}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_id" label="Course ID" variant="outlined" value={courseID} onChange={validateID}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_course_number" label="Course Number" variant="outlined" value={number} onChange={validateNumber}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_number" label="Course Number" variant="outlined" value={number} onChange={validateNumber}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_course_name" label="Course Name" variant="outlined" value={name} onChange={validateName}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_name" label="Course Name" variant="outlined" value={name} onChange={validateName}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_number_of_credits" label="Credits" variant="outlined" value={credits} onChange={validateCredits}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_number_of_credits" label="Credits" variant="outlined" value={credits} onChange={validateCredits}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={validateCapacity}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={validateCapacity}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
                 </Box>
 
                 <br></br>
 
                 <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
-                        <InputLabel id="label">Required Technology</InputLabel>
+                        <InputLabel shrink id="label">Required Technology</InputLabel>
                         <Select
                         labelId="label"
                         id='technology_dropdown'
                         multiple
+                        notched
                         onChange={handleTechChange}
                         value={tech}
                         label="Required Technology"

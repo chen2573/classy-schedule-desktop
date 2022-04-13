@@ -14,12 +14,17 @@ import TopBar from './TopBar.js'
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+    sx: {
+        "&& .Mui-selected": {
+            backgroundColor: "#92afdb"
+        }
     },
-  },
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    }
 };
 
 
@@ -107,33 +112,30 @@ const RoomAdd = ({onAddRoom}) => {
         <h1> Add Room </h1>
         <form onSubmit={onSubmit}>
 
+
+
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_building_code" label="Enter Three Character Code for the Building" variant="outlined" value={rbuilding} onChange={validateRBuilidng}/>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={rnumber} onChange={validateRNumber}/>
             </Box>
 
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={rnumber} onChange={validateRNumber}/>
-            </Box>
-
-            <br></br>
-
-            <Box>
-                <TextField fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={rcapacity} onChange={validateRCapacity}/>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={rcapacity} onChange={validateRCapacity}/>
             </Box>
 
             <br></br>
 
             <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
-                    <InputLabel id="label">Required Technology</InputLabel>
+                    <InputLabel shrink id="label">Required Technology</InputLabel>
                     <Select
                     labelId="label"
                     id='technology_dropdown'
                     multiple
+                    notched
                     onChange={handleTechChange}
                     value={rtech}
                     label="Required Technology"
