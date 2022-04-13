@@ -9,11 +9,12 @@ import RoomPage from './components/RoomAddPage.js'
 import SolutionPage from './components/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms } from './utils/sampleData';
+import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, sampleSolution } from './utils/sampleData';
 import varValueConvert from 'cross-env/src/variable';
 import LabAddPage from './components/LabAddPage';
 import SolutionGenerate from './components/AddSolution';
 import AddSolution from './components/AddSolution.js';
+import SolutionDashboard from './components/SolutionDashboard';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -66,6 +67,7 @@ function App() {
   const [professors, setProfessors] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [labs, setLabs] = useState([]);
+  const [solutions, setSolutions] = useState([]);
 
   /**
    * Adds a course. This method is passed down through the components.
@@ -186,8 +188,54 @@ function App() {
     getLatestProfessors();
     getLatestRooms();
     getLatestLabs();
+    getLatestSolutions();
   };
+  /**
+   * Gets the latest data for programs.
+   */
+   const getLatestSolutions = () => {
+    // Clears up the currently stored data and gets new data in the following code.
+    // There was a bug where with every refresh, we would get duplicate state.
+    //setCourses('')
+    let stateSolutions = [];
 
+    if (window.DB === undefined && DEVELOPMENT_MODE) {
+      console.log('Using sample data');
+
+      sampleSolution.map((solution) => {
+        let name = solution.name;
+        let course = solution.course;
+        let professor = solution.professor;
+        let time = solution.time;
+        let room = solution.room;
+        const id = Math.floor(Math.random() * 10000) + 1
+
+        let newSolution = { id, name, course, professor, time, room };
+        stateSolutions.push(newSolution);
+      });
+      setSolutions(stateSolutions);
+    }
+    // else {
+    //   //console.log(FETCH_ALL_PROGRAM_DATA);
+    //   // Send a query to main
+    //   window.DB.send(CHANNEL_PROGRAM_TO_MAIN, "Request for PROGRAMS from RENDERER"); // Add constants
+
+    //   // Recieve the results
+    //   window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
+    //     //console.log(dataRows);
+
+    //     dataRows.map((program) => {
+    //       let programId = program.dept_id;
+    //       let programName = program.dept_name;
+    //       const id = Math.floor(Math.random() * 10000) + 1;
+
+    //       let newProgram = { id, programId, programName };
+    //       statePrograms.push(newProgram);
+    //     });
+    //     setPrograms(statePrograms);
+    //   });
+    // }
+  }
   /**
    * Gets the latest data for programs.
    */
@@ -490,6 +538,10 @@ function App() {
     else if(currentPage === 'AddSolution')
     {
       return <AddSolution courses={courses} rooms={rooms} professors={professors} labs={labs} setCurrentPage={setCurrentPage}/>;
+    }
+    else if(currentPage === 'SolutionDashboard')
+    {
+      return <SolutionDashboard solutions = {solutions} setCurrentPage={setCurrentPage}/>;
     }
     else
     {
