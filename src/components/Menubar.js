@@ -59,19 +59,13 @@ export function MenuBar ({setCurrentPage})
                     </Box>
                 </Button>
 
-                <Button variant="text" onClick={()=>{setCurrentPage('AddSolution')}}>
+                <Button variant="text" onClick={()=>{setCurrentPage('SolutionDashboard')}}>
                     <Box>
-                        <AddIcon color="secondary"/>
-                        <p className="button-text">Generate Schedule</p>
+                        <CalendarTodayIcon color="secondary"/>
+                        <p className="button-text">Schedule Dashboard</p>
                     </Box>
                 </Button>
 
-                <Button variant="text" onClick={()=>{setCurrentPage('schedule')}}>
-                    <Box>
-                        <CalendarTodayIcon color="secondary"/>
-                        <p className="button-text">Schedule</p>
-                    </Box>
-                </Button>
                 
                 <Box></Box>
             </Box>

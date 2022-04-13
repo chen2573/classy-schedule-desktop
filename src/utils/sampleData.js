@@ -110,3 +110,22 @@ export const sampleRooms = [
         "rbuilding": "OSS"
     }  
 ]
+export const sampleSolution = [
+        [
+        {
+            "name":"solution"
+        },
+        {
+            "professor": 1,
+            "course": 2,
+            "time": 1,
+            "room": 1
+        }, 
+        {
+            "professor": 1,
+            "course": 1,
+            "time": 2,
+            "room": 1
+        }]
+    
+]
