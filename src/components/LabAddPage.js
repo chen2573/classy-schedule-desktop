@@ -13,12 +13,17 @@ import TopBar from './TopBar.js'
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+    sx: {
+        "&& .Mui-selected": {
+            backgroundColor: "#92afdb"
+        }
     },
-  },
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    }
 };
 
 /**
@@ -107,24 +112,25 @@ const LabAdd = ({onAddLab, courses}) => {
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_lab_name" label="Lab Name" variant="outlined" value={lname} onChange={(e)=> setLName(e.target.value)}/>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_lab_name" label="Lab Name" variant="outlined" value={lname} onChange={(e)=> setLName(e.target.value)}/>
             </Box>
 
             <br></br>
 
             <Box>
-                <TextField fullWidth id="enter_lab_capacity" label="Lab Capacity" variant="outlined" value={lcapacity} onChange={(e)=> setLCapacity(e.target.value)}/>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_lab_capacity" label="Lab Capacity" variant="outlined" value={lcapacity} onChange={(e)=> setLCapacity(e.target.value)}/>
             </Box>
 
             <br></br>
 
             <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
-                    <InputLabel id="label">Required Technology</InputLabel>
+                    <InputLabel shrink id="label">Required Technology</InputLabel>
                     <Select
                     labelId="label"
                     id='technology_dropdown'
                     multiple
+                    notched
                     onChange={handleTechChange}
                     value={ltech}
                     label="Required Technology"
@@ -155,10 +161,16 @@ const LabAdd = ({onAddLab, courses}) => {
 
             <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
-                    <InputLabel id="label">Associated Course</InputLabel>
+                    <InputLabel shrink id="label">Associated Course</InputLabel>
                     <Select
                     labelId="label"
                     id='associated_course_dropdown'
+                    notched
+                    MenuProps={{sx: {
+                        "&& .Mui-selected": {
+                          backgroundColor: "#92afdb"
+                        }
+                    }}}
                     value={lcourse.map(e => e.name)}
                     label="Associated Course"
                     >

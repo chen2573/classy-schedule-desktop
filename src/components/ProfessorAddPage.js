@@ -17,18 +17,23 @@ import './../assets/styles/SideNav.css';
 import './../assets/styles/AddPages.css';
 import SideNavigation from './SideNavigation.js';
 import TopBar from './TopBar.js'
- 
+
 
 // Styling
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
+  sx: {
+    "&& .Mui-selected": {
+      backgroundColor: "#92afdb"
+    }
+  },
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
       width: 250,
     },
-  },
+  }
 };
 
 /**
@@ -177,10 +182,16 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
 
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="label">Program</InputLabel>
+            <InputLabel shrink id="label">Program</InputLabel>
             <Select
               labelId="label"
               id='program_dropdown'
+              notched
+              MenuProps={{sx: {
+                "&& .Mui-selected": {
+                  backgroundColor: "#92afdb"
+                }
+              }}}
               value={program}
               label="Program"
               onChange={(e) => setProgram(e.target.value)}
@@ -201,23 +212,29 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
         <br></br>
             
         <Box>
-          <TextField fullWidth id="enter_name" label="Professor Name" variant="outlined" value={name} onChange={validateName}/>
+          <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_name" label="Professor Name" variant="outlined" value={name} onChange={validateName}/>
         </Box>
         
         <br></br>
 
         <Box>
-          <TextField fullWidth id="enter_teach_load" label="Teach Load" variant="outlined" value={teach_load} onChange={validateTeachLoad}/>
+          <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_teach_load" label="Teach Load" variant="outlined" value={teach_load} onChange={validateTeachLoad}/>
         </Box>
 
         <br></br>
 
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="label">Preferred Time Block</InputLabel>
+            <InputLabel shrink id="label">Preferred Time Block</InputLabel>
             <Select
               labelId="label"
               id='time_block_dropdown'
+              notched
+              MenuProps={{sx: {
+                "&& .Mui-selected": {
+                  backgroundColor: "#92afdb"
+                }
+              }}}
               value={time_block}
               label="Preferred Time Block"
               onChange={(e) => setTimeBlock(e.target.value)}
@@ -236,14 +253,16 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
 
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="label">Courses Professor Can Teach</InputLabel>
+            <InputLabel shrink id="label">Courses Professor Can Teach</InputLabel>
             <Select
               labelId="label"
               id='can_teach_dropdown'
               multiple
+              notched
               value={can_teach.map(e => e.name)}
               label="Courses Professor Can Teach"
               input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Can Teach" />}
+              
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => (
@@ -270,11 +289,12 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
             
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="label">Courses Professor Want to Teach</InputLabel>
+            <InputLabel shrink id="label">Courses Professor Want to Teach</InputLabel>
             <Select
               labelId="label"
               id='want_teach_dropdown'
               multiple
+              notched
               value={want_teach.map(e => e.name)}
               label="Courses Professor Want to Teach"
               input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Want to Teach" />}
