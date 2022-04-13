@@ -8,6 +8,9 @@ import './../assets/styles/AddPages.css';
 import SideNavigation from './SideNavigation.js';
 import TopBar from './TopBar.js'
 
+const validate = (validateFN, stateSetter) => e => {
+    stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
+}
 
 // Styling
 const ITEM_HEIGHT = 48;
@@ -40,6 +43,17 @@ const LabAdd = ({onAddLab, courses}) => {
     const [ltimes, setLTimes] = useState('');
     const [lcourse, setLCourse] = useState([]);
 
+    // Lab Name must be less than 50 characters and have no numbers
+    const validLNameLength = name => name.length < 51;
+    const validLNameChar = val => [...val.matchAll(/(^[^0-9]+$)?/g)].some(x => x[0] == val) || val === '';
+    const validLName = name => validLNameLength(name) && validLNameChar(name)
+    // This function calls passes other functions to validate
+    const validateLName = validate(validLName, setLName);
+
+    // Lab Capacity must be a value between 0 and 1000
+    const validLCapacity = val => [...val.matchAll(/(1000|[1-9][0-9][0-9]|[1-9][0-9]|[0-9])?/g)].some(x => x[0] == val) || val === '';
+    // This function calls passes other functions to validate
+    const validateLCapacity = validate(validLCapacity, setLCapacity);
 
     /**
      * This function handles changes on the Technology dropdown
@@ -112,13 +126,13 @@ const LabAdd = ({onAddLab, courses}) => {
             <br></br>
 
             <Box>
-                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_lab_name" label="Lab Name" variant="outlined" value={lname} onChange={(e)=> setLName(e.target.value)}/>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_lab_name" label="Lab Name" variant="outlined" value={lname} onChange={validateLName}/>
             </Box>
 
             <br></br>
 
             <Box>
-                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_lab_capacity" label="Lab Capacity" variant="outlined" value={lcapacity} onChange={(e)=> setLCapacity(e.target.value)}/>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_lab_capacity" label="Lab Capacity" variant="outlined" value={lcapacity} onChange={validateLCapacity}/>
             </Box>
 
             <br></br>

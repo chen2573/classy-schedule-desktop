@@ -28,17 +28,17 @@ class DatabaseService {
     invalidateToken() {
         this.authenticationToken = 'tokenInvalid';
     }
-}
 
-
-function getPrograms() {
-    return axios({
-        method: 'GET',
-        url: API_BASE + '/department-management/departments',
-        headers: {
-            'content-type': 'application/json'
-        }
-    });
+    getPrograms() {
+        return axios({
+            method: 'GET',
+            url: API_BASE + 'department-management/departments',
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
 }
 
 /*
