@@ -10,6 +10,8 @@ import SolutionPage from './components/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, sampleSolution } from './utils/sampleData';
+import * as DBFunction from './services/databaseServices/UIDatabaseService';
+
 import varValueConvert from 'cross-env/src/variable';
 import LabAddPage from './components/LabAddPage';
 import SolutionGenerate from './components/AddSolution';
@@ -24,7 +26,7 @@ import SolutionDashboard from './components/SolutionDashboard';
  * will always use sample data.
  * 
  */
-const DEVELOPMENT_MODE = true; // Change to true when you want to debug with dummy data.
+const USE_DATABASE = true; // Change to true when you want to debug with dummy data.
 
 /**
  * Constants we will use to make our database queries.
@@ -94,7 +96,7 @@ function App() {
     console.log(newCourse);
     setCourses([...courses, newCourse]);
 
-    if (!DEVELOPMENT_MODE) {
+    if (!USE_DATABASE) {
       
       //let query = createSqlQuery('Add', newCourse.programId, newCourse.number, newCourse.name, newCourse.credits, newCourse.capacity);
       //window.DB.send(CHANNEL_COURSE_TO_MAIN, query);
@@ -111,22 +113,21 @@ function App() {
   };
 
   /**
-   * This is a temp method, when we were quering right to the database. Will be removed soon.
-   */
-  const createSqlQuery = (operation, programId, number, name, credits, capacity) => {
-    if (operation == 'Add') {
-      return `Insert Into class (dept_id, class_num, class_name, credits, capacity) VALUES ('${programId}', '${number}', '${name}', '${credits}', '${capacity}')`
-    }
-  };
-
-  /**
    * Adds a professor to the local state or to the DB if in production.
    * @param professor - the professor object that is being added. 
    */
   const addProfessor = (professor) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
-
-    const newProfessor = { id, ...professor }
+    let id;
+    let newProfessor;
+    
+    if(USE_DATABASE){
+      id = DBFunction.createProfessor(professor);
+      newProfessor = { id, ...professor }
+    }
+    else{
+      id = Math.floor(Math.random() * 10000) + 1;
+      newProfessor = { id, ...professor }
+    }
     setProfessors([...professors, newProfessor]);
   };
 
@@ -135,8 +136,23 @@ function App() {
    * @param id - the professor id that is being deleted. 
    */
   const deleteProfessor = (id) => {
-    console.log('delete', id);
-    setProfessors(professors.filter((professor) => professor.id !== id));
+    getLatestProfessors();
+
+    // Confirm with user if they want to delete. This will be permenant.
+    let deletedResponse = window.confirm("Are you sure you want to remove this Professor?\n This will be permanent.");
+
+    if(deletedResponse){
+      //delete from database
+      DBFunction.deleteProfessor(id).then((shouldDeleteFromUI) => {
+        console.log(shouldDeleteFromUI);
+        if(shouldDeleteFromUI){
+          //delete from UI
+          setProfessors(professors.filter((professor) => professor.id !== id));
+        }
+      }).catch((error) => {
+        window.alert(error);
+      });
+    }
   };
 
   /**
@@ -190,6 +206,7 @@ function App() {
     getLatestLabs();
     getLatestSolutions();
   };
+
   /**
    * Gets the latest data for programs.
    */
@@ -199,7 +216,7 @@ function App() {
     //setCourses('')
     let stateSolutions = [];
 
-    if (window.DB === undefined && DEVELOPMENT_MODE) {
+    if (window.DB === undefined && USE_DATABASE) {
       console.log('Using sample data');
 
       sampleSolution.map((solution) => {
@@ -245,7 +262,7 @@ function App() {
     //setCourses('')
     let statePrograms = [];
 
-    if (window.DB === undefined && DEVELOPMENT_MODE) {
+    if (window.DB === undefined && USE_DATABASE) {
       console.log('Using sample data');
 
       samplePrograms.map((program) => {
@@ -259,9 +276,13 @@ function App() {
       setPrograms(statePrograms);
     }
     else {
+      var _payload = {
+        request: 'REFRESH',
+        message: 'Request for PROGRAMS from RENDERER',
+    };
       //console.log(FETCH_ALL_PROGRAM_DATA);
       // Send a query to main
-      window.DB.send(CHANNEL_PROGRAM_TO_MAIN, "Request for PROGRAMS from RENDERER"); // Add constants
+      window.DB.send(CHANNEL_PROGRAM_TO_MAIN, _payload); // Add constants
 
       // Recieve the results
       window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
@@ -289,7 +310,7 @@ function App() {
     //setCourses('')
     let stateCourses = [];
 
-    if (window.DB === undefined || DEVELOPMENT_MODE) {
+    if (window.DB === undefined || USE_DATABASE) {
       console.log('Using sample data');
 
       sampleCourses.map((course) => {
@@ -343,8 +364,8 @@ function App() {
     let stateProfessors = [];
 
     // Database team has to fix their tables.
-    if (window.DB === undefined || DEVELOPMENT_MODE || true) {
-      console.log('Using sample data');
+    if (window.DB === undefined || !USE_DATABASE) {
+      console.log('Using sample Professor data');
 
       sampleProfessors.map((prof) => {
         let program = prof.program;
@@ -361,29 +382,36 @@ function App() {
       setProfessors(stateProfessors);
     }
     else {
+      var _payload = {
+        request: 'REFRESH',
+        message: 'Renderer REFRESH for Professors',
+      }
 
       // Send a query to main
-      window.DB.send("toMain", FETCH_ALL_PROFESSOR_DATA);
+      window.DB.send(CHANNEL_PROFESSOR_TO_MAIN, _payload);
 
       // Recieve the results
-      window.DB.receive("fromMain", (dataRows) => {
-        console.log(dataRows);
+      window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (dataRows) => {
 
-        dataRows.map((data) => {
-          let name = data.ProfessorName;
-          let department = '';
-          const id = Math.floor(Math.random() * 10000) + 1;
+          dataRows.map((data) => {
+              let id = data.professor_id
+              let name = data.first_name;
+              //let name = data.last_name;
+              let teach_load = data.teach_load;
+              let time_block = '';
+              let can_teach = ''; 
+              let want_teach = '';
 
-          let newProf = { id, name, department };
-          stateProfessors.push(newProf);
+              let newProf = { id, name, teach_load, time_block, can_teach, want_teach };
+              stateProfessors.push(newProf);
+          });
 
-
-        });
-        setProfessors(stateProfessors);
+          setProfessors(stateProfessors);
       });
     }
+    
   }
-
+  
   /**
    * Get the latest room data.
    */
@@ -392,7 +420,7 @@ function App() {
     let stateRooms = [];
 
     // Update when DB team has implemented tables
-    if (window.DB === undefined || DEVELOPMENT_MODE || true) {
+    if (window.DB === undefined || USE_DATABASE || true) {
       console.log('Using sample data');
 
       sampleRooms.map((room) => {
@@ -440,7 +468,7 @@ function App() {
     let stateLabs = [];
 
     // Update when DB team has implemented tables
-    if (window.DB === undefined || DEVELOPMENT_MODE || true) {
+    if (window.DB === undefined || USE_DATABASE || true) {
       console.log('Using sample data');
 
       sampleLabs.map((lab) => {
@@ -487,18 +515,6 @@ function App() {
   useEffect(updateAllStates, []);
 
   /**
-   * This function is used for debugging to get an idea of how the database looks like.
-   */
-  const decribeDatabaseTable = () => {
-    window.DB.send(CHANNEL_COURSE_TO_MAIN, "Desc class");
-
-    window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (data) => {
-      console.log(data);
-    });
-  }
-
-
-  /**
    * global styling
    * This variable controls the color styling of all the MUI components
    * It can be updated to control other styling elements if needed
@@ -506,7 +522,6 @@ function App() {
   const theme = createTheme({
     palette: { primary: { main: "#90a4ae", dark: '#546e7a' }, secondary: { main: "#ffffff", dark: '#cfd8dc' } }
   });
-
 
   /**
    * conditionally render pages based on the currentPage state
