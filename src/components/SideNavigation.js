@@ -14,15 +14,15 @@ function logoutFromApplication() {
 
 const SideNavigation = () => {
   return (
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>&times;</a>
-        <a class="link-pages" href="#">Account</a>
-        <a class="link-pages" href="#">Services</a>
-        <a class="link-pages" href="#">Contact</a>
-        <a class="link-pages" href="#">Settings</a>
+    <div id="mySidenav" className="sidenav">
+        <a href="#" className="closebtn" onClick={closeNav}>&times;</a>
+        <a className="link-pages" href="/">Account</a>
+        <a className="link-pages" href="/">Services</a>
+        <a className="link-pages" href="/">Contact</a>
+        <a className="link-pages" href="/">Settings</a>
         <br />
         <br />
-        <a class="link-pages logout" href="#" onClick={logoutFromApplication}><strong>Logout</strong></a>
+        <a className="link-pages logout" href="#" onClick={logoutFromApplication}><strong>Logout</strong></a>
     </div>
   )
 }
