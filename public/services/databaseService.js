@@ -111,7 +111,7 @@ class DatabaseService {
             method: 'POST',
             url: API_BASE + 'class-management/classes/create',
             data: {
-                'class_name': courseNum,
+                'class_num': courseNum,
                 'dept_id': deptId,
                 'class_name': courseName,
                 'capacity': capacity,
@@ -126,17 +126,12 @@ class DatabaseService {
 
     /**
      * Deletes the course with the specified course name and number.
-     * @param courseName - the name of the course to be deleted. 
-     * @param courseNum - the number of the course to be deleted.
+     * @param classNum - the number of the course to be deleted.
      */
-    deleteCourse(courseName, courseNum) {
+    deleteCourse(classNum) {
         return axios({
-            method: 'POST',
-            url: API_BASE + 'class-management/classes/delete',
-            data: {
-                'class_name': courseName,
-                'class_num': courseNum
-            },
+            method: 'DELETE',
+            url: API_BASE + 'class-management/classes/delete/' + classNum,
             headers: {
                 'accept': 'application/json',
                 Authorization: this.authenticationToken

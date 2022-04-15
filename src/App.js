@@ -71,45 +71,109 @@ function App() {
   const [labs, setLabs] = useState([]);
   const [solutions, setSolutions] = useState([]);
 
+   /**
+ * This is a helper function to get the Program name given a program id.
+ * @param programList - a list of temp program objects to iterate over
+ * @param targetID - the id of the the program to search for.
+ * @returns the name of the program that is specified.
+ */
+  const getProgramName = (programList, targetID) => {
+    for(const key in programList) {
+      if(programList[key].programId === targetID){
+        return programList[key].programName;
+      }
+    }
+  }
+
+    /**
+   * This is a helper function to get the Program id given a program name.
+   * @param programList - a list of temp program objects to iterate over
+   * @param targetName - the name of the the program to search for.
+   * @returns the ID of the program that is specified.
+   */
+  const getProgramID = (programList, targetName) => {
+    for(const key in programList) {
+      if(programList[key].programName === targetName){
+        return programList[key].programId;
+      }
+    }
+  }
+
   /**
    * Adds a course. This method is passed down through the components.
    * @param course - the course that will be added. 
    */
   const addCourse = (course) => {
-    //BUG: Database has changed their scheme for departments, so adding courses
-    // in non-dev mode will cause problems.
-    let programIdArray = programs.filter((program) => {
-      if (program.programName === course.program) {
-        return program.programId;
+    let id;
+    let newCourse;
+    let programId;
+
+    if(USE_DATABASE){
+      id = Math.floor(Math.random() * 10000) + 1;
+      
+      let programIdArray = programs.filter((program) => {
+        if (program.programName === course.program) {
+          return program.programId;
+        }
+      });
+      console.log(programIdArray)
+      if (programIdArray.length === 0){
+        window.alert('Uh-oh! There is a bug here. We are working on it :)');
+      }
+      else {
+        programId = programIdArray[0].programId;
       }
 
-    });
-    console.log(programIdArray)
-    if (programIdArray.length === 0){
-      window.alert('Uh-oh! There is a bug here. We are working on it :)');
-    }
-    else {
-      var programId = programIdArray[0].programId;
-    }
+      DBFunction.createCourse(course, programId);
 
-    const newCourse = { programId, ...course }
-    console.log(newCourse);
+      newCourse = { id, ...course }
+    }
+    else{
+      id = Math.floor(Math.random() * 10000) + 1;
+      newCourse = { id, ...course }
+    }
     setCourses([...courses, newCourse]);
-
-    if (!USE_DATABASE) {
-      
-      //let query = createSqlQuery('Add', newCourse.programId, newCourse.number, newCourse.name, newCourse.credits, newCourse.capacity);
-      //window.DB.send(CHANNEL_COURSE_TO_MAIN, query);
-    }
   };
+
+    /**
+ * This is a helper function to get the Course name given a course id.
+ * @param courseList - a list of temp course objects to iterate over
+ * @param targetID - the id of the the course to search for.
+ * @returns the name of the program that is specified.
+ */
+  const getCourseNumber = (courseList, targetID) => {
+    for(const key in courseList) {
+      if(courseList[key].id === targetID){
+        return courseList[key].number;
+      }
+    }
+  }
 
   /**
    * Deletes a course. This method is passed down through the components.
    * @param id - the id of the course that is being deleted 
    */
   const deleteCourse = (id) => {
-    console.log(id);
-    setCourses(courses.filter((course) => course.id !== id));
+    getLatestCourses();
+
+    // Confirm with user if they want to delete. This will be permenant.
+    let deletedResponse = window.confirm("Are you sure you want to remove this Course?\n This will be permanent.");
+
+    if(deletedResponse){
+      let tempCourse = courses;
+
+      let courseNum = getCourseNumber(tempCourse, id);
+      //delete from database
+      DBFunction.deleteCourse(courseNum).then((shouldDeleteFromUI) => {
+        console.log(shouldDeleteFromUI);
+        if(shouldDeleteFromUI){
+          //delete from UI
+          setCourses(courses.filter((course) => course.id !== id));
+        }
+      }).catch((error) => {
+        window.alert(error);
+      });
+    }
   };
 
   /**
@@ -253,6 +317,7 @@ function App() {
     //   });
     // }
   }
+
   /**
    * Gets the latest data for programs.
    */
@@ -279,14 +344,14 @@ function App() {
       var _payload = {
         request: 'REFRESH',
         message: 'Request for PROGRAMS from RENDERER',
-    };
+      };
       //console.log(FETCH_ALL_PROGRAM_DATA);
       // Send a query to main
       window.DB.send(CHANNEL_PROGRAM_TO_MAIN, _payload); // Add constants
 
       // Recieve the results
       window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
-        //console.log(dataRows);
+        console.log(dataRows);
 
         dataRows.map((program) => {
           let programId = program.dept_id;
@@ -310,7 +375,7 @@ function App() {
     //setCourses('')
     let stateCourses = [];
 
-    if (window.DB === undefined || USE_DATABASE) {
+    if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
 
       sampleCourses.map((course) => {
@@ -328,26 +393,46 @@ function App() {
       setCourses(stateCourses);
     }
     else {
-      //console.log(FETCH_ALL_COURSE_DATA);
+      let _payload = {
+        request: 'REFRESH',
+        message: 'Renderer REFRESH for Courses',
+      }
+
       // Send a query to main
-      window.DB.send(CHANNEL_COURSE_TO_MAIN, FETCH_ALL_COURSE_DATA); // Add constants
+      window.DB.send(CHANNEL_COURSE_TO_MAIN, _payload); // Add constants
 
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
-        //console.log(dataRows);
+        console.log(dataRows);
         //console.log(typeof dataRows);
 
         dataRows.map((data) => {
-          let courseID = data.ClassID;
-          let program = data.dept_id;
-          let capacity = data.Capacity;
+          let programName;
+          console.log(programs);
+          let programNameArray = programs.filter((program) => {
+            //console.log(program.programId);
+            //console.log(data.dept_id);
+            if (program.programId === data.dept_id) {
+              return program.programName;
+            }
+          });
+          if (programNameArray.length === 0){
+            //window.alert('Uh-oh! There is a bug here. We are working on it :)');
+          }
+          else {
+            programName = programNameArray[0].programName;
+          }
+
+          let courseID = " ";
+          let program = programName;
+          let capacity = data.capacity;
           let number = data.class_num;
           let credits = data.credits;
           let name = data.class_name;
           const id = Math.floor(Math.random() * 10000) + 1
 
 
-          let newCourse = { program, number, name, courseID, credits, capacity }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          let newCourse = { id, program, number, name, courseID, credits, capacity }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
           stateCourses.push(newCourse);
         });
@@ -355,6 +440,7 @@ function App() {
       });
     }
   }
+
 
   /**
    * Gets the latest data for professors.
@@ -382,7 +468,7 @@ function App() {
       setProfessors(stateProfessors);
     }
     else {
-      var _payload = {
+      let _payload = {
         request: 'REFRESH',
         message: 'Renderer REFRESH for Professors',
       }
