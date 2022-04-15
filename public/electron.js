@@ -304,7 +304,7 @@ function createIPCChannels() {
                 mainWindow.webContents.send('fromMain:Program', payload.data);
                     
             }).catch((error) => {
-                console.log('DATABASE LOG--> ERROR returning Programs: ' + error + + '\n');
+                console.error('DATABASE LOG--> ERROR returning Programs: ' + error + + '\n');
             });
         }
 
@@ -321,7 +321,7 @@ function createIPCChannels() {
                 console.log("DATABASE LOG--> Successfully returned the following Professor rows\n" + payload.data + "\n\n");
                 mainWindow.webContents.send('fromMain:Professor', payload.data);
             }).catch((error) => {
-                console.log('DATABASE LOG--> ERROR returning Professors: ' + error + + '\n');
+                console.error('DATABASE LOG--> ERROR returning Professors: ' + error + + '\n');
             });
         }
         else if(args.request === 'CREATE'){
@@ -329,7 +329,7 @@ function createIPCChannels() {
             console.log("DATABASE LOG --> " + "Making request CREATE a PROFESSOR")
     
             DB.createProfessor(args.firstName, args.lastName, args.teachLoad).then((payload) => {
-                console.log("DATABASE LOG--> Successfully returned the following Professor rows\n" + payload.data + "\n");
+                console.log("DATABASE LOG--> Successfully added professor \n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -339,7 +339,7 @@ function createIPCChannels() {
 
                 mainWindow.webContents.send('fromMain:Professor', _payload);
             }).catch((error) => {
-                console.log('DATABASE LOG--> ERROR adding professor: ' + error + + '\n');
+                console.error('DATABASE LOG--> ERROR adding professor: ' + error + + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to add professor.",
@@ -364,7 +364,7 @@ function createIPCChannels() {
 
                 mainWindow.webContents.send('fromMain:Professor', _payload);
             }).catch((error) => {
-                console.log('DATABASE LOG--> ERROR deleting professor: ' + error + '\n');
+                console.error('DATABASE LOG--> ERROR deleting professor: ' + error + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to delete professor.",
@@ -377,70 +377,69 @@ function createIPCChannels() {
 
     });
 
-        // Get all Professors
-        ipcMain.on("toMain:Course", (event, args) => {
+    // Get all Professors
+    ipcMain.on("toMain:Course", (event, args) => {
 
-            if(args.request === 'REFRESH'){
-                console.log("DATABASE LOG --> " + args.message)
-                console.log("DATABASE LOG --> " + "Making request REFRESH all COURSES")
-        
-                DB.getCourses().then((payload) => {
-                    console.log("DATABASE LOG--> Successfully returned the following Course rows\n" + payload.data + "\n\n");
-                    mainWindow.webContents.send('fromMain:Course', payload.data);
-                }).catch((error) => {
-                    console.log('DATABASE LOG--> ERROR returning Courses: ' + error + + '\n');
-                });
-            }
-            else if(args.request === 'CREATE'){
-                console.log("DATABASE LOG --> " + args.message)
-                console.log("DATABASE LOG --> " + "Making request CREATE a PROFESSOR")
-        
-                DB.createProfessor(args.firstName, args.lastName, args.teachLoad).then((payload) => {
-                    console.log("DATABASE LOG--> Successfully returned the following Professor rows\n" + payload.data + "\n");
+        if(args.request === 'REFRESH'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request REFRESH all COURSES")
     
-                    let _payload = {
-                        status: 'SUCCESS',
-                        message: "Professor added successfully!",
-                        profId: payload.data.professor_id
-                    };
+            DB.getCourses().then((payload) => {
+                console.log("DATABASE LOG--> Successfully returned the following Course rows\n" + payload.data + "\n\n");
+                mainWindow.webContents.send('fromMain:Course', payload.data);
+            }).catch((error) => {
+                console.error('DATABASE LOG--> ERROR returning Courses: ' + error + + '\n');
+            });
+        }
+        else if(args.request === 'CREATE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request CREATE a COURSE")
+
+            DB.createCourse(args.courseNum, args.deptId, args.courseName, args.capacity, args.credits).then((payload) => {
+                console.log("DATABASE LOG--> Successfully created Course\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Course added successfully!",
+                };
+                mainWindow.webContents.send('fromMain:Course', _payload);
+
+            }).catch((error) => {
+                console.error('ERROR! DATABASE LOG--> ERROR adding course: ' + error + + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to add course.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Course', _payload);
+            });
+        }
+        else if(args.request === 'DELETE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request DELETE a COURSE")
     
-                    mainWindow.webContents.send('fromMain:Professor', _payload);
-                }).catch((error) => {
-                    console.log('DATABASE LOG--> ERROR adding professor: ' + error + + '\n');
-                    let _payload = {
-                        status: 'FAIL',
-                        message: "Error! Unable to add professor.",
-                        errorCode: error
-                    };
-    
-                    mainWindow.webContents.send('fromMain:Professor', _payload);
-                });
-            }
-            else if(args.request === 'DELETE'){
-                console.log("DATABASE LOG --> " + args.message)
-                console.log("DATABASE LOG --> " + "Making request DELETE a PROFESSOR")
-        
-                DB.deleteProfessor(args.profId).then((payload) => {
-                    console.log("DATABASE LOG--> Successfully deleted Professor with profId: " + args.profId + "\n");
-    
-                    let _payload = {
-                        status: 'SUCCESS',
-                        message: "Professor deleted successfully!",
-                        profId: payload.data.professor_id
-                    };
-    
-                    mainWindow.webContents.send('fromMain:Professor', _payload);
-                }).catch((error) => {
-                    console.log('DATABASE LOG--> ERROR deleting professor: ' + error + '\n');
-                    let _payload = {
-                        status: 'FAIL',
-                        message: "Error! Unable to delete professor.",
-                        errorCode: error
-                    };
-    
-                    mainWindow.webContents.send('fromMain:Professor', _payload);
-                });
-            }
-    
-        });
+            DB.deleteCourse(args.classNum).then((payload) => {
+                console.log("DATABASE LOG--> Successfully deleted Course with course number: " + args.classNum + "\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Course deleted successfully!",
+                    courseNum: payload.data.classNum
+                };
+
+                mainWindow.webContents.send('fromMain:Course', _payload);
+            }).catch((error) => {
+                console.log('DATABASE LOG--> ERROR deleting course: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to delete course.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Course', _payload);
+            });
+        }
+
+    });
 }
