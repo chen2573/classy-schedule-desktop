@@ -310,7 +310,7 @@ function App() {
     //setCourses('')
     let stateCourses = [];
 
-    if (window.DB === undefined || USE_DATABASE) {
+    if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
 
       sampleCourses.map((course) => {
@@ -328,9 +328,13 @@ function App() {
       setCourses(stateCourses);
     }
     else {
-      //console.log(FETCH_ALL_COURSE_DATA);
+      let _payload = {
+        request: 'REFRESH',
+        message: 'Renderer REFRESH for Professors',
+      }
+
       // Send a query to main
-      window.DB.send(CHANNEL_COURSE_TO_MAIN, FETCH_ALL_COURSE_DATA); // Add constants
+      window.DB.send(CHANNEL_COURSE_TO_MAIN, _payload); // Add constants
 
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
@@ -338,9 +342,15 @@ function App() {
         //console.log(typeof dataRows);
 
         dataRows.map((data) => {
-          let courseID = data.ClassID;
-          let program = data.dept_id;
-          let capacity = data.Capacity;
+          let tempPrograms = programs;
+          //console.log(tempPrograms['0'].programId);
+
+          let programName = getProgramName(tempPrograms, data.dept_id);
+          console.log(programName)
+
+          let courseID = " ";
+          let program = programName;
+          let capacity = data.capacity;
           let number = data.class_num;
           let credits = data.credits;
           let name = data.class_name;
@@ -353,6 +363,20 @@ function App() {
         });
         setCourses(stateCourses);
       });
+    }
+  }
+
+  /**
+   * This is a helper function to get the Program name given a program id.
+   * @param programList - a list of temp program objects to iterate over
+   * @param targetID - the id of the the program to search for.
+   * @returns the name of the program that is specified.
+   */
+  function getProgramName(programList, targetID) {
+    for(const key in programList) {
+      if(programList[key].programId === targetID){
+        return programList[key].programName;
+      }
     }
   }
 
@@ -382,7 +406,7 @@ function App() {
       setProfessors(stateProfessors);
     }
     else {
-      var _payload = {
+      let _payload = {
         request: 'REFRESH',
         message: 'Renderer REFRESH for Professors',
       }
