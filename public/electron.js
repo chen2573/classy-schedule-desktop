@@ -252,9 +252,22 @@ let DB = new DatabaseService();
 /**
  * Inter Process Communication is used to communicate to our UI which
  * is our React App. The channels for the IPC channels are set up in public/preload.js.
+ * 
+ * This function adds creates and adds all the channels needed for communcication with the React App.
+ * This communication is mostly used Database API calls.
  */
 function createIPCChannels() {
-    
+    addAuthenticationChannels();
+    addProgramChannel();
+    addProfessorChannel();
+    addCourseChannel();
+    addRoomChannel();
+}
+
+/**
+ * This function creates a database channel for Authentication.
+ */
+function addAuthenticationChannels(){
     // LogIn logic.
     ipcMain.on("toMain:AuthLogIn", (event, args) => {
         DB.authenticateUser(args.email, args.password).then((payload) => {
@@ -292,7 +305,12 @@ function createIPCChannels() {
 
         
     });
+}
 
+/**
+ * This function creates a database channel for Programs.
+ */
+function addProgramChannel(){
     // Get all Programs
     ipcMain.on("toMain:Program", (event, args) => {
         if(args.request === 'REFRESH'){
@@ -309,7 +327,12 @@ function createIPCChannels() {
         }
 
     });
+}
 
+/**
+ * This function creates a database channel for Professors.
+ */
+function addProfessorChannel(){
     // Get all Professors
     ipcMain.on("toMain:Professor", (event, args) => {
 
@@ -376,8 +399,13 @@ function createIPCChannels() {
         }
 
     });
+}
 
-    // Get all Professors
+/**
+ * This function creates a database channel for Courses.
+ */
+function addCourseChannel(){
+    // Get all Courses
     ipcMain.on("toMain:Course", (event, args) => {
 
         if(args.request === 'REFRESH'){
@@ -442,7 +470,12 @@ function createIPCChannels() {
         }
 
     });
+}
 
+/**
+ * This function creates a database channel for Rooms.
+ */
+function addRoomChannel(){
     // Get all Rooms
     ipcMain.on("toMain:Room", (event, args) => {
 
