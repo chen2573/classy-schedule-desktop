@@ -3,7 +3,9 @@ const {
     CHANNEL_PROFESSOR_TO_MAIN,
     CHANNEL_PROFESSOR_FROM_MAIN,
     CHANNEL_COURSE_TO_MAIN,
-    CHANNEL_COURSE_FROM_MAIN
+    CHANNEL_COURSE_FROM_MAIN,
+    CHANNEL_ROOM_TO_MAIN,
+    CHANNEL_ROOM_FROM_MAIN
 } = require('../../utils/ipcChannels')
 
 
@@ -105,6 +107,57 @@ export function deleteCourse(courseNum) {
             else if(payload.status === 'FAIL') {
                 window.alert(payload.message + '\n' + payload.errorCode);
                 resolve(false);
+            }
+        });
+    });
+}
+
+export function createRoom(room){
+    let _payload = {
+        request: 'CREATE',
+        message: 'Renderer CREATE Room',
+        roomNumber: room.rnumber,
+        capacity: room.rcapacity,
+    };
+    
+    // Send a query to main
+    window.DB.send(CHANNEL_ROOM_TO_MAIN, _payload);
+
+    // Recieve the results
+    window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
+        if(payload.status === 'SUCCESS'){
+            window.alert(payload.message);
+            return payload.profId
+        }
+        else{
+            window.alert(payload.message + '\n' + payload.errorCode);
+        }
+    });
+}
+
+export function deleteRoom(roomId) {
+    let _payload = {
+        request: 'DELETE',
+        message: 'Renderer DELETE Room',
+        roomId: roomId
+    };
+
+    // Send a query to main
+    window.DB.send(CHANNEL_ROOM_TO_MAIN, _payload);
+    
+    return new Promise((resolve, reject) => {
+        // Recieve the results
+        window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS') {
+                window.alert(payload.message);
+                resolve(true);
+            } 
+            else if(payload.status === 'FAIL') {
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(false);
+            }
+            else {
+                reject('Room still being processed. Please wait to delete')
             }
         });
     });

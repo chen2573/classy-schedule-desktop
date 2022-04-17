@@ -78,10 +78,11 @@ const RoomAdd = ({onAddRoom}) => {
     const onSubmit = (e) => {
         e.preventDefault()
         e.target.reset()
-        if (!rbuilding) {
+        //UNCOMMENT ONCE BUILDING IS ADDED AGAIN - Anshul
+        /*if (!rbuilding) {
             alert('Please enter a three letter building code')
             return;
-        }
+        }*/
         if (!rnumber) {
             alert('Please enter the room number')
             return;

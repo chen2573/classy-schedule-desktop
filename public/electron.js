@@ -252,9 +252,22 @@ let DB = new DatabaseService();
 /**
  * Inter Process Communication is used to communicate to our UI which
  * is our React App. The channels for the IPC channels are set up in public/preload.js.
+ * 
+ * This function adds creates and adds all the channels needed for communcication with the React App.
+ * This communication is mostly used Database API calls.
  */
 function createIPCChannels() {
-    
+    addAuthenticationChannels();
+    addProgramChannel();
+    addProfessorChannel();
+    addCourseChannel();
+    addRoomChannel();
+}
+
+/**
+ * This function creates a database channel for Authentication.
+ */
+function addAuthenticationChannels(){
     // LogIn logic.
     ipcMain.on("toMain:AuthLogIn", (event, args) => {
         DB.authenticateUser(args.email, args.password).then((payload) => {
@@ -292,7 +305,12 @@ function createIPCChannels() {
 
         
     });
+}
 
+/**
+ * This function creates a database channel for Programs.
+ */
+function addProgramChannel(){
     // Get all Programs
     ipcMain.on("toMain:Program", (event, args) => {
         if(args.request === 'REFRESH'){
@@ -309,7 +327,12 @@ function createIPCChannels() {
         }
 
     });
+}
 
+/**
+ * This function creates a database channel for Professors.
+ */
+function addProfessorChannel(){
     // Get all Professors
     ipcMain.on("toMain:Professor", (event, args) => {
 
@@ -376,8 +399,13 @@ function createIPCChannels() {
         }
 
     });
+}
 
-    // Get all Professors
+/**
+ * This function creates a database channel for Courses.
+ */
+function addCourseChannel(){
+    // Get all Courses
     ipcMain.on("toMain:Course", (event, args) => {
 
         if(args.request === 'REFRESH'){
@@ -438,6 +466,77 @@ function createIPCChannels() {
                 };
 
                 mainWindow.webContents.send('fromMain:Course', _payload);
+            });
+        }
+
+    });
+}
+
+/**
+ * This function creates a database channel for Rooms.
+ */
+function addRoomChannel(){
+    // Get all Rooms
+    ipcMain.on("toMain:Room", (event, args) => {
+
+        if(args.request === 'REFRESH'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request REFRESH all ROOMS")
+    
+            DB.getRooms().then((payload) => {
+                console.log("DATABASE LOG--> Successfully returned the following Room rows\n" + payload.data + "\n\n");
+                mainWindow.webContents.send('fromMain:Room', payload.data);
+            }).catch((error) => {
+                console.error('DATABASE LOG--> ERROR returning Rooms: ' + error + + '\n');
+            });
+        }
+        else if(args.request === 'CREATE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request CREATE a ROOM")
+
+            DB.createRoom(args.roomNumber, args.capacity).then((payload) => {
+                console.log("DATABASE LOG--> Successfully created Room\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Room added successfully!",
+                };
+                mainWindow.webContents.send('fromMain:Room', _payload);
+
+            }).catch((error) => {
+                console.error('ERROR! DATABASE LOG--> ERROR adding room: ' + error + + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to add room.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            });
+        }
+        else if(args.request === 'DELETE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request DELETE a ROOM")
+    
+            DB.deleteRoom(args.roomId).then((payload) => {
+                console.log("DATABASE LOG--> Successfully deleted Room with room id: " + args.roomId + "\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Room deleted successfully!",
+                    roomId: payload.data.roomId
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            }).catch((error) => {
+                console.log('DATABASE LOG--> ERROR deleting room: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to delete room.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
             });
         }
 
