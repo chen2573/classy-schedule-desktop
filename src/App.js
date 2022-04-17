@@ -224,9 +224,17 @@ function App() {
    * @param room - the room object that is being added. 
    */
   const addRoom = (room) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
-
-    const newRoom = { id, ...room }
+    let id;
+    let newRoom;
+    
+    if(USE_DATABASE){
+      id = DBFunction.createRoom(room);
+      newRoom = { id, ...room }
+    }
+    else{
+      id = Math.floor(Math.random() * 10000) + 1;
+      newRoom= { id, ...room }
+    }
     setRooms([...rooms, newRoom]);
   };
 
@@ -235,8 +243,21 @@ function App() {
    * @param id - the room id that is being deleted. 
    */
   const deleteRoom = (id) => {
-    console.log('delete', id);
-    setRooms(rooms.filter((room) => room.id !== id));
+    // Confirm with user if they want to delete. This will be permenant.
+    let deletedResponse = window.confirm("Are you sure you want to remove this Room?\n This will be permanent.");
+
+    if(deletedResponse){
+      //delete from database
+      DBFunction.deleteRoom(id).then((shouldDeleteFromUI) => {
+        console.log(shouldDeleteFromUI);
+        if(shouldDeleteFromUI){
+          //delete from UI
+          setRooms(rooms.filter((room) => room.id !== id));
+        }
+      }).catch((error) => {
+        window.alert(error);
+      });
+    }
   };
 
   /**
@@ -506,7 +527,7 @@ function App() {
     let stateRooms = [];
 
     // Update when DB team has implemented tables
-    if (window.DB === undefined || USE_DATABASE || true) {
+    if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
 
       sampleRooms.map((room) => {
@@ -516,28 +537,28 @@ function App() {
         let rtech = room.rtech;
         let id = Math.floor(Math.random() * 10000) + 1;
 
-        var newRoom = { id, rbuilding, rnumber, rcapacity, rtech, };
+        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, };
         stateRooms.push(newRoom);
       })
       setRooms(stateRooms);
     }
     else {
-      console.log(FETCH_ALL_ROOM_DATA);
+      let _payload = {
+        request: 'REFRESH',
+        message: 'Renderer REFRESH for Rooms',
+      }
 
-      window.DB.send("toMain", FETCH_ALL_ROOM_DATA);
+      window.DB.send(CHANNEL_ROOM_TO_MAIN, _payload);
 
-      window.DB.receive("fromMain", (dataRows) => {
-        console.log(dataRows);
-        console.log(typeof dataRows);
-
+      window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
           let rbuilding = data.rbuilding;
-          let rnumber = data.rnumber;
-          let rcapacity = data.rcapacity;
+          let rnumber = data.room_num;
+          let rcapacity = data.capacity;
           let rtech = data.rtech;
-          const id = Math.floor(Math.random() * 10000) + 1
+          let id = data.room_id;
 
-          let newRoom = { rnumber };
+          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech};
 
           stateRooms.push(newRoom);
         });

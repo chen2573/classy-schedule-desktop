@@ -216,7 +216,7 @@ class DatabaseService {
     createRoom(roomNum, capacity) {
         return axios({
             method: 'POST',
-            url: API_BASE + 'room-management/professor/create',
+            url: API_BASE + 'room-management/rooms/create',
             data: {
                 'room_num': roomNum,
                 'capacity': capacity
@@ -234,11 +234,8 @@ class DatabaseService {
      */
     deleteRoom(roomId) {
         return axios({
-            method: 'POST',
-            url: API_BASE + 'room-management/professor/delete',
-            data: {
-                'room_id': roomId
-            },
+            method: 'DELETE',
+            url: API_BASE + 'room-management/rooms/delete/'+roomId,
             headers: {
                 'accept': 'application/json',
                 Authorization: this.authenticationToken

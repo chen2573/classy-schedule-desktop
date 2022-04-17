@@ -442,4 +442,70 @@ function createIPCChannels() {
         }
 
     });
+
+    // Get all Rooms
+    ipcMain.on("toMain:Room", (event, args) => {
+
+        if(args.request === 'REFRESH'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request REFRESH all ROOMS")
+    
+            DB.getRooms().then((payload) => {
+                console.log("DATABASE LOG--> Successfully returned the following Room rows\n" + payload.data + "\n\n");
+                mainWindow.webContents.send('fromMain:Room', payload.data);
+            }).catch((error) => {
+                console.error('DATABASE LOG--> ERROR returning Rooms: ' + error + + '\n');
+            });
+        }
+        else if(args.request === 'CREATE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request CREATE a ROOM")
+
+            DB.createRoom(args.roomNumber, args.capacity).then((payload) => {
+                console.log("DATABASE LOG--> Successfully created Room\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Room added successfully!",
+                };
+                mainWindow.webContents.send('fromMain:Room', _payload);
+
+            }).catch((error) => {
+                console.error('ERROR! DATABASE LOG--> ERROR adding room: ' + error + + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to add room.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            });
+        }
+        else if(args.request === 'DELETE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request DELETE a ROOM")
+    
+            DB.deleteRoom(args.roomId).then((payload) => {
+                console.log("DATABASE LOG--> Successfully deleted Room with room id: " + args.roomId + "\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Room deleted successfully!",
+                    roomId: payload.data.roomId
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            }).catch((error) => {
+                console.log('DATABASE LOG--> ERROR deleting room: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to delete room.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            });
+        }
+
+    });
 }
