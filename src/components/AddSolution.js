@@ -8,6 +8,8 @@ import './../assets/styles/AddPages.css';
 import SideNavigation from './SideNavigation.js';
 import TopBar from './TopBar.js';
 
+import * as AlgoFunction from './../services/algorithmServices/mainAlgorithmService';
+
 
     /**
  * This component is a view that lists out individual LabListItems.
@@ -201,6 +203,11 @@ const CourseListItem = ({ course }) => {
     );
 }
 
+function createNewSchedule(){
+    AlgoFunction.runAlgorithm();
+    //setCurrentPage('schedule');
+}
+
 /**
  * The component that will be exported. This page will 4 lists of the Courses, professors, rooms, and labs that have been added and
  * that are in the database.
@@ -228,7 +235,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
                     </div>
                     
                     {/* generate schedule button */}
-                    <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}} onClick={()=>{setCurrentPage('schedule')}}>
+                    <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}} onClick={createNewSchedule}>
                         <Typography variant="text" color="secondary">Generate Schedule</Typography>
                     </Button>
                 </div>

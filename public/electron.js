@@ -262,6 +262,7 @@ function createIPCChannels() {
     addProfessorChannel();
     addCourseChannel();
     addRoomChannel();
+    addAlgorithmChannel();
 }
 
 /**
@@ -541,4 +542,28 @@ function addRoomChannel(){
         }
 
     });
+}
+
+/**
+ * This function creates a database channel for Algorithms.
+ */
+ function addAlgorithmChannel(){
+    // Get all Programs
+    ipcMain.on("toMain:Algo", (event, args) => {
+        if(args.request === 'RUN'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request RUN ALGORITHM")
+    
+            executeAlgorithm();
+        }
+
+    });
+}
+
+//const exec = require('child_process').execFile;
+const util = require('util');
+const execFile = util.promisify(require('child_process').execFile);
+async function executeAlgorithm() {
+    const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/CSP-selective2.exe'), []);
+    console.log(stdout);
 }
