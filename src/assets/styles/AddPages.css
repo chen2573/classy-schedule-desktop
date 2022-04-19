@@ -103,4 +103,11 @@
     max-width:100%;
     display: flex;
     flex-wrap: wrap;
+  }  
+  .solution-page {
+    max-width:100%;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    right: 30%;
   }
