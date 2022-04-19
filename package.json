@@ -1,7 +1,7 @@
 {
   "name": "classy-schedule-desktop",
   "productName": "ClassySchedule",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "public/electron.js",
   "private": true,
   "author": "CISC480 Desktop Team",
