@@ -5,7 +5,6 @@ const shell = require('electron').shell;
 const mysql = require('mysql');
 const fs = require('fs');
 const isDev = require('electron-is-dev');
-const { archFromString } = require('electron-builder');
 
 // Objects coming from electron
 const {
