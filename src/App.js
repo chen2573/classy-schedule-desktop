@@ -26,7 +26,7 @@ import SolutionDashboard from './components/SolutionDashboard';
  * will always use sample data.
  * 
  */
-const USE_DATABASE = true; // Change to true when you want to debug with dummy data.
+const USE_DATABASE = false; // Change to true when you want to debug with dummy data.
 
 /**
  * Constants we will use to make our database queries.
@@ -300,19 +300,16 @@ function App() {
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
     let stateSolutions = [];
-
-    if (window.DB === undefined && USE_DATABASE) {
+    //console.log(sampleSolution);
+    if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
 
       sampleSolution.map((solution) => {
+        console.log(sampleSolution);
         let name = solution.name;
-        let course = solution.course;
-        let professor = solution.professor;
-        let time = solution.time;
-        let room = solution.room;
+        let data = solution.data;
         const id = Math.floor(Math.random() * 10000) + 1
-
-        let newSolution = { id, name, course, professor, time, room };
+        let newSolution = { id, name, data };
         stateSolutions.push(newSolution);
       });
       setSolutions(stateSolutions);

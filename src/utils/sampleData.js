@@ -111,21 +111,41 @@ export const sampleRooms = [
     }  
 ]
 export const sampleSolution = [
-        [
         {
-            "name":"solution"
+            "name": "solution1",
+            "data":[
+                {
+                    "professor": 1,
+                    "course": 2,
+                    "time": 1,
+                    "room": 1
+                }, 
+                {
+                    "professor": 1,
+                    "course": 1,
+                    "time": 2,
+                    "room": 1
+                }
+            ]
         },
         {
-            "professor": 1,
-            "course": 2,
-            "time": 1,
-            "room": 1
-        }, 
-        {
-            "professor": 1,
-            "course": 1,
-            "time": 2,
-            "room": 1
-        }]
+            "name": "solution2",
+            "data":[
+                {
+                    "professor": 1,
+                    "course": 2,
+                    "time": 1,
+                    "room": 1
+                }, 
+                {
+                    "professor": 1,
+                    "course": 1,
+                    "time": 2,
+                    "room": 1
+                }
+            ]
+        }
+
+
     
 ]
