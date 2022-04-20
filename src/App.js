@@ -26,7 +26,7 @@ import SolutionDashboard from './components/SolutionDashboard';
  * will always use sample data.
  * 
  */
-const USE_DATABASE = false; // Change to true when you want to debug with dummy data.
+const USE_DATABASE = true; // Change to true when you want to debug with dummy data.
 
 /**
  * Constants we will use to make our database queries.
@@ -301,7 +301,7 @@ function App() {
     //setCourses('')
     let stateSolutions = [];
     //console.log(sampleSolution);
-    if (window.DB === undefined || !USE_DATABASE) {
+    if (window.DB === undefined || !USE_DATABASE || true) {
       console.log('Using sample data');
 
       sampleSolution.map((solution) => {

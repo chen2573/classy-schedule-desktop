@@ -563,6 +563,14 @@ function addRoomChannel(){
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
 async function executeAlgorithm() {
-    const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/CSP-selective2.exe'), []);
-    console.log(stdout);
+
+    if(process.platform == 'darwin'){
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/CSP-selective2.exe'), []);
+        console.log(stdout);
+    }
+    else {
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/win/CSP-selective2.exe'), []);
+        console.log(stdout);
+    }
+    
 }
