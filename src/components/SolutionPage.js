@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './DataViewer.js';
 import '../assets/styles/Solution.css';
-const solutionData = require("../solution-data/solution.json");
+const solutionData = require("../utils/solution.json");
 
 
 /**
