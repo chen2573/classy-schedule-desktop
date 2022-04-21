@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography, Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import DataViewer from './DataViewer.js';
-import '../assets/styles/Solution.css';
-const solutionData = require("../utils/solution.json");
+import DataViewer from './../DataViewer.js';
+import './../../assets/styles/Solution.css';
+const solutionData = require("../../utils/solution.json");
 
 
 /**

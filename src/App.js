@@ -6,16 +6,16 @@ import CoursePage from './components/addPages/CourseAddPage.js';
 import LabPage from './components/addPages/LabAddPage.js';
 import ProfessorPage from './components/addPages/ProfessorAddPage.js';
 import RoomPage from './components/addPages/RoomAddPage.js'
-import SolutionPage from './components/SolutionPage.js';
+import SolutionPage from './components/schedulePages/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, sampleSolution } from './utils/sampleData';
 import * as DBFunction from './services/databaseServices/UIDatabaseService';
 
 import varValueConvert from 'cross-env/src/variable';
-import SolutionGenerate from './components/AddSolution';
-import AddSolution from './components/AddSolution.js';
-import SolutionDashboard from './components/SolutionDashboard';
+import SolutionGenerate from './components/schedulePages/AddSolution';
+import AddSolution from './components/schedulePages/AddSolution.js';
+import SolutionDashboard from './components/schedulePages/SolutionDashboard';
 
 /**
  * Toggle to get data from database or use sample data.
