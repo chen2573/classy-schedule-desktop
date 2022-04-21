@@ -110,40 +110,20 @@ export const sampleRooms = [
         "rbuilding": "OSS"
     }  
 ]
-export const sampleSolution = [
+export const samplePlans = [
         {
-            "name": "solution1",
-            "data":[
-                {
-                    "professor": 1,
-                    "course": 2,
-                    "time": 1,
-                    "room": 1
-                }, 
-                {
-                    "professor": 1,
-                    "course": 1,
-                    "time": 2,
-                    "room": 1
-                }
-            ]
+            "plan_id": "1234",
+            "plan_name": "planA",
+            "plan_description": "test plan A",
+            "semester_year": "2021",
+            "semester_num": "1",        
         },
         {
-            "name": "solution2",
-            "data":[
-                {
-                    "professor": 1,
-                    "course": 2,
-                    "time": 1,
-                    "room": 1
-                }, 
-                {
-                    "professor": 1,
-                    "course": 1,
-                    "time": 2,
-                    "room": 1
-                }
-            ]
+            "plan_id": "2343",
+            "plan_name": "planB",
+            "plan_description": "test plan B",
+            "semester_year": "2022",
+            "semester_num": "3", 
         }
 
 
