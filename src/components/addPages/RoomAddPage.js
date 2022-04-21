@@ -2,11 +2,11 @@ import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, Outline
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
-import './../assets/styles/HomePage.css';
-import './../assets/styles/SideNav.css';
-import './../assets/styles/AddPages.css';
-import SideNavigation from './SideNavigation.js';
-import TopBar from './TopBar.js'
+import './../../assets/styles/HomePage.css';
+import './../../assets/styles/SideNav.css';
+import './../../assets/styles/AddPages.css';
+import SideNavigation from './../SideNavigation.js';
+import TopBar from './../TopBar.js'
  
 
 

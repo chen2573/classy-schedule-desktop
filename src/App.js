@@ -2,21 +2,20 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
 import HomePage from './components/HomePage.js';
-import CoursePage from './components/CourseAddPage.js';
-import LabPage from './components/LabAddPage.js';
-import ProfessorPage from './components/ProfessorAddPage.js';
-import RoomPage from './components/RoomAddPage.js'
-import SolutionPage from './components/SolutionPage.js';
+import CoursePage from './components/addPages/CourseAddPage.js';
+import LabPage from './components/addPages/LabAddPage.js';
+import ProfessorPage from './components/addPages/ProfessorAddPage.js';
+import RoomPage from './components/addPages/RoomAddPage.js'
+import SolutionPage from './components/schedulePages/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, sampleSolution } from './utils/sampleData';
 import * as DBFunction from './services/databaseServices/UIDatabaseService';
 
 import varValueConvert from 'cross-env/src/variable';
-import LabAddPage from './components/LabAddPage';
-import SolutionGenerate from './components/AddSolution';
-import AddSolution from './components/AddSolution.js';
-import SolutionDashboard from './components/SolutionDashboard';
+import SolutionGenerate from './components/schedulePages/AddSolution';
+import AddSolution from './components/schedulePages/AddSolution.js';
+import SolutionDashboard from './components/schedulePages/SolutionDashboard';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -27,18 +26,6 @@ import SolutionDashboard from './components/SolutionDashboard';
  * 
  */
 const USE_DATABASE = true; // Change to true when you want to debug with dummy data.
-
-/**
- * Constants we will use to make our database queries.
- */
-const {
-  FETCH_TABLE_INFO,
-  FETCH_ALL_PROGRAM_DATA,
-  FETCH_ALL_COURSE_DATA,
-  FETCH_ALL_PROFESSOR_DATA,
-  FETCH_ALL_ROOM_DATA,
-  FETCH_ALL_LAB_DATA
-} = require('./utils/queries');
 
 /**
  * Constants used for ipc channels.
@@ -533,27 +520,27 @@ function App() {
       setLabs(stateLabs);
     }
     else {
-      console.log(FETCH_ALL_LAB_DATA);
+      // console.log(FETCH_ALL_LAB_DATA);
 
-      window.DB.send("toMain", FETCH_ALL_LAB_DATA);
+      // window.DB.send("toMain", FETCH_ALL_LAB_DATA);
 
-      window.DB.receive("fromMain", (dataRows) => {
-        console.log(dataRows);
-        console.log(typeof dataRows);
+      // window.DB.receive("fromMain", (dataRows) => {
+      //   console.log(dataRows);
+      //   console.log(typeof dataRows);
 
-        dataRows.map((data) => {
-          let lname = data.lname;
-          let lcapacity = data.lcapacity;
-          let ltech = data.ltech;
-          let lcourse = data.lcourse;
-          const id = Math.floor(Math.random() * 10000) + 1
+      //   dataRows.map((data) => {
+      //     let lname = data.lname;
+      //     let lcapacity = data.lcapacity;
+      //     let ltech = data.ltech;
+      //     let lcourse = data.lcourse;
+      //     const id = Math.floor(Math.random() * 10000) + 1
 
-          let newLab = { lname };
+      //     let newLab = { lname };
 
-          stateLabs.push(newLab);
-        });
-        setLabs(stateLabs);
-      });
+      //     stateLabs.push(newLab);
+      //   });
+      //   setLabs(stateLabs);
+      // });
     }
   }
 
