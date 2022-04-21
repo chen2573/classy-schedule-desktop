@@ -1,4 +1,4 @@
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Button,Typography } from '@mui/material';
+import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Button,Typography, Input } from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
@@ -10,12 +10,53 @@ import TopBar from '../TopBar.js';
 
 import * as AlgoFunction from './../../services/algorithmServices/mainAlgorithmService';
 
-
-    /**
- * This component is a view that lists out individual LabListItems.
- * @param labs - The state of labs that is passed down from App.js
+/**
+ * The component that will be exported. This page will 4 lists of the Courses, professors, rooms, and labs that have been added and
+ * that are in the database.
+ * @param courses - the state of courses passed from App.js
+ * @param rooms - the state of rooms passed from App.js
+ * @param professors - the state of professors passed from App.js
+ * @param labs - the state of labs passed from App.js
+ * @param setCurrentPage - the function passed to redirect to the solution page
+ * @returns - The exported component
  */
-     const LabList = ({labs}) => {
+const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
+    /**
+    * State variables to send to the algorithm
+    */
+    const [sections, setSections] = useState([]);
+    const colorIsRed = true;
+
+    //======================== Algorithm Calculation Functions ===========================
+    /**
+     * This function runs when a course is selected. The number of sections of the course will 
+     * be determined by user input. 
+     * 
+     * There has to be an extra => so that this function can run on a onClick.
+     * https://stackoverflow.com/questions/63960506/react-pass-value-to-onclick-function
+     * 
+     * @param course - a course that is being selected 
+     * @returns 
+     */
+    const addSectionsForClass = (course) => () => {
+        let courseItem = this.refs(course.id);
+        console.log(courseItem);
+        courseItem.style.backgroundColor = 'red';
+        setSections([...sections, course]);
+        console.log(sections);
+    }
+
+    function createNewSchedule(){
+        AlgoFunction.runAlgorithm();
+        //setCurrentPage('schedule');
+    }
+
+    //======================== AddSolution Components =====================================
+    /**
+     * This component is a view that lists out individual LabListItems.
+     * @param labs - The state of labs that is passed down from App.js
+     */
+        const LabList = ({labs}) => {
         return(
         <div className='container'>
         <h1>Labs</h1>
@@ -56,69 +97,70 @@ import * as AlgoFunction from './../../services/algorithmServices/mainAlgorithmS
             </div>
         );
     }
-/**
- * This component is a view that lists out individual ProfessorListItems.
- * 
- * @param professors - The state of professors that is passed down from App.js
- * @returns          - React component that lists viewable professor components
- */
- const ProfessorList = ({professors}) => {
-    return (
-      <div className='container'>
-        <h1>Professors</h1>
-      {professors.map((currentProfessor, index) => (
-        <ProfessorListItem key={index} professor={currentProfessor}/>
-      ))}
-      </div>
-    );
-  }
-   
-   
-  /**
-   * The component that will display an individual professor. These components will populate the ProfessorList component.
-   * 
-   * @param professor - An individual professor
-   * @returns         - React component that displays a single professor component
-   */
-  const ProfessorListItem = ({professor}) => {
-    return (
-      <div className='item'>
-        <h3>{professor.name}</h3>
-        {/* This stuff in the paragraph tag will become popover*/}
-        <p>Program: {professor.program}<br></br></p>
-      </div>
-    );
-  }
-  
-  /**
-   * This page will have a list of the Professors that have been added and
-   * the professors that are in the database.
-   * 
-   * @param professors     - The state of professors passed from App.js
-   */
-   const ProfessorAddPageContent = ({professors}) => {
-    return (
-      <div className="home">
-        <div className='element-page'>
-          <ProfessorList professors={professors}/> 
-        </div>
-      </div>
-    );
-  }
 
-/**
- * This component is a view that lists out individual RoomListItems.
- * @param rooms - The state of rooms that is passed down from App.js
- */
-     const RoomList = ({ rooms }) => {
-        return(
+    /**
+     * This component is a view that lists out individual ProfessorListItems.
+     * 
+     * @param professors - The state of professors that is passed down from App.js
+     * @returns          - React component that lists viewable professor components
+     */
+    const ProfessorList = ({professors}) => {
+        return (
         <div className='container'>
-        <h1>Rooms</h1>
-        {rooms.map((currentRoom, index) => (
-            <RoomListItem key={index} room={currentRoom}/>
+            <h1>Professors</h1>
+        {professors.map((currentProfessor, index) => (
+            <ProfessorListItem key={index} professor={currentProfessor}/>
         ))}
         </div>
         );
+    }
+   
+   
+    /**
+     * The component that will display an individual professor. These components will populate the ProfessorList component.
+     * 
+     * @param professor - An individual professor
+     * @returns         - React component that displays a single professor component
+     */
+    const ProfessorListItem = ({professor}) => {
+        return (
+        <div className='item'>
+            <h3>{professor.name}</h3>
+            {/* This stuff in the paragraph tag will become popover*/}
+            <p>Program: {professor.program}<br></br></p>
+        </div>
+        );
+    }
+  
+    /**
+     * This page will have a list of the Professors that have been added and
+     * the professors that are in the database.
+     * 
+     * @param professors     - The state of professors passed from App.js
+     */
+    const ProfessorAddPageContent = ({professors}) => {
+        return (
+        <div className="home">
+            <div className='element-page'>
+            <ProfessorList professors={professors}/> 
+            </div>
+        </div>
+        );
+    }
+
+    /**
+     * This component is a view that lists out individual RoomListItems.
+     * @param rooms - The state of rooms that is passed down from App.js
+     */
+        const RoomList = ({ rooms }) => {
+            return(
+            <div className='container'>
+            <h1>Rooms</h1>
+            {rooms.map((currentRoom, index) => (
+                <RoomListItem key={index} room={currentRoom}/>
+            ))}
+            </div>
+            );
     }
     
     /**
@@ -151,74 +193,61 @@ import * as AlgoFunction from './../../services/algorithmServices/mainAlgorithmS
           </div>
         );
     }
-/**
- * This component is a view that lists out individual CourseListItems.
- * @param courses - The state of courses that is passed down from App.js
- * @returns - The component that is a view listing out the CourseListItems
- */
- const CourseList = ({ courses}) => {
-    return (
-        <div className='container'>
-            <h1>Courses</h1>
-            {courses.map((currentCourse, index) => (
-                <CourseListItem key={index} course={currentCourse}/>
-            ))}
-        </div>
-    );
-}
 
-
-/**
- * The component that will display an individual course. These components will populate the CourseList component.
- * @param course - an individual course
- * @returns - The component displaying an individual course.
- */
-const CourseListItem = ({ course }) => {
-    return (
-        <div className='item'>
-            <h3>{course.program} {course.number}</h3>
-            {/* This stuff in the paragraph tag will become popover*/}
-            <p><em>Class ID</em> : {course.courseID} <br />
-                <em>Course Name</em> : {course.name}<br />
-                <em>Credits</em> : {course.credits}<br />
-                <em>Capacity</em> : {course.capacity}<br />
-                <em>Tech: </em>{course.tech}</p>
-        </div>
-    );
-}
-
-/**
- * This page will have a list of the Courses that have been added and
- * the courses that are in the database.
- * @param courses - the state of courses passed from App.js
- * @returns - The exported component
- */
- const CourseAddPageContent = ({ courses  }) => {
-    return (
-        <div className="home">
-            <div className='element-page'>
-                <CourseList courses={courses} />
+    /**
+     * This component is a view that lists out individual CourseListItems.
+     * @param courses - The state of courses that is passed down from App.js
+     * @returns - The component that is a view listing out the CourseListItems
+     */
+    const CourseList = ({ courses}) => {
+        return (
+            <div className='container'>
+                <h1>Courses</h1>
+                {courses.map((currentCourse, index) => (
+                    <CourseListItem key={index} course={currentCourse}/>
+                ))}
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-function createNewSchedule(){
-    AlgoFunction.runAlgorithm();
-    //setCurrentPage('schedule');
-}
 
-/**
- * The component that will be exported. This page will 4 lists of the Courses, professors, rooms, and labs that have been added and
- * that are in the database.
- * @param courses - the state of courses passed from App.js
- * @param rooms - the state of rooms passed from App.js
- * @param professors - the state of professors passed from App.js
- * @param labs - the state of labs passed from App.js
- * @param setCurrentPage - the function passed to redirect to the solution page
- * @returns - The exported component
- */
-const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
+    /**
+     * The component that will display an individual course. These components will populate the CourseList component.
+     * @param course - an individual course
+     * @returns - The component displaying an individual course.
+     */
+    const CourseListItem = ({ course }) => {
+        //addSectionsForClass(course)
+        return (
+            <div className='item' id={course.id}>
+                <h3>{course.program} {course.number}</h3>
+                {/* This stuff in the paragraph tag will become popover*/}
+                <p><em>Class ID</em> : {course.courseID} <br />
+                    <em>Course Name</em> : {course.name}<br />
+                    <em>Credits</em> : {course.credits}<br />
+                    <em>Capacity</em> : {course.capacity}<br />
+                    <em>Tech: </em>{course.tech}</p>
+            </div>
+        );
+    }
+
+    /**
+     * This page will have a list of the Courses that have been added and
+     * the courses that are in the database.
+     * @param courses - the state of courses passed from App.js
+     * @returns - The exported component
+     */
+    const CourseAddPageContent = ({ courses  }) => {
+        return (
+            <div className="home">
+                <div className='element-page'>
+                    <CourseList courses={courses} />
+                </div>
+            </div>
+        );
+    }
+
+
     return (
         <div>
             <SideNavigation></SideNavigation>
