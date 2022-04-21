@@ -90,7 +90,7 @@ class DatabaseService {
     getCourses() {
         return axios({
             method: 'GET',
-            url: API_BASE + 'class-management/classes',
+            url: API_BASE + 'class-management/classes/department',
             headers: {
                 'accept': 'application/json',
                 Authorization: this.authenticationToken
@@ -128,10 +128,10 @@ class DatabaseService {
      * Deletes the course with the specified course name and number.
      * @param classNum - the number of the course to be deleted.
      */
-    deleteCourse(classNum) {
+    deleteCourse(classNum, deptId) {
         return axios({
             method: 'DELETE',
-            url: API_BASE + 'class-management/classes/delete/' + classNum,
+            url: API_BASE + 'class-management/classes/delete/' + classNum + '/' + deptId,
             headers: {
                 'accept': 'application/json',
                 Authorization: this.authenticationToken
