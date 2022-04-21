@@ -71,219 +71,11 @@ function App() {
   const [labs, setLabs] = useState([]);
   const [solutions, setSolutions] = useState([]);
 
-   /**
- * This is a helper function to get the Program name given a program id.
- * @param programList - a list of temp program objects to iterate over
- * @param targetID - the id of the the program to search for.
- * @returns the name of the program that is specified.
- */
-  const getProgramName = (programList, targetID) => {
-    for(const key in programList) {
-      if(programList[key].programId === targetID){
-        return programList[key].programName;
-      }
-    }
-  }
-
-    /**
-   * This is a helper function to get the Program id given a program name.
-   * @param programList - a list of temp program objects to iterate over
-   * @param targetName - the name of the the program to search for.
-   * @returns the ID of the program that is specified.
-   */
-  const getProgramID = (programList, targetName) => {
-    for(const key in programList) {
-      if(programList[key].programName === targetName){
-        return programList[key].programId;
-      }
-    }
-  }
-
-  /**
-   * Adds a course. This method is passed down through the components.
-   * @param course - the course that will be added. 
-   */
-  const addCourse = (course) => {
-    let id;
-    let newCourse;
-    let programId;
-
-    if(USE_DATABASE){
-      id = Math.floor(Math.random() * 10000) + 1;
-      
-      let programIdArray = programs.filter((program) => {
-        if (program.programName === course.program) {
-          return program.programId;
-        }
-      });
-      console.log(programIdArray)
-      if (programIdArray.length === 0){
-        window.alert('Uh-oh! There is a bug here. We are working on it :)');
-      }
-      else {
-        programId = programIdArray[0].programId;
-      }
-
-      DBFunction.createCourse(course, programId);
-
-      newCourse = { id, ...course }
-    }
-    else{
-      id = Math.floor(Math.random() * 10000) + 1;
-      newCourse = { id, ...course }
-    }
-    setCourses([...courses, newCourse]);
-  };
-
-    /**
- * This is a helper function to get the Course name given a course id.
- * @param courseList - a list of temp course objects to iterate over
- * @param targetID - the id of the the course to search for.
- * @returns the name of the program that is specified.
- */
-  const getCourseNumber = (courseList, targetID) => {
-    for(const key in courseList) {
-      if(courseList[key].id === targetID){
-        return courseList[key].number;
-      }
-    }
-  }
-
-  /**
-   * Deletes a course. This method is passed down through the components.
-   * @param id - the id of the course that is being deleted 
-   */
-  const deleteCourse = (id) => {
-    getLatestCourses();
-
-    // Confirm with user if they want to delete. This will be permenant.
-    let deletedResponse = window.confirm("Are you sure you want to remove this Course?\n This will be permanent.");
-
-    if(deletedResponse){
-      let tempCourse = courses;
-
-      let courseNum = getCourseNumber(tempCourse, id);
-      //delete from database
-      DBFunction.deleteCourse(courseNum).then((shouldDeleteFromUI) => {
-        console.log(shouldDeleteFromUI);
-        if(shouldDeleteFromUI){
-          //delete from UI
-          setCourses(courses.filter((course) => course.id !== id));
-        }
-      }).catch((error) => {
-        window.alert(error);
-      });
-    }
-  };
-
-  /**
-   * Adds a professor to the local state or to the DB if in production.
-   * @param professor - the professor object that is being added. 
-   */
-  const addProfessor = (professor) => {
-    let id;
-    let newProfessor;
-    
-    if(USE_DATABASE){
-      id = DBFunction.createProfessor(professor);
-      newProfessor = { id, ...professor }
-    }
-    else{
-      id = Math.floor(Math.random() * 10000) + 1;
-      newProfessor = { id, ...professor }
-    }
-    setProfessors([...professors, newProfessor]);
-  };
-
-  /**
-   * Deletes a professor from the local state or from the DB if in production.
-   * @param id - the professor id that is being deleted. 
-   */
-  const deleteProfessor = (id) => {
-    getLatestProfessors();
-
-    // Confirm with user if they want to delete. This will be permenant.
-    let deletedResponse = window.confirm("Are you sure you want to remove this Professor?\n This will be permanent.");
-
-    if(deletedResponse){
-      //delete from database
-      DBFunction.deleteProfessor(id).then((shouldDeleteFromUI) => {
-        console.log(shouldDeleteFromUI);
-        if(shouldDeleteFromUI){
-          //delete from UI
-          setProfessors(professors.filter((professor) => professor.id !== id));
-        }
-      }).catch((error) => {
-        window.alert(error);
-      });
-    }
-  };
-
-  /**
-   * Adds a room to the local state or to the DB if in production.
-   * @param room - the room object that is being added. 
-   */
-  const addRoom = (room) => {
-    let id;
-    let newRoom;
-    
-    if(USE_DATABASE){
-      id = DBFunction.createRoom(room);
-      newRoom = { id, ...room }
-    }
-    else{
-      id = Math.floor(Math.random() * 10000) + 1;
-      newRoom= { id, ...room }
-    }
-    setRooms([...rooms, newRoom]);
-  };
-
-  /**
-   * Deletes a room from the local state or from the DB if in production.
-   * @param id - the room id that is being deleted. 
-   */
-  const deleteRoom = (id) => {
-    // Confirm with user if they want to delete. This will be permenant.
-    let deletedResponse = window.confirm("Are you sure you want to remove this Room?\n This will be permanent.");
-
-    if(deletedResponse){
-      //delete from database
-      DBFunction.deleteRoom(id).then((shouldDeleteFromUI) => {
-        console.log(shouldDeleteFromUI);
-        if(shouldDeleteFromUI){
-          //delete from UI
-          setRooms(rooms.filter((room) => room.id !== id));
-        }
-      }).catch((error) => {
-        window.alert(error);
-      });
-    }
-  };
-
-  /**
-   * Adds a lab to the local state or to the DB if in production.
-   * @param lab - the lab object that is being added. 
-   */
-  const addLab = (lab) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
-
-    const newLab = { id, ...lab }
-    setLabs([...labs, newLab]);
-  };
-
-  /**
-   * Deletes a lab from the local state or from the DB if in production.
-   * @param id - the lab id that is being deleted. 
-   */
-  const deleteLab = (id) => {
-    console.log('delete', id);
-    setLabs(labs.filter((lab) => lab.id !== id));
-  };
-
   /**
    * Gets the latest data for all the states and refreshes the cooresponding states.
+   * This function is used in the useEffect method.
    */
-   const updateAllStates = () => {
+  const updateAllStates = () => {
     getLatestPrograms();
     getLatestCourses();
     getLatestProfessors();
@@ -292,53 +84,10 @@ function App() {
     getLatestSolutions();
   };
 
-  /**
-   * Gets the latest data for programs.
-   */
-   const getLatestSolutions = () => {
-    // Clears up the currently stored data and gets new data in the following code.
-    // There was a bug where with every refresh, we would get duplicate state.
-    //setCourses('')
-    let stateSolutions = [];
-    //console.log(sampleSolution);
-    if (window.DB === undefined || !USE_DATABASE || true) {
-      console.log('Using sample data');
-
-      sampleSolution.map((solution) => {
-        console.log(sampleSolution);
-        let name = solution.name;
-        let data = solution.data;
-        const id = Math.floor(Math.random() * 10000) + 1
-        let newSolution = { id, name, data };
-        stateSolutions.push(newSolution);
-      });
-      setSolutions(stateSolutions);
-    }
-    // else {
-    //   //console.log(FETCH_ALL_PROGRAM_DATA);
-    //   // Send a query to main
-    //   window.DB.send(CHANNEL_PROGRAM_TO_MAIN, "Request for PROGRAMS from RENDERER"); // Add constants
-
-    //   // Recieve the results
-    //   window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
-    //     //console.log(dataRows);
-
-    //     dataRows.map((program) => {
-    //       let programId = program.dept_id;
-    //       let programName = program.dept_name;
-    //       const id = Math.floor(Math.random() * 10000) + 1;
-
-    //       let newProgram = { id, programId, programName };
-    //       statePrograms.push(newProgram);
-    //     });
-    //     setPrograms(statePrograms);
-    //   });
-    // }
-  }
-
-  /**
-   * Gets the latest data for programs.
-   */
+//================= PROGRAM/DEPARTMENT Functions ====================== 
+/**
+ * Gets the latest data for programs.
+ */
   const getLatestPrograms = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
@@ -384,10 +133,11 @@ function App() {
     }
   }
 
+  //================= COURSE Functions =================================
   /**
-   * Gets the latest data for courses.
-   */
-  const getLatestCourses = () => {
+ * Gets the latest data for courses.
+ */
+    const getLatestCourses = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
@@ -425,24 +175,24 @@ function App() {
         //console.log(typeof dataRows);
 
         dataRows.map((data) => {
-          let programName;
-          console.log(programs);
-          let programNameArray = programs.filter((program) => {
-            //console.log(program.programId);
-            //console.log(data.dept_id);
-            if (program.programId === data.dept_id) {
-              return program.programName;
-            }
-          });
-          if (programNameArray.length === 0){
-            //window.alert('Uh-oh! There is a bug here. We are working on it :)');
-          }
-          else {
-            programName = programNameArray[0].programName;
-          }
+          // let programName;
+          // console.log(programs);
+          // let programNameArray = programs.filter((program) => {
+          //   //console.log(program.programId);
+          //   //console.log(data.dept_id);
+          //   if (program.programId === data.dept_id) {
+          //     return program.programName;
+          //   }
+          // });
+          // if (programNameArray.length === 0){
+          //   //window.alert('Uh-oh! There is a bug here. We are working on it :)');
+          // }
+          // else {
+          //   programName = programNameArray[0].programName;
+          // }
 
           let courseID = " ";
-          let program = programName;
+          let program = data.dept_name;
           let capacity = data.capacity;
           let number = data.class_num;
           let credits = data.credits;
@@ -459,10 +209,119 @@ function App() {
     }
   }
 
+  /**
+   * Adds a course. This method is passed down through the components.
+   * @param course - the course that will be added. 
+   */
+  const addCourse = (course) => {
+    let id;
+    let newCourse;
+    let programId;
+
+    if(USE_DATABASE){
+      id = Math.floor(Math.random() * 10000) + 1;
+      
+      let programIdArray = programs.filter((program) => {
+        if (program.programName === course.program) {
+          return program.programId;
+        }
+      });
+      console.log(programIdArray)
+      if (programIdArray.length === 0){
+        window.alert('Uh-oh! There is a bug here. We are working on it :)');
+      }
+      else {
+        programId = programIdArray[0].programId;
+      }
+
+      DBFunction.createCourse(course, programId); 
+
+      newCourse = { id, ...course }
+    }
+    else{
+      id = Math.floor(Math.random() * 10000) + 1;
+      newCourse = { id, ...course }
+    }
+    setCourses([...courses, newCourse]);
+  };
 
   /**
-   * Gets the latest data for professors.
+   * Deletes a course. This method is passed down through the components.
+   * @param id - the id of the course that is being deleted 
    */
+  const deleteCourse = (id) => {
+    getLatestCourses();
+
+    // Confirm with user if they want to delete. This will be permenant.
+    let deletedResponse = window.confirm("Are you sure you want to remove this Course?\n This will be permanent.");
+
+    if(deletedResponse){
+      let tempCourse = courses;
+      let tempPrograms = programs;
+
+      let courseNum = getCourseNumber(tempCourse, id);
+      let programName = getDepartmentName(tempCourse, id);
+      let programId = getDepartmentId(tempPrograms, programName);
+
+      //delete from database
+      DBFunction.deleteCourse(courseNum, programId).then((shouldDeleteFromUI) => {
+        console.log(shouldDeleteFromUI);
+        if(shouldDeleteFromUI){
+          //delete from UI
+          setCourses(courses.filter((course) => course.id !== id));
+        }
+      }).catch((error) => {
+        window.alert(error);
+      });
+    }
+  };
+
+  /**
+ * This is a helper function to get the Course name given a course id.
+ * @param courseList - a list of temp course objects to iterate over
+ * @param targetID - the id of the the course to search for.
+ * @returns the name of the program that is specified.
+ */
+   const getCourseNumber = (courseList, targetID) => {
+    for(const key in courseList) {
+      if(courseList[key].id === targetID){
+        return courseList[key].number;
+      }
+    }
+  }
+
+/**
+ * This is a helper function to get the Department name given a course id.
+ * @param courseList - a list of temp course objects to iterate over
+ * @param targetID - the id of the the course to search for.
+ * @returns the name of the program that is specified.
+ */
+  const getDepartmentName = (courseList, targetID) => {
+    for(const key in courseList) {
+      if(courseList[key].id === targetID){
+        return courseList[key].program;
+      }
+    }
+  }
+
+  /**
+ * This is a helper function to get the department ID given a course id.
+ * @param courseList - a list of temp course objects to iterate over
+ * @param targetName - the name of the the department to search for.
+ * @returns the name of the program that is specified.
+ */
+   const getDepartmentId = (programList, targetName) => {
+    for(const key in programList) {
+      if(programList[key].programName === targetName){
+        return programList[key].programId;
+      }
+    }
+  }
+
+  //================= PROFESSOR Functions =================================
+  /**
+ * Gets the latest data for professors.
+ */
   const getLatestProfessors = () => {
 
     let stateProfessors = [];
@@ -515,7 +374,51 @@ function App() {
     }
     
   }
-  
+
+  /**
+   * Adds a professor to the local state or to the DB if in production.
+   * @param professor - the professor object that is being added. 
+   */
+  const addProfessor = (professor) => {
+    let id;
+    let newProfessor;
+    
+    if(USE_DATABASE){
+      id = DBFunction.createProfessor(professor);
+      newProfessor = { id, ...professor }
+    }
+    else{
+      id = Math.floor(Math.random() * 10000) + 1;
+      newProfessor = { id, ...professor }
+    }
+    setProfessors([...professors, newProfessor]);
+  };
+
+  /**
+   * Deletes a professor from the local state or from the DB if in production.
+   * @param id - the professor id that is being deleted. 
+   */
+  const deleteProfessor = (id) => {
+    getLatestProfessors();
+
+    // Confirm with user if they want to delete. This will be permenant.
+    let deletedResponse = window.confirm("Are you sure you want to remove this Professor?\n This will be permanent.");
+
+    if(deletedResponse){
+      //delete from database
+      DBFunction.deleteProfessor(id).then((shouldDeleteFromUI) => {
+        console.log(shouldDeleteFromUI);
+        if(shouldDeleteFromUI){
+          //delete from UI
+          setProfessors(professors.filter((professor) => professor.id !== id));
+        }
+      }).catch((error) => {
+        window.alert(error);
+      });
+    }
+  };
+
+  //================= ROOM Functions =================================
   /**
    * Get the latest room data.
    */
@@ -565,6 +468,48 @@ function App() {
   }
 
   /**
+   * Adds a room to the local state or to the DB if in production.
+   * @param room - the room object that is being added. 
+   */
+  const addRoom = (room) => {
+    let id;
+    let newRoom;
+    
+    if(USE_DATABASE){
+      id = DBFunction.createRoom(room);
+      newRoom = { id, ...room }
+    }
+    else{
+      id = Math.floor(Math.random() * 10000) + 1;
+      newRoom= { id, ...room }
+    }
+    setRooms([...rooms, newRoom]);
+  };
+
+  /**
+   * Deletes a room from the local state or from the DB if in production.
+   * @param id - the room id that is being deleted. 
+   */
+  const deleteRoom = (id) => {
+    // Confirm with user if they want to delete. This will be permenant.
+    let deletedResponse = window.confirm("Are you sure you want to remove this Room?\n This will be permanent.");
+
+    if(deletedResponse){
+      //delete from database
+      DBFunction.deleteRoom(id).then((shouldDeleteFromUI) => {
+        console.log(shouldDeleteFromUI);
+        if(shouldDeleteFromUI){
+          //delete from UI
+          setRooms(rooms.filter((room) => room.id !== id));
+        }
+      }).catch((error) => {
+        window.alert(error);
+      });
+    }
+  };
+
+  //================= LAB Functions =================================
+    /**
    * Get the latest lab data.
    */
   const getLatestLabs = () => {
@@ -611,13 +556,79 @@ function App() {
       });
     }
   }
-  
+
+  /**
+   * Adds a lab to the local state or to the DB if in production.
+   * @param lab - the lab object that is being added. 
+   */
+  const addLab = (lab) => {
+    const id = Math.floor(Math.random() * 10000) + 1;
+
+    const newLab = { id, ...lab }
+    setLabs([...labs, newLab]);
+  };
+
+  /**
+   * Deletes a lab from the local state or from the DB if in production.
+   * @param id - the lab id that is being deleted. 
+   */
+  const deleteLab = (id) => {
+    console.log('delete', id);
+    setLabs(labs.filter((lab) => lab.id !== id));
+  };
+
+  //================= SOLUTION Functions =================================
+  /**
+   * Gets the latest data for programs.
+   */
+   const getLatestSolutions = () => {
+    // Clears up the currently stored data and gets new data in the following code.
+    // There was a bug where with every refresh, we would get duplicate state.
+    //setCourses('')
+    let stateSolutions = [];
+    //console.log(sampleSolution);
+    if (window.DB === undefined || !USE_DATABASE || true) {
+      console.log('Using sample data');
+
+      sampleSolution.map((solution) => {
+        console.log(sampleSolution);
+        let name = solution.name;
+        let data = solution.data;
+        const id = Math.floor(Math.random() * 10000) + 1
+        let newSolution = { id, name, data };
+        stateSolutions.push(newSolution);
+      });
+      setSolutions(stateSolutions);
+    }
+    // else {
+    //   //console.log(FETCH_ALL_PROGRAM_DATA);
+    //   // Send a query to main
+    //   window.DB.send(CHANNEL_PROGRAM_TO_MAIN, "Request for PROGRAMS from RENDERER"); // Add constants
+
+    //   // Recieve the results
+    //   window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
+    //     //console.log(dataRows);
+
+    //     dataRows.map((program) => {
+    //       let programId = program.dept_id;
+    //       let programName = program.dept_name;
+    //       const id = Math.floor(Math.random() * 10000) + 1;
+
+    //       let newProgram = { id, programId, programName };
+    //       statePrograms.push(newProgram);
+    //     });
+    //     setPrograms(statePrograms);
+    //   });
+    // }
+  }
+
   /**
   * Gets the latest data for all entities when a new page is loaded. 
   * The useEffect method runs the updateAllStates method once a page is refreshed.
   */
-  useEffect(updateAllStates, []);
-
+  useEffect(updateAllStates, []); 
+  
+  //================= THEME and PAGE NAVIGATION =================================
   /**
    * global styling
    * This variable controls the color styling of all the MUI components
