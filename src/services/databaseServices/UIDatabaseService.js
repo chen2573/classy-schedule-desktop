@@ -87,11 +87,12 @@ export function createCourse(course, programId){
     });
 }
 
-export function deleteCourse(courseNum) {
+export function deleteCourse(courseNum, departmentId) {
     let _payload = {
         request: 'DELETE',
         message: 'Renderer DELETE Course',
-        classNum: courseNum
+        classNum: courseNum,
+        deptId: departmentId
     };
 
     // Send a query to main

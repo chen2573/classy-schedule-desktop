@@ -318,11 +318,11 @@ function addProgramChannel(){
             console.log("DATABASE LOG --> " + "Making request REFRESH all PROGRAMS")
     
             DB.getPrograms().then((payload) => {
-                console.log('DATABASE LOG--> Successfully returned the following rows\n' + payload.data + + '\n');
+                console.log('DATABASE LOG--> Successfully returned the following PROGRAM rows\n' + payload.data + '\n');
                 mainWindow.webContents.send('fromMain:Program', payload.data);
                     
             }).catch((error) => {
-                console.error('DATABASE LOG--> ERROR returning Programs: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR returning PROGRAMS: ' + error + + '\n');
             });
         }
 
@@ -341,10 +341,10 @@ function addProfessorChannel(){
             console.log("DATABASE LOG --> " + "Making request REFRESH all PROFESSORS")
     
             DB.getProfessors().then((payload) => {
-                console.log("DATABASE LOG--> Successfully returned the following Professor rows\n" + payload.data + "\n\n");
+                console.log("DATABASE LOG--> Successfully returned the following PROFESSOR rows\n" + payload.data + "\n\n");
                 mainWindow.webContents.send('fromMain:Professor', payload.data);
             }).catch((error) => {
-                console.error('DATABASE LOG--> ERROR returning Professors: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR returning PROFESSORS: ' + error + + '\n');
             });
         }
         else if(args.request === 'CREATE'){
@@ -352,7 +352,7 @@ function addProfessorChannel(){
             console.log("DATABASE LOG --> " + "Making request CREATE a PROFESSOR")
     
             DB.createProfessor(args.firstName, args.lastName, args.teachLoad).then((payload) => {
-                console.log("DATABASE LOG--> Successfully added professor \n");
+                console.log("DATABASE LOG--> Successfully added PROFESSOR \n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -362,7 +362,7 @@ function addProfessorChannel(){
 
                 mainWindow.webContents.send('fromMain:Professor', _payload);
             }).catch((error) => {
-                console.error('DATABASE LOG--> ERROR adding professor: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR adding PROFESSOR: ' + error + + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to add professor.",
@@ -377,7 +377,7 @@ function addProfessorChannel(){
             console.log("DATABASE LOG --> " + "Making request DELETE a PROFESSOR")
     
             DB.deleteProfessor(args.profId).then((payload) => {
-                console.log("DATABASE LOG--> Successfully deleted Professor with profId: " + args.profId + "\n");
+                console.log("DATABASE LOG--> Successfully deleted PROFESSOR with profId: " + args.profId + "\n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -387,7 +387,7 @@ function addProfessorChannel(){
 
                 mainWindow.webContents.send('fromMain:Professor', _payload);
             }).catch((error) => {
-                console.error('DATABASE LOG--> ERROR deleting professor: ' + error + '\n');
+                console.error('!!!DATABASE LOG--> ERROR deleting PROFESSOR: ' + error + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to delete professor.",
@@ -413,10 +413,10 @@ function addCourseChannel(){
             console.log("DATABASE LOG --> " + "Making request REFRESH all COURSES")
     
             DB.getCourses().then((payload) => {
-                console.log("DATABASE LOG--> Successfully returned the following Course rows\n" + payload.data + "\n\n");
+                console.log("DATABASE LOG--> Successfully returned the following COURSE rows\n" + payload.data + "\n");
                 mainWindow.webContents.send('fromMain:Course', payload.data);
             }).catch((error) => {
-                console.error('DATABASE LOG--> ERROR returning Courses: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR returning COURSES: ' + error + + '\n');
             });
         }
         else if(args.request === 'CREATE'){
@@ -424,7 +424,7 @@ function addCourseChannel(){
             console.log("DATABASE LOG --> " + "Making request CREATE a COURSE")
 
             DB.createCourse(args.courseNum, args.deptId, args.courseName, args.capacity, args.credits).then((payload) => {
-                console.log("DATABASE LOG--> Successfully created Course\n");
+                console.log("DATABASE LOG--> Successfully created COURSE\n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -433,7 +433,7 @@ function addCourseChannel(){
                 mainWindow.webContents.send('fromMain:Course', _payload);
 
             }).catch((error) => {
-                console.error('ERROR! DATABASE LOG--> ERROR adding course: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR adding COURSE: ' + error + + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to add course.",
@@ -447,8 +447,8 @@ function addCourseChannel(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request DELETE a COURSE")
     
-            DB.deleteCourse(args.classNum).then((payload) => {
-                console.log("DATABASE LOG--> Successfully deleted Course with course number: " + args.classNum + "\n");
+            DB.deleteCourse(args.classNum, args.deptId).then((payload) => {
+                console.log("DATABASE LOG--> Successfully deleted COURSE with course number: " + args.classNum + "\n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -458,7 +458,7 @@ function addCourseChannel(){
 
                 mainWindow.webContents.send('fromMain:Course', _payload);
             }).catch((error) => {
-                console.log('DATABASE LOG--> ERROR deleting course: ' + error + '\n');
+                console.log('!!!DATABASE LOG--> ERROR deleting COURSE: ' + error + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to delete course.",
@@ -484,10 +484,10 @@ function addRoomChannel(){
             console.log("DATABASE LOG --> " + "Making request REFRESH all ROOMS")
     
             DB.getRooms().then((payload) => {
-                console.log("DATABASE LOG--> Successfully returned the following Room rows\n" + payload.data + "\n\n");
+                console.log("DATABASE LOG--> Successfully returned the following ROOM rows\n" + payload.data + "\n\n");
                 mainWindow.webContents.send('fromMain:Room', payload.data);
             }).catch((error) => {
-                console.error('DATABASE LOG--> ERROR returning Rooms: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR returning ROOMS: ' + error + + '\n');
             });
         }
         else if(args.request === 'CREATE'){
@@ -495,7 +495,7 @@ function addRoomChannel(){
             console.log("DATABASE LOG --> " + "Making request CREATE a ROOM")
 
             DB.createRoom(args.roomNumber, args.capacity).then((payload) => {
-                console.log("DATABASE LOG--> Successfully created Room\n");
+                console.log("DATABASE LOG--> Successfully created ROOM\n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -504,7 +504,7 @@ function addRoomChannel(){
                 mainWindow.webContents.send('fromMain:Room', _payload);
 
             }).catch((error) => {
-                console.error('ERROR! DATABASE LOG--> ERROR adding room: ' + error + + '\n');
+                console.error('!!!DATABASE LOG--> ERROR adding ROOM: ' + error + + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to add room.",
@@ -519,7 +519,7 @@ function addRoomChannel(){
             console.log("DATABASE LOG --> " + "Making request DELETE a ROOM")
     
             DB.deleteRoom(args.roomId).then((payload) => {
-                console.log("DATABASE LOG--> Successfully deleted Room with room id: " + args.roomId + "\n");
+                console.log("DATABASE LOG--> Successfully deleted ROOM with room id: " + args.roomId + "\n");
 
                 let _payload = {
                     status: 'SUCCESS',
@@ -529,7 +529,7 @@ function addRoomChannel(){
 
                 mainWindow.webContents.send('fromMain:Room', _payload);
             }).catch((error) => {
-                console.log('DATABASE LOG--> ERROR deleting room: ' + error + '\n');
+                console.log('!!!DATABASE LOG--> ERROR deleting room: ' + error + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to delete room.",

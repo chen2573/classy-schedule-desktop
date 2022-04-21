@@ -193,7 +193,7 @@ const CourseListItem = ({ course }) => {
  * @param courses - the state of courses passed from App.js
  * @returns - The exported component
  */
- const CourseAddPageContent = ({ courses }) => {
+ const CourseAddPageContent = ({ courses  }) => {
     return (
         <div className="home">
             <div className='element-page'>
