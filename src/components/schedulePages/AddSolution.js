@@ -10,6 +10,11 @@ import TopBar from '../TopBar.js';
 
 import * as AlgoFunction from './../../services/algorithmServices/mainAlgorithmService';
 
+const {
+    CHANNEL_MODAL_FROM_MAIN,
+    CHANNEL_MODAL_TO_MAIN
+} = require('./../../utils/ipcChannels')
+
 /**
  * The component that will be exported. This page will 4 lists of the Courses, professors, rooms, and labs that have been added and
  * that are in the database.
@@ -39,11 +44,20 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @returns 
      */
     const addSectionsForClass = (course) => () => {
-        let courseItem = this.refs(course.id);
-        console.log(courseItem);
-        courseItem.style.backgroundColor = 'red';
-        setSections([...sections, course]);
+        let _payload = {
+            request: 'COURSE_SECTIONS',
+            program: course.program,
+            number: course.number,
+            message: 'Renderer PROMPT for Course Sections'
+        }
+
+        window.DB.send(CHANNEL_MODAL_TO_MAIN, _payload);
+        window.DB.receive(CHANNEL_MODAL_FROM_MAIN, (response) => {
+            console.log(response);
+        });
+
         console.log(sections);
+        setSections([...sections, course]);
     }
 
     function createNewSchedule(){
@@ -162,7 +176,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             </div>
             );
     }
-    
+
     /**
      * The component that will display an individual room. These components will populate the RoomList component.
      * @param room - an individual room
@@ -200,12 +214,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @param courses - The state of courses that is passed down from App.js
      * @returns - The component that is a view listing out the CourseListItems
      */
-    const CourseList = ({ courses}) => {
+    const CourseList = ({ courses, onClickCourse }) => {
         return (
             <div className='container'>
                 <h1>Courses</h1>
                 {courses.map((currentCourse, index) => (
-                    <CourseListItem key={index} course={currentCourse}/>
+                    <CourseListItem key={index} course={currentCourse} onClickCourse={onClickCourse}/>
                 ))}
             </div>
         );
@@ -217,10 +231,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @param course - an individual course
      * @returns - The component displaying an individual course.
      */
-    const CourseListItem = ({ course }) => {
+    const CourseListItem = ({ course, onClickCourse}) => {
         //addSectionsForClass(course)
         return (
-            <div className='item' id={course.id}>
+            <div className='item' id={course.id} onClick={onClickCourse(course)}>
                 <h3>{course.program} {course.number}</h3>
                 {/* This stuff in the paragraph tag will become popover*/}
                 <p><em>Class ID</em> : {course.courseID} <br />
@@ -238,11 +252,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @param courses - the state of courses passed from App.js
      * @returns - The exported component
      */
-    const CourseAddPageContent = ({ courses  }) => {
+    const CourseAddPageContent = ({ courses, onClickCourse }) => {
         return (
             <div className="home">
                 <div className='element-page'>
-                    <CourseList courses={courses} />
+                    <CourseList courses={courses} onClickCourse={onClickCourse}/>
                 </div>
             </div>
         );
@@ -258,7 +272,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
                     <TopBar></TopBar>
 
                     <div className="container-home">
-                        <CourseAddPageContent courses={courses} ></CourseAddPageContent>
+                        <CourseAddPageContent courses={courses} onClickCourse={addSectionsForClass} ></CourseAddPageContent>
                         <RoomAddPageContent  rooms={rooms} ></RoomAddPageContent>
                         <ProfessorAddPageContent professors={professors} ></ProfessorAddPageContent>
                         <LabAddPageContent labs={labs} ></LabAddPageContent>

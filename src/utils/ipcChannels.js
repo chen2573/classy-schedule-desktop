@@ -11,5 +11,9 @@ module.exports = {
     CHANNEL_ROOM_TO_MAIN: 'toMain:Room',
     CHANNEL_ROOM_FROM_MAIN: 'fromMain:Room',
     CHANNEL_LAB_TO_MAIN: 'toMain:Lab',
-    CHANNEL_LAB_FROM_MAIN: 'fromMain:Lab'
+    CHANNEL_LAB_FROM_MAIN: 'fromMain:Lab',
+    CHANNEL_PLAN_TO_MAIN: 'toMain:Plan',
+    CHANNEL_PLAN_FROM_MAIN: 'fromMain:Plan',
+    CHANNEL_MODAL_FROM_MAIN: 'fromMain:Modal',
+    CHANNEL_MODAL_TO_MAIN: 'toMain:Modal'
 }

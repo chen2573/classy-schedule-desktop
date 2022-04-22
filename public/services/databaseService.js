@@ -242,6 +242,21 @@ class DatabaseService {
             }
         });
     }
+
+    // ======== Plan methods ===========
+    /**
+     * Gets the latest rooms.
+     */
+     getPlans() {
+        return axios({
+            method: 'GET',
+            url: API_BASE + 'plan-management/plans',
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
 }
 
 /**

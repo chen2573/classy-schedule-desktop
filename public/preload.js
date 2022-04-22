@@ -15,13 +15,13 @@ contextBridge.exposeInMainWorld(
     "DB", {
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = ['toMain:Course', 'toMain:Professor', 'toMain:Room', 'toMain:Program', 'toMain:AuthLogIn', 'toMain:AuthLogOut', 'toMain:Algo'];
+            let validChannels = ['toMain:Course', 'toMain:Professor', 'toMain:Room', 'toMain:Program', 'toMain:AuthLogIn', 'toMain:AuthLogOut', 'toMain:Plan', 'toMain:Modal', 'toMain:Algo'];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel, func) => {
-            let validChannels = ['fromMain:Course', 'fromMain:Professor', 'fromMain:Room', 'fromMain:Program', 'fromMain:AuthLogIn', 'fromMain:AuthLogOut', 'fromMain:Algo'];
+            let validChannels = ['fromMain:Course', 'fromMain:Professor', 'fromMain:Room', 'fromMain:Program', 'fromMain:AuthLogIn', 'fromMain:AuthLogOut', 'fromMain:Plan', 'fromMain:Modal', 'fromMain:Algo'];
             if (validChannels.includes(channel)) {
                 // Deliberately strip event as it includes `sender` 
                 ipcRenderer.once(channel, (event, ...args) => func(...args));
