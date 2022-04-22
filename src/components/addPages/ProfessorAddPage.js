@@ -57,7 +57,8 @@ const validate = (validateFN, stateSetter) => e => {
  */
 const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const [program, setProgram] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [teach_load, setTeachLoad] = useState('6');
   const [time_block, setTimeBlock] = useState('');
   const [can_teach, setCanTeach] = useState([]);
@@ -86,7 +87,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
    * @param name - Input value
    * @returns    - True if the input is valid, otherwise false
    */
-  const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').includes(c));
+  const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').includes(c));
   
   /**
    *  This function enforces that the input is less than 30 characters
@@ -99,7 +100,10 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const validName = name => validNameChars(name) && validNameLength(name);
   
   // This function calls passes other functions to validate
-  const validateName = validate(validName, setName);
+  const validateFirstName = validate(validName, setFirstName);
+
+  // This function calls passes other functions to validate
+  const validateLastName = validate(validName, setLastName);
 
 
 
@@ -139,7 +143,11 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
       alert('Please enter a program');
       return;
     }
-    if (!name) {
+    if (!firstName) {
+      alert('Please enter a professor name');
+      return;
+    }
+    if (!lastName) {
       alert('Please enter a professor name');
       return;
     }
@@ -162,10 +170,11 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
  
        
  
-    onAddProfessor({program, name, teach_load, time_block, can_teach, want_teach});
+    onAddProfessor({program, firstName, lastName, teach_load, time_block, can_teach, want_teach});
  
     setProgram('');
-    setName('');
+    setFirstName('');
+    setLastName('');
     setTeachLoad('6');
     setCanTeach([]);
     setWantTeach([]);
@@ -212,9 +221,15 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
         <br></br>
             
         <Box>
-          <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_name" label="Professor Name" variant="outlined" value={name} onChange={validateName}/>
+          <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_name" label="First Name" variant="outlined" value={firstName} onChange={validateFirstName}/>
         </Box>
         
+        <br></br>
+
+        <Box>
+          <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_name" label="Last Name" variant="outlined" value={lastName} onChange={validateLastName}/>
+        </Box>
+
         <br></br>
 
         <Box>

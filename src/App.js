@@ -9,7 +9,7 @@ import RoomPage from './components/addPages/RoomAddPage.js'
 import SolutionPage from './components/schedulePages/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, sampleSolution } from './utils/sampleData';
+import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, samplePlans } from './utils/sampleData';
 import * as DBFunction from './services/databaseServices/UIDatabaseService';
 
 import varValueConvert from 'cross-env/src/variable';
@@ -577,8 +577,8 @@ function App() {
     if (window.DB === undefined || !USE_DATABASE || true) {
       console.log('Using sample data');
 
-      sampleSolution.map((solution) => {
-        console.log(sampleSolution);
+      samplePlans.map((solution) => {
+        console.log(samplePlans);
         let name = solution.name;
         let data = solution.data;
         const id = Math.floor(Math.random() * 10000) + 1
