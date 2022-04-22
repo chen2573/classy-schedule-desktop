@@ -143,8 +143,10 @@ function App() {
         let name = course.name;
         let credits = course.credits;
         let id = Math.floor(Math.random() * 10000) + 1;
+        let elementClassName = "item";
+        let sections = 0;
 
-        var newCourse = { id, program, number, name, courseID, credits, capacity };
+        var newCourse = { id, program, number, name, courseID, credits, capacity, elementClassName, sections };
         stateCourses.push(newCourse);
       });
       setCourses(stateCourses);
@@ -186,10 +188,12 @@ function App() {
           let number = data.class_num;
           let credits = data.credits;
           let name = data.class_name;
-          const id = Math.floor(Math.random() * 10000) + 1
+          const id = Math.floor(Math.random() * 10000) + 1;
+          let elementClassName = "item";
+          let sections = 0;
 
 
-          let newCourse = { id, program, number, name, courseID, credits, capacity }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          let newCourse = { id, program, number, name, courseID, credits, capacity, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
           stateCourses.push(newCourse);
         });
@@ -425,9 +429,9 @@ function App() {
         let rcapacity = room.rcapacity;
         let rtech = room.rtech;
         let id = Math.floor(Math.random() * 10000) + 1;
-        let className = "item";
+        let elementClassName = "item";
 
-        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, className};
+        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, elementClassName};
         stateRooms.push(newRoom);
       })
       setRooms(stateRooms);
@@ -447,9 +451,9 @@ function App() {
           let rcapacity = data.capacity;
           let rtech = data.rtech;
           let id = data.room_id;
-          let className = "item";
+          let elementClassName = "item";
 
-          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, className};
+          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, elementClassName};
 
           stateRooms.push(newRoom);
         });

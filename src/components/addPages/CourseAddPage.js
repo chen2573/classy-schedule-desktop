@@ -299,7 +299,8 @@ const CourseListItem = ({ course, onDelete }) => {
                 <em>Course Name</em> : {course.name}<br />
                 <em>Credits</em> : {course.credits}<br />
                 <em>Capacity</em> : {course.capacity}<br />
-                <em>Tech: </em>{course.tech}</p>
+                <em>Tech</em> : {course.tech}<br />
+                <em>Sections</em> : {course.sections}</p>
         </div>
     );
 }

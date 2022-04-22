@@ -30,6 +30,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     * State variables to send to the algorithm
     */
     const [sections, setSections] = useState([]);
+    const [tempState, setTempState] = useState([]);
     const colorIsRed = true;
 
     //======================== Algorithm Calculation Functions ===========================
@@ -51,15 +52,29 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             message: 'Renderer PROMPT for Course Sections'
         }
 
-        window.DB.send(CHANNEL_MODAL_TO_MAIN, _payload);
-        window.DB.receive(CHANNEL_MODAL_FROM_MAIN, (response) => {
-            console.log(response);
-        });
-
+        if(course.elementClassName === "item"){
+            course.elementClassName = "item-selected"; 
+            window.DB.send(CHANNEL_MODAL_TO_MAIN, _payload);
+            window.DB.receive(CHANNEL_MODAL_FROM_MAIN, (response) => {
+               console.log(response);
+               course.sections = response;
+               setTempState([]);
+            });
+        }else{
+            course.elementClassName = "item";
+            course.sections = 0;
+        }
         console.log(sections);
         setSections([...sections, course]);
     }
-
+    const selectRooms = (room) => () => {
+        if(room.elementClassName === "item"){
+            room.elementClassName = "item-selected"; 
+        }else{
+            room.elementClassName = "item";
+        }
+        setTempState([]);
+    }
     function createNewSchedule(){
         AlgoFunction.runAlgorithm();
         //setCurrentPage('schedule');
@@ -166,12 +181,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * This component is a view that lists out individual RoomListItems.
      * @param rooms - The state of rooms that is passed down from App.js
      */
-        const RoomList = ({ rooms }) => {
+        const RoomList = ({ rooms, onClickRoom }) => {
             return(
             <div className='container'>
             <h1>Rooms</h1>
             {rooms.map((currentRoom, index) => (
-                <RoomListItem key={index} room={currentRoom}/>
+                <RoomListItem key={index} room={currentRoom} onClickRoom={onClickRoom}/>
             ))}
             </div>
             );
@@ -181,9 +196,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * The component that will display an individual room. These components will populate the RoomList component.
      * @param room - an individual room
      */
-    const RoomListItem = ({ room }) => {
+    const RoomListItem = ({ room, onClickRoom }) => {
         return(
-        <div className={room.className}>
+        <div className={room.elementClassName} onClick = {onClickRoom(room)}>
             {/* this needs to change to a location if more than one building is used number is not unique*/}
             <h3>Room: {room.rnumber} </h3>
             <p><em>Building: </em> {room.rbuilding}<br />
@@ -199,11 +214,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * the rooms that are in the database.
      * @param rooms - the state of rooms passed from App.js
      */
-     const RoomAddPageContent = ({ rooms }) => {
+     const RoomAddPageContent = ({ rooms, onClickRoom }) => {
         return (
           <div className="home">
               <div className='element-page'>
-                  <RoomList rooms={rooms}/>
+                  <RoomList rooms={rooms} onClickRoom={onClickRoom}/>
               </div>
           </div>
         );
@@ -234,14 +249,15 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const CourseListItem = ({ course, onClickCourse}) => {
         //addSectionsForClass(course)
         return (
-            <div className='item' id={course.id} onClick={onClickCourse(course)}>
+            <div className={course.elementClassName} id={course.id} onClick={onClickCourse(course)}>
                 <h3>{course.program} {course.number}</h3>
                 {/* This stuff in the paragraph tag will become popover*/}
                 <p><em>Class ID</em> : {course.courseID} <br />
                     <em>Course Name</em> : {course.name}<br />
                     <em>Credits</em> : {course.credits}<br />
                     <em>Capacity</em> : {course.capacity}<br />
-                    <em>Tech: </em>{course.tech}</p>
+                    <em>Tech: </em>{course.tech}<br />
+                    <em>Sections</em>: {course.sections}</p>
             </div>
         );
     }
@@ -273,7 +289,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
 
                     <div className="container-home">
                         <CourseAddPageContent courses={courses} onClickCourse={addSectionsForClass} ></CourseAddPageContent>
-                        <RoomAddPageContent  rooms={rooms} ></RoomAddPageContent>
+                        <RoomAddPageContent  rooms={rooms} onClickRoom={selectRooms}></RoomAddPageContent>
                         <ProfessorAddPageContent professors={professors} ></ProfessorAddPageContent>
                         <LabAddPageContent labs={labs} ></LabAddPageContent>
                     </div>
