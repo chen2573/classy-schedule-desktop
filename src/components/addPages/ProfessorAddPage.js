@@ -373,7 +373,7 @@ const ProfessorList = ({professors, onDelete}) => {
 const ProfessorListItem = ({professor, onDelete}) => {
   return (
     <div className='item'>
-      <h3>{professor.name} <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(professor.id)} /></h3>
+      <h3>{professor.firstName} {professor.lastName} <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(professor.id)} /></h3>
       {/* This stuff in the paragraph tag will become popover*/}
       <p>Program: {professor.program}<br></br></p>
     </div>
