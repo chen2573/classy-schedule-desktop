@@ -183,11 +183,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
     const RoomListItem = ({ room }) => {
         return(
-        <div className='item'>
+        <div className={room.className}>
             {/* this needs to change to a location if more than one building is used number is not unique*/}
             <h3>Room: {room.rnumber} </h3>
             <p><em>Building: </em> {room.rbuilding}<br />
             <em>Tech: </em>{room.rtech}</p>
+            
             {/*Do we want to add a subheader like the video*/}
         </div>
         );
