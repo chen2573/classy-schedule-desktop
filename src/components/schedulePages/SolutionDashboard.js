@@ -16,9 +16,9 @@ import AddIcon from '@mui/icons-material/Add';
         return(
         <div className='container'>
             <h1>Solutions</h1>
-            {solutions.map((currentSolution, index) => (
+            {/**{solutions.map((currentSolution, index) => (
                 <SolutionItem key={index} solutions={currentSolution}/>
-            ))}
+            ))}**/}
         </div>
         );
     }

@@ -423,8 +423,9 @@ function App() {
         let rcapacity = room.rcapacity;
         let rtech = room.rtech;
         let id = Math.floor(Math.random() * 10000) + 1;
+        let className = "item";
 
-        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, };
+        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, className};
         stateRooms.push(newRoom);
       })
       setRooms(stateRooms);
@@ -444,8 +445,9 @@ function App() {
           let rcapacity = data.capacity;
           let rtech = data.rtech;
           let id = data.room_id;
+          let className = "item";
 
-          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech};
+          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, className};
 
           stateRooms.push(newRoom);
         });
