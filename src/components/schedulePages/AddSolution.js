@@ -160,9 +160,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const ProfessorListItem = ({professor}) => {
         return (
         <div className='item'>
-            <h3>{professor.name}</h3>
+            <h3>{professor.firstName} {professor.lastName}</h3>
             {/* This stuff in the paragraph tag will become popover*/}
-            <p>Program: {professor.program}<br></br></p>
+            <p>Program: {professor.program}<br/></p>
         </div>
         );
     }
