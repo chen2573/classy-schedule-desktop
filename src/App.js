@@ -9,7 +9,7 @@ import RoomPage from './components/addPages/RoomAddPage.js'
 import SolutionPage from './components/schedulePages/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, sampleSolution } from './utils/sampleData';
+import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, samplePlans } from './utils/sampleData';
 import * as DBFunction from './services/databaseServices/UIDatabaseService';
 
 import varValueConvert from 'cross-env/src/variable';
@@ -423,8 +423,9 @@ function App() {
         let rcapacity = room.rcapacity;
         let rtech = room.rtech;
         let id = Math.floor(Math.random() * 10000) + 1;
+        let className = "item";
 
-        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, };
+        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, className};
         stateRooms.push(newRoom);
       })
       setRooms(stateRooms);
@@ -444,8 +445,9 @@ function App() {
           let rcapacity = data.capacity;
           let rtech = data.rtech;
           let id = data.room_id;
+          let className = "item";
 
-          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech};
+          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, className};
 
           stateRooms.push(newRoom);
         });
@@ -577,8 +579,8 @@ function App() {
     if (window.DB === undefined || !USE_DATABASE || true) {
       console.log('Using sample data');
 
-      sampleSolution.map((solution) => {
-        console.log(sampleSolution);
+      samplePlans.map((solution) => {
+        console.log(samplePlans);
         let name = solution.name;
         let data = solution.data;
         const id = Math.floor(Math.random() * 10000) + 1
