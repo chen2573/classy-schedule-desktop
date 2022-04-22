@@ -19,6 +19,7 @@
     "axios": "^0.26.1",
     "cross-env": "^7.0.3",
     "electron-is-dev": "^2.0.0",
+    "electron-prompt": "^1.7.0",
     "material-ui-popup-state": "^2.0.0",
     "mysql": "^2.18.1",
     "prop-type": "0.0.1",

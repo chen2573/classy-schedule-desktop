@@ -40,7 +40,9 @@ const {
   CHANNEL_ROOM_TO_MAIN,
   CHANNEL_ROOM_FROM_MAIN,
   CHANNEL_LAB_TO_MAIN,
-  CHANNEL_LAB_FROM_MAIN
+  CHANNEL_LAB_FROM_MAIN,
+  CHANNEL_PLAN_TO_MAIN,
+  CHANNEL_PLAN_FROM_MAIN
 } = require('./utils/ipcChannels')
 //#endregion
 
@@ -56,7 +58,7 @@ function App() {
   const [professors, setProfessors] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [labs, setLabs] = useState([]);
-  const [solutions, setSolutions] = useState([]);
+  const [plans, setPlans] = useState([]);
 
   /**
    * Gets the latest data for all the states and refreshes the cooresponding states.
@@ -68,7 +70,7 @@ function App() {
     getLatestProfessors();
     getLatestRooms();
     getLatestLabs();
-    getLatestSolutions();
+    getLatestPlans();
   };
 
 //================= PROGRAM/DEPARTMENT Functions ====================== 
@@ -105,7 +107,7 @@ function App() {
 
       // Recieve the results
       window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
-        console.log(dataRows);
+        //console.log(dataRows);
 
         dataRows.map((program) => {
           let programId = program.dept_id;
@@ -158,7 +160,7 @@ function App() {
 
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
-        console.log(dataRows);
+        //console.log(dataRows);
         //console.log(typeof dataRows);
 
         dataRows.map((data) => {
@@ -568,13 +570,13 @@ function App() {
   /**
    * Gets the latest data for programs.
    */
-   const getLatestSolutions = () => {
+   const getLatestPlans = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
-    let stateSolutions = [];
+    let statePlans = [];
     //console.log(sampleSolution);
-    if (window.DB === undefined || !USE_DATABASE || true) {
+    if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
 
       sampleSolution.map((solution) => {
@@ -583,30 +585,36 @@ function App() {
         let data = solution.data;
         const id = Math.floor(Math.random() * 10000) + 1
         let newSolution = { id, name, data };
-        stateSolutions.push(newSolution);
+        statePlans.push(newSolution);
       });
-      setSolutions(stateSolutions);
+      setPlans(statePlans);
     }
-    // else {
-    //   //console.log(FETCH_ALL_PROGRAM_DATA);
-    //   // Send a query to main
-    //   window.DB.send(CHANNEL_PROGRAM_TO_MAIN, "Request for PROGRAMS from RENDERER"); // Add constants
+    else {
+      let _payload = {
+        request: 'REFRESH',
+        message: 'Renderer REFRESH for Plans',
+      }
 
-    //   // Recieve the results
-    //   window.DB.receive(CHANNEL_PROGRAM_FROM_MAIN, (dataRows) => {
-    //     //console.log(dataRows);
+      // Send a query to main
+      window.DB.send(CHANNEL_PLAN_TO_MAIN, _payload);
 
-    //     dataRows.map((program) => {
-    //       let programId = program.dept_id;
-    //       let programName = program.dept_name;
-    //       const id = Math.floor(Math.random() * 10000) + 1;
+      // Recieve the results
+      window.DB.receive(CHANNEL_PLAN_FROM_MAIN, (dataRows) => {
+        console.log("PLANS: ", dataRows);
+          dataRows.map((data) => {
+              let id = data.plan_id
+              let planName = data.plan_name;
+              let planDescription = data.plan_description;
+              let semesterYear = data.semester_year;
+              let semesterNum = data.semester_num; 
 
-    //       let newProgram = { id, programId, programName };
-    //       statePrograms.push(newProgram);
-    //     });
-    //     setPrograms(statePrograms);
-    //   });
-    // }
+              let newPlan= { id, planName, planDescription, semesterYear, semesterNum};
+              statePlans.push(newPlan);
+          });
+
+          setPlans(statePlans);
+      });
+    }
   }
 
   /**
@@ -658,7 +666,7 @@ function App() {
     }
     else if(currentPage === 'SolutionDashboard')
     {
-      return <SolutionDashboard solutions = {solutions} setCurrentPage={setCurrentPage}/>;
+      return <SolutionDashboard plans = {plans} setCurrentPage={setCurrentPage}/>;
     }
     else
     {
