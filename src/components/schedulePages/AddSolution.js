@@ -53,12 +53,18 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         }
 
         if(course.elementClassName === "item"){
-            course.elementClassName = "item-selected"; 
+            
             window.DB.send(CHANNEL_MODAL_TO_MAIN, _payload);
             window.DB.receive(CHANNEL_MODAL_FROM_MAIN, (response) => {
-               console.log(response);
-               course.sections = response;
-               setTempState([]);
+                if(response === "CANCEL"){
+                    console.log('User cancelled')
+                }
+                else {
+                    course.elementClassName = "item-selected"; 
+                    console.log(response);
+                    course.sections = response;
+                    setTempState([]);
+                }
             });
         }else{
             course.elementClassName = "item";
