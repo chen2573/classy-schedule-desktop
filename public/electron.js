@@ -549,8 +549,8 @@ const prompt = require('electron-prompt');
 /**
  * This function creates a database channel for all modal windows.
  */
- function addModalWindows(){
-    // Get all Rooms
+function addModalWindows(){
+// Get all Rooms
     ipcMain.on("toMain:Modal", (event, args) => {
 
         if(args.request === 'COURSE_SECTIONS'){
@@ -564,7 +564,7 @@ const prompt = require('electron-prompt');
             }, mainWindow)
             .then((response) => {
                 if(response === null) {
-                    console.log('user cancelled');
+                    mainWindow.webContents.send('fromMain:Modal', "CANCEL");
                 } else {
                     console.log("MODAL WINDOW LOG --> User entered: " + response)
                     mainWindow.webContents.send('fromMain:Modal', response);

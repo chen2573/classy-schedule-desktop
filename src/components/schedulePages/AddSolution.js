@@ -53,12 +53,18 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         }
 
         if(course.elementClassName === "item"){
-            course.elementClassName = "item-selected"; 
+            
             window.DB.send(CHANNEL_MODAL_TO_MAIN, _payload);
             window.DB.receive(CHANNEL_MODAL_FROM_MAIN, (response) => {
-               console.log(response);
-               course.sections = response;
-               setTempState([]);
+                if(response === "CANCEL"){
+                    console.log('User cancelled')
+                }
+                else {
+                    course.elementClassName = "item-selected"; 
+                    console.log(response);
+                    course.sections = response;
+                    setTempState([]);
+                }
             });
         }else{
             course.elementClassName = "item";
@@ -154,9 +160,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const ProfessorListItem = ({professor}) => {
         return (
         <div className='item'>
-            <h3>{professor.name}</h3>
+            <h3>{professor.firstName} {professor.lastName}</h3>
             {/* This stuff in the paragraph tag will become popover*/}
-            <p>Program: {professor.program}<br></br></p>
+            <p>Program: {professor.program}<br/></p>
         </div>
         );
     }

@@ -13,8 +13,8 @@ export function createProfessor(professor){
     let _payload = {
         request: 'CREATE',
         message: 'Renderer CREATE Professor',
-        firstName: professor.name,
-        lastName: professor.name,
+        firstName: professor.firstName,
+        lastName: professor.lastName,
         teachLoad: professor.teach_load
     };
     

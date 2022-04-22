@@ -351,14 +351,14 @@ function App() {
 
           dataRows.map((data) => {
               let id = data.professor_id
-              let name = data.first_name;
-              //let name = data.last_name;
+              let firstName = data.first_name;
+              let lastName = data.last_name;
               let teach_load = data.teach_load;
               let time_block = '';
               let can_teach = ''; 
               let want_teach = '';
 
-              let newProf = { id, name, teach_load, time_block, can_teach, want_teach };
+              let newProf = { id, firstName, lastName, teach_load, time_block, can_teach, want_teach };
               stateProfessors.push(newProf);
           });
 
