@@ -325,14 +325,15 @@ function App() {
 
       sampleProfessors.map((prof) => {
         let program = prof.program;
-        let name = prof.name;
+        let firstName = prof.firstName;
+        let lastName = prof.lastName;
         let teach_load = prof.teach_load;
         let time_block = prof.time_block;
         let can_teach = prof.can_teach;
         let want_teach = prof.want_teach;
         const id = Math.floor(Math.random() * 10000) + 1;
 
-        let newProfessor = { id, program, name, teach_load, time_block, can_teach, want_teach };
+        let newProfessor = { id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach };
         stateProfessors.push(newProfessor);
       });
       setProfessors(stateProfessors);
