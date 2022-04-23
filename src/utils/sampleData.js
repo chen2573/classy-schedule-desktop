@@ -80,15 +80,18 @@ export const sampleLabs = [
  */
 export const sampleProfessors = [
     {
-        "name": "Jason Sawin",
+        "firstName": "Jason",
+        "lastName": "Sawin",
         "program": "CISC"
     },
     {
-        "name": "Sarah Miracle",
+        "firstName": "Sarah",
+        "lastName": "Miracle",
         "program": "CISC"
     },
     {
-        "name": "Amelia McNamara",
+        "firstName": "Amelia",
+        "lastName": "McNamara",
         "program": "STAT"
     }
 ]
