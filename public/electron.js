@@ -263,6 +263,7 @@ function createIPCChannels() {
     addRoomChannel();
     addPlanChannel();
     addModalWindows();
+    addJsonChannel()
     addAlgorithmChannel();
 }
 
@@ -662,13 +663,30 @@ function addModalWindows(){
     });
 }
 
+/**
+ * This function creates a database channel for Algorithms.
+ */
+ function addJsonChannel(){
+    // Get all Programs
+    ipcMain.on("toMain:Json", (event, data) => {
+        console.log("JSON LOG --> Creating json")
+        console.log(data);
+        let tempData = JSON.stringify(data);
+        executeAlgorithm(tempData);
+
+        let fs = require('fs');
+        fs.writeFile(path.join(__dirname, '/services/tempData.json'), tempData, (err, result) => {
+            if(err) console.log('!!!JSON LOG --> ERROR creating json file', err);
+        });
+    });
+}
+
 //const exec = require('child_process').execFile;
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
-async function executeAlgorithm() {
-
+async function executeAlgorithm(data) {
     if(process.platform == 'darwin'){
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/CSP-selective2.exe'), []);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/CSP-selective2.exe'), [data]);
         console.log(stdout);
     }
     else {
