@@ -111,8 +111,8 @@ const LabAdd = ({onAddLab, courses}) => {
         }
         }
 
-
-        onAddLab({lname, lcapacity, ltech, lcourse});
+        let elementClassName = 'item';
+        onAddLab({lname, lcapacity, ltech, lcourse, elementClassName});
         setLName('');
         setLCapacity('');
         setLTech([]);

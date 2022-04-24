@@ -1,6 +1,6 @@
 import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Button,Typography, Input } from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import './../../assets/styles/HomePage.css';
 import './../../assets/styles/SideNav.css';
@@ -8,7 +8,7 @@ import './../../assets/styles/AddPages.css';
 import SideNavigation from '../SideNavigation.js';
 import TopBar from '../TopBar.js';
 
-import * as AlgoFunction from './../../services/algorithmServices/mainAlgorithmService';
+import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
 
 const {
     CHANNEL_MODAL_FROM_MAIN,
@@ -29,7 +29,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     /**
     * State variables to send to the algorithm
     */
-    const [sections, setSections] = useState([]);
+    const [courseSections, setCourseSections] = useState([]);
+    const [selectedRooms, setSelectedRooms] = useState([]);
+    const [selectedProfessors, setSelectedProfessors] = useState([]);
+    const [selectedLabs, setSelectedLabs] = useState([]);
     const [tempState, setTempState] = useState([]);
     const colorIsRed = true;
 
@@ -63,40 +66,80 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
                     course.elementClassName = "item-selected"; 
                     console.log(response);
                     course.sections = response;
-                    setTempState([]);
+                    
+                    setCourseSections([...courseSections, course]);
                 }
             });
         }else{
             course.elementClassName = "item";
             course.sections = 0;
+
+            let id = course.id;
+            setCourseSections(courseSections.filter((remaingCourses) => remaingCourses.id !== id));
         }
-        console.log(sections);
-        setSections([...sections, course]);
     }
+
     const selectRooms = (room) => () => {
         if(room.elementClassName === "item"){
-            room.elementClassName = "item-selected"; 
+            room.elementClassName = "item-selected";
+            setSelectedRooms([...selectedRooms, room]); 
         }else{
             room.elementClassName = "item";
+
+            let id = room.id;
+            setSelectedRooms(selectedRooms.filter((remaingRooms) => remaingRooms.id !== id));
         }
-        setTempState([]);
     }
+
+    const selectProfessors = (professor) => () => {
+        //console.log(professor)
+        if(professor.elementClassName === "item"){
+            professor.elementClassName = "item-selected"; 
+            setSelectedProfessors([...selectedProfessors, professor]); 
+        }else{
+            professor.elementClassName = "item";
+
+            let id = professor.id;
+            setSelectedProfessors(selectedProfessors.filter((remaingProfs) => remaingProfs.id !== id));
+        }
+    }
+
+    const selectLabs = (lab) => () => {
+        //console.log(lab)
+        if(lab.elementClassName === "item"){
+            lab.elementClassName = "item-selected"; 
+            setSelectedLabs([...selectedLabs, lab]);
+        }else{
+            lab.elementClassName = "item";
+
+            let id = lab.id;
+            setSelectedLabs(selectedLabs.filter((remaingLabs) => remaingLabs.id !== id));
+        }
+    }
+
+    function createJsonDataFromState(){
+        let data = AlgoService.createJsonData(courseSections, selectedRooms, selectedProfessors, selectedLabs);
+        console.log(data);
+    }
+    
     function createNewSchedule(){
-        AlgoFunction.runAlgorithm();
+        createJsonDataFromState();
+        //AlgoService.runAlgorithm();
         //setCurrentPage('schedule');
     }
+
 
     //======================== AddSolution Components =====================================
     /**
      * This component is a view that lists out individual LabListItems.
      * @param labs - The state of labs that is passed down from App.js
      */
-        const LabList = ({labs}) => {
+        const LabList = ({labs, onClickLab}) => {
         return(
         <div className='container'>
         <h1>Labs</h1>
         {labs.map((currentLab, index) => (
-            <LabListItem key={index} lab={currentLab}/>
+            <LabListItem key={index} lab={currentLab} onClickLab={onClickLab}/>
         ))}
         </div>
         );
@@ -106,9 +149,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * The component that will display an individual lab. These components will populate the LabList component.
      * @param lab - an individual lab
      */
-    const LabListItem = ({lab}) => {
+    const LabListItem = ({lab, onClickLab}) => {
         return(
-        <div className='item'>
+        <div className={lab.elementClassName} onClick={onClickLab(lab)} >
             <h3>Lab: {lab.lname}</h3>
             <p><em>Course: {lab.lcourse[0].name}</em></p>
             {/*What do we want this course part to show
@@ -123,11 +166,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * the labs that are in the database.
      * @param labs - the state of labs passed from App.js
      */
-     const LabAddPageContent = ({ labs }) => {
+     const LabAddPageContent = ({ labs, onClickLab}) => {
         return (
             <div className="home">
                 <div className='element-page'>
-                    <LabList labs={labs}/>
+                    <LabList labs={labs} onClickLab={onClickLab}/>
                 </div>
             </div>
         );
@@ -139,12 +182,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @param professors - The state of professors that is passed down from App.js
      * @returns          - React component that lists viewable professor components
      */
-    const ProfessorList = ({professors}) => {
+    const ProfessorList = ({professors, onClickProfessor}) => {
         return (
         <div className='container'>
             <h1>Professors</h1>
         {professors.map((currentProfessor, index) => (
-            <ProfessorListItem key={index} professor={currentProfessor}/>
+            <ProfessorListItem key={index} professor={currentProfessor} onClickProfessor={onClickProfessor}/>
         ))}
         </div>
         );
@@ -157,9 +200,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @param professor - An individual professor
      * @returns         - React component that displays a single professor component
      */
-    const ProfessorListItem = ({professor}) => {
+    const ProfessorListItem = ({professor, onClickProfessor}) => {
         return (
-        <div className='item'>
+        <div className={professor.elementClassName} onClick={onClickProfessor(professor)}>
             <h3>{professor.firstName} {professor.lastName}</h3>
             {/* This stuff in the paragraph tag will become popover*/}
             <p>Program: {professor.program}<br/></p>
@@ -173,11 +216,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * 
      * @param professors     - The state of professors passed from App.js
      */
-    const ProfessorAddPageContent = ({professors}) => {
+    const ProfessorAddPageContent = ({professors, onClickProfessor}) => {
         return (
         <div className="home">
             <div className='element-page'>
-            <ProfessorList professors={professors}/> 
+            <ProfessorList professors={professors} onClickProfessor={onClickProfessor}/> 
             </div>
         </div>
         );
@@ -284,6 +327,15 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         );
     }
 
+    useEffect(() => {
+        console.log('STATE REFRESH');
+        console.log('=============');
+        //console.log('COURSES', courseSections);
+        //console.log('ROOMS', selectedRooms);
+        //console.log('PROFS', selectedProfessors);
+        //console.log('LABS', selectedLabs)
+    }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
+
 
     return (
         <div>
@@ -296,8 +348,8 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
                     <div className="container-home">
                         <CourseAddPageContent courses={courses} onClickCourse={addSectionsForClass} ></CourseAddPageContent>
                         <RoomAddPageContent  rooms={rooms} onClickRoom={selectRooms}></RoomAddPageContent>
-                        <ProfessorAddPageContent professors={professors} ></ProfessorAddPageContent>
-                        <LabAddPageContent labs={labs} ></LabAddPageContent>
+                        <ProfessorAddPageContent professors={professors} onClickProfessor={selectProfessors}></ProfessorAddPageContent>
+                        <LabAddPageContent labs={labs} onClickLab={selectLabs}></LabAddPageContent>
                     </div>
                     
                     {/* generate schedule button */}
