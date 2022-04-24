@@ -8,7 +8,7 @@ import './../../assets/styles/AddPages.css';
 import SideNavigation from '../SideNavigation.js';
 import TopBar from '../TopBar.js';
 
-import * as AlgoFunction from './../../services/algorithmServices/mainAlgorithmService';
+import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
 
 const {
     CHANNEL_MODAL_FROM_MAIN,
@@ -116,11 +116,18 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             setSelectedLabs(selectedLabs.filter((remaingLabs) => remaingLabs.id !== id));
         }
     }
+
+    function createJsonDataFromState(){
+        let data = AlgoService.createJsonData(courseSections, selectedRooms, selectedProfessors, selectedLabs);
+        console.log(data);
+    }
     
     function createNewSchedule(){
-        AlgoFunction.runAlgorithm();
+        createJsonDataFromState();
+        //AlgoService.runAlgorithm();
         //setCurrentPage('schedule');
     }
+
 
     //======================== AddSolution Components =====================================
     /**
@@ -323,10 +330,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     useEffect(() => {
         console.log('STATE REFRESH');
         console.log('=============');
-        console.log('COURSES', courseSections);
-        console.log('ROOMS', selectedRooms);
-        console.log('PROFS', selectedProfessors);
-        console.log('LABS', selectedLabs)
+        //console.log('COURSES', courseSections);
+        //console.log('ROOMS', selectedRooms);
+        //console.log('PROFS', selectedProfessors);
+        //console.log('LABS', selectedLabs)
     }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
 
 
