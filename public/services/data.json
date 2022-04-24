@@ -15,6 +15,14 @@
             "credits": "4",
             "capacity": "20",
             "sections": "1"
+        },
+
+        {
+            "id": 3,
+            "name": "AI",
+            "credits": "4",
+            "capacity": "25",
+            "sections": "1"
         }
     ],
     "professors":
@@ -31,6 +39,13 @@
             "name": "B",
             "canTeach": [],
             "courseLoad": "8"
+        },
+
+        {
+            "id": 3,
+            "name": "C",
+            "canTeach": [],
+            "courseLoad": "4"
         }
     ],
     "times":
@@ -38,13 +53,19 @@
         {
             "id": 1,
             "time": "MWF 8:15am",
-            "partOfDay": "morning"
+            "timeBlock": "morning"
         },
 
         {
             "id": 2,
             "time": "TR 1:30pm",
-            "partOfDay": "afternoon"
+            "timeBlock": "afternoon"
+        },
+
+        {
+            "id": 3,
+            "time": "MWF 10:55am",
+            "timeBlock": "morning"
         }
     ],
     "rooms":
@@ -60,6 +81,13 @@
             "id": 2,
             "name": "room 2",
             "capacity": "25",
+            "tech": []
+        },
+
+        {
+            "id": 3,
+            "name": "room 3",
+            "capacity": "20",
             "tech": []
         }
     ]

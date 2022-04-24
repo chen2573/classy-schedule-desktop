@@ -21,6 +21,7 @@ export function runAlgorithm(){
 
 /**
  * This function will create a json object that will be used as input to our algorithm.
+ * Got help from this stack overflow: https://stackoverflow.com/questions/65015651/how-to-create-a-json-object-using-javascript
  * @param courses - courses that have been selected for the algorithm.
  * @param courses - rooms that have been selected for the algorithm. 
  * @param professors - professors that have been selected for the algorithm. 
@@ -35,14 +36,16 @@ export function createJsonData(courses, rooms, professors, labs){
     jsonObject.courses = [];
     jsonObject.labs = [];
     jsonObject.professors = [];
+    jsonObject.times = [];
 
     //Add all rooms
     for(const key in rooms) {
         let tempRoom = {};
         
         tempRoom.id = rooms[key].id;
+        tempRoom.name = rooms[key].rbuilding + ' ' + rooms[key].rnumber;
         tempRoom.capacity = rooms[key].rcapacity;
-        tempRoom.number = rooms[key].rnumber;
+        tempRoom.tech = [];
 
         jsonObject.rooms.push(tempRoom);
     }
@@ -52,7 +55,7 @@ export function createJsonData(courses, rooms, professors, labs){
         let tempCourse = {};
         
         tempCourse.id = courses[key].id;
-        tempCourse.capacity = courses[key].rcapacity;
+        tempCourse.capacity = courses[key].capacity;
         tempCourse.name = courses[key].name;
         tempCourse.department = courses[key].program;
         tempCourse.number = courses[key].number;
@@ -67,9 +70,9 @@ export function createJsonData(courses, rooms, professors, labs){
         let tempProfessor = {};
         
         tempProfessor.id = professors[key].id;
-        tempProfessor.firstName = professors[key].firstName;
-        tempProfessor.lastName = professors[key].lastName;
-        tempProfessor.teachLoad = professors[key].teach_load;
+        tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
+        tempProfessor.canTeach = [];
+        tempProfessor.courseLoad = professors[key].teach_load;
 
 
         jsonObject.professors.push(tempProfessor);
@@ -85,6 +88,26 @@ export function createJsonData(courses, rooms, professors, labs){
 
         jsonObject.labs.push(tempLab);
     }
+
+    let temp1 = {};
+    temp1.id = 1;
+    temp1.time = "MWF 8:15am";
+    temp1.timeBlock = "morning";
+    jsonObject.times.push(temp1);
+
+    let temp2 = {};
+    temp2.id = 2;
+    temp2.time = "TR 1:30pm";
+    temp2.timeBlock = "afternoon";
+    jsonObject.times.push(temp2);
+
+    let temp3 = {};
+    temp3.id = 3;
+    temp3.time = "MWF 10:55am";
+    temp3.timeBlock = "morning";
+    jsonObject.times.push(temp3);
+
+    window.DB.send('toMain:Json', jsonObject);
 
     return jsonObject;
 }

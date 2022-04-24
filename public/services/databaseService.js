@@ -9,7 +9,7 @@ class DatabaseService {
     authenticateUser(user, pass) {
         return axios({
             method: 'POST',
-            url: API_BASE + 'user-management/authenticate',
+            url: API_BASE + 'user-management/users/authenticate',
             data: {
                 'username': user,
                 'password': pass

@@ -330,10 +330,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     useEffect(() => {
         console.log('STATE REFRESH');
         console.log('=============');
-        //console.log('COURSES', courseSections);
-        //console.log('ROOMS', selectedRooms);
-        //console.log('PROFS', selectedProfessors);
-        //console.log('LABS', selectedLabs)
+        console.log('COURSES', courseSections);
+        console.log('ROOMS', selectedRooms);
+        console.log('PROFS', selectedProfessors);
+        console.log('LABS', selectedLabs)
     }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
 
 
