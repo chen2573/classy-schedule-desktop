@@ -30,6 +30,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     * State variables to send to the algorithm
     */
     const [courseSections, setCourseSections] = useState([]);
+    const [selectedRooms, setSelectedRooms] = useState([]);
+    const [selectedProfessors, setSelectedProfessors] = useState([]);
+    const [selectedLabs, setSelectedLabs] = useState([]);
     const [tempState, setTempState] = useState([]);
     const colorIsRed = true;
 
@@ -78,31 +81,40 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
 
     const selectRooms = (room) => () => {
         if(room.elementClassName === "item"){
-            room.elementClassName = "item-selected"; 
+            room.elementClassName = "item-selected";
+            setSelectedRooms([...selectedRooms, room]); 
         }else{
             room.elementClassName = "item";
+
+            let id = room.id;
+            setSelectedRooms(selectedRooms.filter((remaingRooms) => remaingRooms.id !== id));
         }
-        setTempState([]);
     }
 
     const selectProfessors = (professor) => () => {
         //console.log(professor)
         if(professor.elementClassName === "item"){
             professor.elementClassName = "item-selected"; 
+            setSelectedProfessors([...selectedProfessors, professor]); 
         }else{
             professor.elementClassName = "item";
+
+            let id = professor.id;
+            setSelectedProfessors(selectedProfessors.filter((remaingProfs) => remaingProfs.id !== id));
         }
-        setTempState([]);
     }
 
     const selectLabs = (lab) => () => {
         //console.log(lab)
         if(lab.elementClassName === "item"){
             lab.elementClassName = "item-selected"; 
+            setSelectedLabs([...selectedLabs, lab]);
         }else{
             lab.elementClassName = "item";
+
+            let id = lab.id;
+            setSelectedLabs(selectedLabs.filter((remaingLabs) => remaingLabs.id !== id));
         }
-        setTempState([]);
     }
     
     function createNewSchedule(){
@@ -309,8 +321,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     }
 
     useEffect(() => {
-        console.log(courseSections);
-    }, [courseSections]);
+        console.log('STATE REFRESH');
+        console.log('=============');
+        console.log('COURSES', courseSections);
+        console.log('ROOMS', selectedRooms);
+        console.log('PROFS', selectedProfessors);
+        console.log('LABS', selectedLabs)
+    }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
 
 
     return (
