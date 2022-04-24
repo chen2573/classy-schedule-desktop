@@ -169,8 +169,9 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
     }
  
        
- 
-    onAddProfessor({program, firstName, lastName, teach_load, time_block, can_teach, want_teach});
+    let elementClassName = 'item';
+
+    onAddProfessor({program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
  
     setProgram('');
     setFirstName('');

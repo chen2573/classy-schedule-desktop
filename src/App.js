@@ -331,9 +331,11 @@ function App() {
         let time_block = prof.time_block;
         let can_teach = prof.can_teach;
         let want_teach = prof.want_teach;
+        let elementClassName = 'item';
+        
         const id = Math.floor(Math.random() * 10000) + 1;
 
-        let newProfessor = { id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach };
+        let newProfessor = { id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName};
         stateProfessors.push(newProfessor);
       });
       setProfessors(stateProfessors);
@@ -358,8 +360,9 @@ function App() {
               let time_block = '';
               let can_teach = ''; 
               let want_teach = '';
+              let elementClassName = 'item';
 
-              let newProf = { id, firstName, lastName, teach_load, time_block, can_teach, want_teach };
+              let newProf = { id, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName };
               stateProfessors.push(newProf);
           });
 
@@ -521,9 +524,10 @@ function App() {
         let lcapacity = lab.lcapacity;
         let ltech = lab.ltech;
         let lcourse = lab.lcourse;
+        let elementClassName = 'item';
         let id = Math.floor(Math.random() * 10000) + 1;
 
-        var newLab = { id, lname, lcapacity, ltech, lcourse};
+        var newLab = { id, lname, lcapacity, ltech, lcourse, elementClassName};
         stateLabs.push(newLab);
       })
       setLabs(stateLabs);
