@@ -16,7 +16,7 @@ const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     sx: {
         "&& .Mui-selected": {
-            backgroundColor: "#92afdb"
+            backgroundColor: "#90A4AE"
         }
     },
     PaperProps: {
