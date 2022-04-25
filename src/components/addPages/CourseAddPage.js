@@ -7,6 +7,7 @@ import './../../assets/styles/SideNav.css';
 import './../../assets/styles/AddPages.css';
 import SideNavigation from './../SideNavigation.js';
 import TopBar from './../TopBar.js'
+import DataViewer from '../DataViewer';
 
 
 
@@ -277,7 +278,7 @@ const CourseList = ({ courses, onDelete }) => {
         <div className='container'>
             {courses.map((currentCourse, index) => (
                 <CourseListItem key={index} course={currentCourse}
-                    onDelete={onDelete} />
+                    onDelete={onDelete} courses={courses} />
             ))}
         </div>
     );
@@ -290,17 +291,15 @@ const CourseList = ({ courses, onDelete }) => {
  * @param onDelete - The delete function that is passed down from App.js
  * @returns - The component displaying an individual course.
  */
-const CourseListItem = ({ course, onDelete }) => {
+const CourseListItem = ({ course, onDelete, courses }) => {
     return (
         <div className='item'>
-            <h3>{course.program} {course.number}<FaTimes style={{ color: 'red', cursor: 'pointer' }} onClick={() => onDelete(course.id)} /></h3>
+        <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(course.id)}/>
+        <DataViewer id={course.id} dataState={courses} sx={{position:'absolute'}}>
+             <h3>{course.program} {course.number}</h3>
             {/* This stuff in the paragraph tag will become popover*/}
-            <p><em>Class ID</em> : {course.courseID} <br />
-                <em>Course Name</em> : {course.name}<br />
-                <em>Credits</em> : {course.credits}<br />
-                <em>Capacity</em> : {course.capacity}<br />
-                <em>Tech</em> : {course.tech}<br />
-                <em>Sections</em> : {course.sections}</p>
+            <p><em>Course Name</em> : {course.name}<br /></p>
+        </DataViewer>
         </div>
     );
 }
