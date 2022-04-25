@@ -26,7 +26,7 @@ function openNav() {
                         <NotificationsNone/>
                         <span className="topIconBadge">2</span>
                     </div>
-                    <a href="#"><img onClick={openNav} src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffree-profile-pics.com%2Fprofile-pictures%2F01262014%2Fdownload%2Fyoda-profile-picture-512x512.png&f=1&nofb=1" alt="" className="topAvatar"/></a>
+                    <a href="#"><img onClick={openNav} src="https://pm1.narvii.com/7443/6cd967b9b43e84a408cf5ba385e4d9bc55e3fd9ar1-2048-2048v2_hq.jpg" alt="" className="topAvatar"/></a>
                 </div>
             </div>
         </div>

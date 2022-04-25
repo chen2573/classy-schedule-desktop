@@ -79,6 +79,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         }
     }
 
+    /**
+     * Selects a room to add for creating schedule. This function changes the background color
+     * and adds it to the state variable holding rooms.
+     * @param room - the room that was clicked
+     */
     const selectRooms = (room) => () => {
         if(room.elementClassName === "item"){
             room.elementClassName = "item-selected";
@@ -91,6 +96,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         }
     }
 
+    /**
+     * Selects a professor to add for creating schedule. This function changes the background color
+     * and adds it to the state variable holding professors.
+     * @param professor - the professor that was clicked
+     */
     const selectProfessors = (professor) => () => {
         //console.log(professor)
         if(professor.elementClassName === "item"){
@@ -104,6 +114,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         }
     }
 
+    /**
+     * Selects a lab to add for creating schedule. This function changes the background color
+     * and adds it to the state variable holding labs.
+     * @param lab - the lab that was clicked
+     */
     const selectLabs = (lab) => () => {
         //console.log(lab)
         if(lab.elementClassName === "item"){
@@ -116,16 +131,14 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             setSelectedLabs(selectedLabs.filter((remaingLabs) => remaingLabs.id !== id));
         }
     }
-
-    function createJsonDataFromState(){
-        let data = AlgoService.createJsonData(courseSections, selectedRooms, selectedProfessors, selectedLabs);
-        console.log(data);
-    }
     
+    /**
+     * Sends the selected values from this state to the algorithm service. The algo service will create
+     * a json from the variables and run the scheduling algorithm. The current page will then move to the solution viewer page.
+     */
     function createNewSchedule(){
-        createJsonDataFromState();
-        //AlgoService.runAlgorithm();
-        //setCurrentPage('schedule');
+        AlgoService.createScheduleFromData(courseSections, selectedRooms, selectedProfessors, selectedLabs);
+        setCurrentPage('schedule')
     }
 
 
@@ -328,12 +341,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     }
 
     useEffect(() => {
-        console.log('STATE REFRESH');
-        console.log('=============');
-        console.log('COURSES', courseSections);
-        console.log('ROOMS', selectedRooms);
-        console.log('PROFS', selectedProfessors);
-        console.log('LABS', selectedLabs)
+        //console.log('STATE REFRESH');
+        //console.log('=============');
+        //console.log('COURSES', courseSections);
+        //console.log('ROOMS', selectedRooms);
+        //console.log('PROFS', selectedProfessors);
+        //console.log('LABS', selectedLabs)
     }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
 
 
