@@ -20,14 +20,14 @@ export function runAlgorithm(){
 }
 
 /**
- * This function will create a json object that will be used as input to our algorithm.
+ * This function will create a json object that will be sent as input to our algorithm.
  * Got help from this stack overflow: https://stackoverflow.com/questions/65015651/how-to-create-a-json-object-using-javascript
  * @param courses - courses that have been selected for the algorithm.
  * @param courses - rooms that have been selected for the algorithm. 
  * @param professors - professors that have been selected for the algorithm. 
  * @param labs - labs that have been selected for the algorithm.  
  */
-export function createJsonData(courses, rooms, professors, labs){
+export function createScheduleFromData(courses, rooms, professors, labs){
     //console.log(courses);
     //The main object that will be returned back;
     let jsonObject = {};
@@ -89,6 +89,7 @@ export function createJsonData(courses, rooms, professors, labs){
         jsonObject.labs.push(tempLab);
     }
 
+    //Add temp times for now.
     let temp1 = {};
     temp1.id = 1;
     temp1.time = "MWF 8:15am";
@@ -107,6 +108,7 @@ export function createJsonData(courses, rooms, professors, labs){
     temp3.timeBlock = "morning";
     jsonObject.times.push(temp3);
 
+    //Sends data to electron to run algorithm
     window.DB.send('toMain:Json', jsonObject);
 
     return jsonObject;

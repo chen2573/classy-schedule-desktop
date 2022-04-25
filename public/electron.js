@@ -674,10 +674,10 @@ function addModalWindows(){
         let tempData = JSON.stringify(data);
         executeAlgorithm(tempData);
 
-        let fs = require('fs');
-        fs.writeFile(path.join(__dirname, '/services/tempData.json'), tempData, (err, result) => {
-            if(err) console.log('!!!JSON LOG --> ERROR creating json file', err);
-        });
+        // let fs = require('fs');
+        // fs.writeFile(path.join(__dirname, '/services/tempData.json'), tempData, (err, result) => {
+        //     if(err) console.log('!!!JSON LOG --> ERROR creating json file', err);
+        // });
     });
 }
 
@@ -687,11 +687,17 @@ const execFile = util.promisify(require('child_process').execFile);
 async function executeAlgorithm(data) {
     if(process.platform == 'darwin'){
         const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/CSP-selective2.exe'), [data]);
-        console.log(stdout);
+        console.log('SOLUTION LOG --> Solution:' + stdout);
+        let payload = JSON.parse(stdout);
+
+        mainWindow.webContents.send('fromMain:Algo', payload);
     }
     else {
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/win/CSP-selective2.exe'), []);
-        console.log(stdout);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/CSP-selective2.exe'), [data]);
+        console.log('SOLUTION LOG --> Solution:' + stdout);
+        let payload = JSON.parse(stdout);
+
+        mainWindow.webContents.send('fromMain:Algo', payload);
     }
     
 }
