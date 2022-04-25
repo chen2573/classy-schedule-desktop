@@ -7,6 +7,8 @@ import './../../assets/styles/SideNav.css';
 import './../../assets/styles/AddPages.css';
 import SideNavigation from '../SideNavigation.js';
 import TopBar from '../TopBar.js';
+import DataViewer from '../DataViewer';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
 
@@ -152,7 +154,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         <div className='container'>
         <h1>Labs</h1>
         {labs.map((currentLab, index) => (
-            <LabListItem key={index} lab={currentLab} onClickLab={onClickLab}/>
+            <LabListItem key={index} lab={currentLab} onClickLab={onClickLab} labs={labs}/>
         ))}
         </div>
         );
@@ -162,15 +164,19 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * The component that will display an individual lab. These components will populate the LabList component.
      * @param lab - an individual lab
      */
-    const LabListItem = ({lab, onClickLab}) => {
+    const LabListItem = ({lab, onClickLab, labs}) => {
         return(
-        <div className={lab.elementClassName} onClick={onClickLab(lab)} >
-            <h3>Lab: {lab.lname}</h3>
-            <p><em>Course: {lab.lcourse[0].name}</em></p>
-            {/*What do we want this course part to show
-            Maybe the course object that we can pop out?
-            */}
-        </div>
+            <div className={lab.elementClassName}>
+                <DataViewer id={lab.id} dataState={labs} sx={{position:'absolute'}}>
+                    <MoreHorizIcon style= {{float:"right"}}/>
+                </DataViewer>
+                {/* this needs to change to a location if more than one building is used number is not unique*/}
+                <div onClick = {onClickLab(lab)}>
+                    <h3>Lab: {lab.lname}</h3>
+                    <p><em>Course: {lab.lcourse[0].name}</em></p>
+                </div>
+            </div>
+
         );
     }
     
@@ -200,7 +206,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         <div className='container'>
             <h1>Professors</h1>
         {professors.map((currentProfessor, index) => (
-            <ProfessorListItem key={index} professor={currentProfessor} onClickProfessor={onClickProfessor}/>
+            <ProfessorListItem key={index} professor={currentProfessor} onClickProfessor={onClickProfessor} professors={professors}/>
         ))}
         </div>
         );
@@ -213,13 +219,17 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * @param professor - An individual professor
      * @returns         - React component that displays a single professor component
      */
-    const ProfessorListItem = ({professor, onClickProfessor}) => {
+    const ProfessorListItem = ({professor, onClickProfessor, professors}) => {
         return (
-        <div className={professor.elementClassName} onClick={onClickProfessor(professor)}>
-            <h3>{professor.firstName} {professor.lastName}</h3>
-            {/* This stuff in the paragraph tag will become popover*/}
-            <p>Program: {professor.program}<br/></p>
-        </div>
+            <div className={professor.elementClassName}>
+                <DataViewer id={professor.id} dataState={professors} sx={{position:'absolute'}}>
+                    <MoreHorizIcon style= {{float:"right"}}/>
+                </DataViewer>
+                {/* this needs to change to a location if more than one building is used number is not unique*/}
+                <div onClick = {onClickProfessor(professor)}>
+                    <h3>{professor.firstName} {professor.lastName}</h3>
+                </div>
+            </div>
         );
     }
   
@@ -248,7 +258,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             <div className='container'>
             <h1>Rooms</h1>
             {rooms.map((currentRoom, index) => (
-                <RoomListItem key={index} room={currentRoom} onClickRoom={onClickRoom}/>
+                <RoomListItem key={index} room={currentRoom} onClickRoom={onClickRoom} rooms={rooms}/>
             ))}
             </div>
             );
@@ -258,13 +268,16 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * The component that will display an individual room. These components will populate the RoomList component.
      * @param room - an individual room
      */
-    const RoomListItem = ({ room, onClickRoom }) => {
+    const RoomListItem = ({ room, onClickRoom, rooms }) => {
         return(
-        <div className={room.elementClassName} onClick = {onClickRoom(room)}>
+        <div className={room.elementClassName}>
+            <DataViewer id={room.id} dataState={rooms} sx={{position:'absolute'}}>
+                <MoreHorizIcon style= {{float:"right"}}/>
+            </DataViewer>
             {/* this needs to change to a location if more than one building is used number is not unique*/}
-            <h3>Room: {room.rnumber} </h3>
-            <p><em>Building: </em> {room.rbuilding}<br />
-            <em>Tech: </em>{room.rtech}</p>
+            <div onClick = {onClickRoom(room)}>
+                <h3>Room: {room.rnumber} </h3>
+            </div>
             
             {/*Do we want to add a subheader like the video*/}
         </div>
@@ -310,17 +323,17 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
     const CourseListItem = ({ course, onClickCourse}) => {
         //addSectionsForClass(course)
-        return (
-            <div className={course.elementClassName} id={course.id} onClick={onClickCourse(course)}>
-                <h3>{course.program} {course.number}</h3>
-                {/* This stuff in the paragraph tag will become popover*/}
-                <p><em>Class ID</em> : {course.courseID} <br />
-                    <em>Course Name</em> : {course.name}<br />
-                    <em>Credits</em> : {course.credits}<br />
-                    <em>Capacity</em> : {course.capacity}<br />
-                    <em>Tech: </em>{course.tech}<br />
-                    <em>Sections</em>: {course.sections}</p>
-            </div>
+        return (            
+                <div className={course.elementClassName} id={course.id} >
+                    <DataViewer id={course.id} dataState={courses} sx={{position:'absolute'}}>
+                        <MoreHorizIcon style= {{float:"right"}}/>
+                    </DataViewer>
+                    <div onClick={onClickCourse(course)}>
+                        <h3>{course.program} {course.number}</h3>
+                        {/* This stuff in the paragraph tag will become popover*/}
+                        <p><em>Course Name</em> : {course.name}<br /></p>
+                    </div>
+                </div>
         );
     }
 
