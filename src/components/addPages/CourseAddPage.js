@@ -16,7 +16,7 @@ const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     sx: {
         "&& .Mui-selected": {
-            backgroundColor: "#92afdb"
+            backgroundColor: "#4682b4"
         }
     },
     PaperProps: {
@@ -167,7 +167,7 @@ const CourseAdd = ({ onAddCourse, programs }) => {
                         notched
                         MenuProps={{sx: {
                             "&& .Mui-selected": {
-                              backgroundColor: "#92afdb"
+                              backgroundColor: "#4682b4"
                             }
                         }}}
                         value={program}

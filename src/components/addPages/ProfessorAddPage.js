@@ -25,7 +25,7 @@ const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   sx: {
     "&& .Mui-selected": {
-      backgroundColor: "#92afdb"
+      backgroundColor: "#4682b4"
     }
   },
   PaperProps: {
@@ -83,7 +83,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
   const validateTeachLoad = validate(validTeachingLoad, setTeachLoad);
    
   /**
-   * This function enforces that the input is alphanumeric lower or upper case or '.'
+   * This function enforces that the input is alphanumeric lower or upper case or ' '
    * @param name - Input value
    * @returns    - True if the input is valid, otherwise false
    */
@@ -199,7 +199,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
               notched
               MenuProps={{sx: {
                 "&& .Mui-selected": {
-                  backgroundColor: "#92afdb"
+                  backgroundColor: "#4682b4"
                 }
               }}}
               value={program}
@@ -248,7 +248,7 @@ const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
               notched
               MenuProps={{sx: {
                 "&& .Mui-selected": {
-                  backgroundColor: "#92afdb"
+                  backgroundColor: '#4682b4'
                 }
               }}}
               value={time_block}
