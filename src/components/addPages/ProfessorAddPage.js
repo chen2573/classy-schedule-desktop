@@ -32,10 +32,12 @@
   * @param courses        - State variable containing course objects
   * @param programs       - State variable containing program objects
   */
-   const ProfessorAddPage = ({onAddProfessor, professors, onDelete, courses, programs}) => {
+   const ProfessorAddPage = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {
 
     const [profEditedId, setProfEditedId] = useState(null);
     const [editedProfessor, setEditedProfessor] = useState(null);
+    const [refresh, setRefresh] = useState('');
+
     const onEdit = profId => e => {
       setProfEditedId(profId);
       setEditedProfessor(profId === null ? null : professors.find(p => p.id === profId));
@@ -69,6 +71,12 @@
     const validate = (validateFN, stateSetter) => e => {
       stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
     }
+
+    const resetState = () => {
+      setEditedProfessor(null);
+      setProfEditedId(null);
+      setRefresh('Refresh');
+    }
       
     /**
       * This component represents the form that will be used by the user to enter in new professor data.
@@ -78,7 +86,7 @@
       * @param programs       - State variable containing program objects
       * @returns              - React component div used to enter and submit professor information
       */
-    const ProfessorAdd = ({onAddProfessor, courses, programs}) => {
+    const ProfessorAdd = ({onAddProfessor, onEditProfessor, courses, programs}) => {
       const [program, setProgram] = useState('');
       const [firstName, setFirstName] = useState(profEditedId === null ? '' : editedProfessor.firstName);
       const [lastName, setLastName] = useState(profEditedId === null ? '' : editedProfessor.lastName);
@@ -86,8 +94,6 @@
       const [time_block, setTimeBlock] = useState(profEditedId === null ? '' : editedProfessor.time_block);
       const [can_teach, setCanTeach] = useState(profEditedId === null ? [] : editedProfessor.can_teach);
       const [want_teach, setWantTeach] = useState(profEditedId === null ? [] : editedProfessor.want_teach);
-    
-    
     
                             // Input Validation
       /**
@@ -197,8 +203,10 @@
         if(profEditedId === null){
           onAddProfessor({program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
         } else {
-          //onEditProfessor({program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
-          console.log("Call to onEditProfessor function happens here.")
+          let id = profEditedId;
+          onEditProfessor({id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
+          resetState();
+          //console.log("Call to onEditProfessor function happens here.")
         }
       
         setProgram('');
@@ -367,7 +375,8 @@
             <br></br>
     
             {profEditedId === null ? <input type="submit" value='Save Professor' className='btn btn-block'/> 
-            : <input type="submit" value='Save Edits' className='btn btn-block'/>}
+            : <><input type="submit" value='Save Edits' className='btn btn-block'/><br /> 
+                <input type="button" value="Cancel Edits" className='btn btn-block' onClick={resetState}/></> }
           </form>
         </div>
       );
@@ -419,7 +428,7 @@
       * @param courses        - State variable containing course objects
       * @param programs       - State variable containing program objects
       */
-      const ProfessorAddPageContent = ({onAddProfessor, professors, onDelete, courses, programs}) => {
+      const ProfessorAddPageContent = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {
     
       //onEditProfessor={onEditProfessor} - not implemented
     
@@ -428,8 +437,8 @@
       return (
         <div className="home">
           <div className='element-page'>
-            <ProfessorAdd onAddProfessor={onAddProfessor} courses={courses} programs={programs}/>
-            <ProfessorList onDelete={onDelete} professors={professors.filter(p => p.id !== profEditedId)} onEdit={onEdit}/> 
+            <ProfessorAdd onAddProfessor={onAddProfessor} onEditProfessor={onEditProfessor} courses={courses} programs={programs}/>
+            <ProfessorList onDelete={onDelete} professors={professors} onEdit={onEdit}/> 
           </div>
         </div>
       );
@@ -437,7 +446,7 @@
  
     useEffect(() => {
 
-    }, [profEditedId])
+    }, [profEditedId, refresh])
 
    return (
      <div>
@@ -448,7 +457,7 @@
                <TopBar></TopBar>
  
                <div className="container-home">
-                 <ProfessorAddPageContent onAddProfessor={onAddProfessor} professors={professors} onDelete={onDelete} courses={courses} programs={programs}></ProfessorAddPageContent>
+                 <ProfessorAddPageContent onAddProfessor={onAddProfessor} onEditProfessor={onEditProfessor} professors={professors} onDelete={onDelete} courses={courses} programs={programs}></ProfessorAddPageContent>
                </div>
            </div>
        </div>

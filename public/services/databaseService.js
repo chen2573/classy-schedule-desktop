@@ -191,6 +191,27 @@ class DatabaseService {
                 Authorization: this.authenticationToken
             }
         });
+    }
+    
+    /**
+     * Updates the professor with the specified ID.
+     * @param profId - the ID of the professor that will be updated. 
+     */
+    updateProfessor(profId, firstName, lastName, teachLoad) {
+        return axios({
+            method: 'PUT',
+            url: API_BASE + 'professor-management/professors/update/' + profId,
+            data: {
+                'professor_id': profId,
+                'first_name': firstName,
+                'last_name': lastName,
+                'teach_load': teachLoad
+            },
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
     } 
 
     // ======== Room methods ===========

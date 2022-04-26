@@ -33,6 +33,32 @@ export function createProfessor(professor){
     });
 }
 
+export function updateProfessor(professor){
+    let _payload = {
+        request: 'UPDATE',
+        message: 'Renderer UPDATE Professor',
+        id: professor.id,
+        firstName: professor.firstName,
+        lastName: professor.lastName,
+        teachLoad: professor.teach_load
+    };
+    
+    // Send a query to main
+    window.DB.send(CHANNEL_PROFESSOR_TO_MAIN, _payload);
+
+    // Recieve the results
+    window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (payload) => {
+        if(payload.status === 'SUCCESS'){
+            window.alert(payload.message);
+            return true;
+        }
+        else{
+            window.alert(payload.message + '\n' + payload.errorCode);
+            return false;
+        }
+    });
+}
+
 export function deleteProfessor(professorId) {
     let _payload = {
         request: 'DELETE',
