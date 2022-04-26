@@ -6,10 +6,10 @@ class DatabaseService {
         this.authenticationToken = 'tokenInvalid';
     }
     
-    authenticateUser(user, pass) {
+    authenticateAdmin(user, pass) {
         return axios({
             method: 'POST',
-            url: API_BASE + 'user-management/users/authenticate',
+            url: API_BASE + 'user-management/admin/authenticate',
             data: {
                 'username': user,
                 'password': pass

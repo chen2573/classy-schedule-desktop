@@ -227,15 +227,18 @@ function App() {
         programId = programIdArray[0].programId;
       }
 
-      DBFunction.createCourse(course, programId); 
-
-      newCourse = { id, ...course }
+      DBFunction.createCourse(course, programId).then((response) => {
+        if(response === "SUCCESS"){
+          newCourse = { id, ...course }
+          setCourses([...courses, newCourse]);
+        }
+      }); 
     }
     else{
       id = Math.floor(Math.random() * 10000) + 1;
       newCourse = { id, ...course }
+      setCourses([...courses, newCourse]);
     }
-    setCourses([...courses, newCourse]);
   };
 
   /**
@@ -243,8 +246,6 @@ function App() {
    * @param id - the id of the course that is being deleted 
    */
   const deleteCourse = (id) => {
-    getLatestCourses();
-
     // Confirm with user if they want to delete. This will be permenant.
     let deletedResponse = window.confirm("Are you sure you want to remove this Course?\n This will be permanent.");
 
@@ -258,7 +259,6 @@ function App() {
 
       //delete from database
       DBFunction.deleteCourse(courseNum, programId).then((shouldDeleteFromUI) => {
-        console.log(shouldDeleteFromUI);
         if(shouldDeleteFromUI){
           //delete from UI
           setCourses(courses.filter((course) => course.id !== id));
@@ -416,22 +416,22 @@ function App() {
   };
 
   const editProfessor = (professor) => {
-    let updatedResult = DBFunction.updateProfessor(professor);
-    let id = professor.id;
-    let stateProfessors = [];
+      DBFunction.updateProfessor(professor).then(result => {
 
-    console.log(professors);
-    if(updatedResult){
-        professors.map(curProf => {
-          if(curProf.id === id){
-            stateProfessors.push(professor);
-          }
-          else{
-            stateProfessors.push(curProf);
-          }
-        })
-        setProfessors(stateProfessors);
-    }
+        let id = professor.id;
+        let stateProfessors = [];
+
+        if (result) {
+          professors.map(curProf => {
+            if (curProf.id === id) {
+              stateProfessors.push(professor);
+            } else {
+              stateProfessors.push(curProf);
+            }
+          })
+          setProfessors(stateProfessors);
+        }
+      });      
   }
 
   //================= ROOM Functions =================================

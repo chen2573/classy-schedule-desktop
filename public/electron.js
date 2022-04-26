@@ -273,7 +273,7 @@ function createIPCChannels() {
 function addAuthenticationChannels(){
     // LogIn logic.
     ipcMain.on("toMain:AuthLogIn", (event, args) => {
-        DB.authenticateUser(args.email, args.password).then((payload) => {
+        DB.authenticateAdmin(args.email, args.password).then((payload) => {
             console.log("USER AUTH LOG--> Token:" + payload.data.token);
             if(payload.data.token === 'tokenInvalid'){
                 window.alert("Invalid Username or Password");
@@ -479,13 +479,13 @@ function addCourseChannel(){
             DB.deleteCourse(args.classNum, args.deptId).then((payload) => {
                 console.log("DATABASE LOG--> Successfully deleted COURSE with course number: " + args.classNum + "\n");
 
-                let _payload = {
+                let data = {
                     status: 'SUCCESS',
                     message: "Course deleted successfully!",
-                    courseNum: payload.data.classNum
                 };
+                console.log(data);
 
-                mainWindow.webContents.send('fromMain:Course', _payload);
+                mainWindow.webContents.send('fromMain:Course', data);
             }).catch((error) => {
                 console.log('!!!DATABASE LOG--> ERROR deleting COURSE: ' + error + '\n');
                 let _payload = {
