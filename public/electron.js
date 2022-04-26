@@ -400,6 +400,32 @@ function addProfessorChannel(){
                 mainWindow.webContents.send('fromMain:Professor', _payload);
             });
         }
+        else if(args.request === 'UPDATE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request UPDATE a PROFESSOR")
+            console.log(args)
+    
+            DB.updateProfessor(args.id, args.firstName, args.lastName, args.teachLoad).then((payload) => {
+                console.log("DATABASE LOG--> Successfully updated PROFESSOR \n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Professor updated successfully!",
+                    profId: payload.data.professor_id
+                };
+
+                mainWindow.webContents.send('fromMain:Professor', _payload);
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR updating PROFESSOR: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to update professor.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Professor', _payload);
+            });
+        }
 
     });
 }

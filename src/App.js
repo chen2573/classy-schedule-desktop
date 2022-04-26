@@ -415,6 +415,25 @@ function App() {
     }
   };
 
+  const editProfessor = (professor) => {
+    let updatedResult = DBFunction.updateProfessor(professor);
+    let id = professor.id;
+    let stateProfessors = [];
+
+    console.log(professors);
+    if(updatedResult){
+        professors.map(curProf => {
+          if(curProf.id === id){
+            stateProfessors.push(professor);
+          }
+          else{
+            stateProfessors.push(curProf);
+          }
+        })
+        setProfessors(stateProfessors);
+    }
+  }
+
   //================= ROOM Functions =================================
   /**
    * Get the latest room data.
@@ -661,7 +680,7 @@ function App() {
     }
     else if (currentPage === 'professor')
     {
-      return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} professors={professors} courses={courses} programs={programs}/>;
+      return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} onEditProfessor={editProfessor} professors={professors} courses={courses} programs={programs}/>;
     }
     else if (currentPage === 'room')
     {
