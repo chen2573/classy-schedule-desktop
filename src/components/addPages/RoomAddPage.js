@@ -6,7 +6,8 @@ import './../../assets/styles/HomePage.css';
 import './../../assets/styles/SideNav.css';
 import './../../assets/styles/AddPages.css';
 import SideNavigation from './../SideNavigation.js';
-import TopBar from './../TopBar.js'
+import TopBar from './../TopBar.js';
+import DataViewer from '../DataViewer';
  
 
 
@@ -212,7 +213,7 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         return(
         <div className='container'>
         {rooms.map((currentRoom, index) => (
-            <RoomListItem key={index} room={currentRoom} onDelete={onDelete} onEdit={onEdit}/>
+            <RoomListItem key={index} room={currentRoom} onDelete={onDelete} onEdit={onEdit} rooms = {rooms}/>
         ))}
         </div>
         );
@@ -222,15 +223,16 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
      * The component that will display an individual room. These components will populate the RoomList component.
      * @param room - an individual room
      */
-    const RoomListItem = ({room, onDelete, onEdit}) => {
+    const RoomListItem = ({room, onDelete, onEdit, rooms}) => {
         return(
-        <div className='item'>
-            {/* this needs to change to a location if more than one building is used number is not unique*/}
-            <h3>Room: {room.rnumber} <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer'}} onClick={onEdit(room.id)}/> <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(room.id)} /></h3>
-            <p><em>Building: </em> {room.rbuilding}<br />
-            <em>Tech: </em>{room.rtech}</p>
-            {/*Do we want to add a subheader like the video*/}
-        </div>
+
+            <div className='item'>
+            <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(room.id)}/>
+            <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right"}} onClick={onEdit(room.id)}/>
+            <DataViewer id={room.id} dataState={rooms} sx={{position:'absolute'}}>
+                <h3> {"Room: "}{room.rbuilding} {room.rnumber}</h3>
+            </DataViewer>
+            </div>
         );
     }
 
