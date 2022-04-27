@@ -165,7 +165,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                 onAddCourse({program, number, name, credits, capacity, tech, length, elementClassName, sections}); // Implement checking for length and tech from database
             } else {
                 let id = courseEditedId;
-                onEditCourse({program, number, name, credits, capacity, tech, length, elementClassName, sections});
+                onEditCourse({id, program, number, name, credits, capacity, tech, length, elementClassName, sections});
                 resetState();
             }
 

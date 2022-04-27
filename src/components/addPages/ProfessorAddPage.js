@@ -144,7 +144,7 @@
       const validEmailText = name => validEmailChars(name) && validNameLength(name);
     
       // This function calls passes other functions to validate
-      const validateEmail = validate(validEmailText, setLastName);
+      const validateEmail = validate(validEmailText, setEmail);
     
     
       /**
@@ -390,7 +390,6 @@
         <div className='item'>
           <h3>{professor.firstName} {professor.lastName} <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer'}} onClick={onEdit(professor.id)}/> <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(professor.id)} /></h3>
           {/* This stuff in the paragraph tag will become popover*/}
-          <p>Email: {professor.email}<br></br></p>
         </div>
       );
     }
