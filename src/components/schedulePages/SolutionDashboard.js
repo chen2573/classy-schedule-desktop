@@ -8,6 +8,8 @@ import './../../assets/styles/AddPages.css';
 import SideNavigation from './../SideNavigation.js';
 import TopBar from './../TopBar.js';
 import AddIcon from '@mui/icons-material/Add';
+import DataViewer from '../DataViewer';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
     /**
  * This component is a view that lists out individual LabListItems.
  * @param plans - The state of plans that are passed down from App.js
@@ -18,7 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
         <div className='container'>
             <h1>plans</h1>
             {plans.map((currentSolution, index) => (
-                <SolutionItem key={index} plan={currentSolution}/>
+                <SolutionItem key={index} plan={currentSolution} plans={plans}/>
             ))}
         </div>
         );
@@ -28,16 +30,18 @@ import AddIcon from '@mui/icons-material/Add';
      * The component that will display an individual lab. These components will populate the LabList component.
      * @param plans - an individual solution
      */
-    const SolutionItem = ({plan}) => {
+    const SolutionItem = ({plan, plans}) => {
         {/*console.log(plans);*/}
         return(
-        <div className='item'>
-            <h3>{plan.planName}</h3>
-            <p>{plan.planDescription}</p>
-            {/*What do we want this course part to show
-            Maybe the course object that we can pop out?
-            */}
-        </div>
+            <div className= "item">
+                <DataViewer id={plan.id} dataState={plans} sx={{position:'absolute'}}>
+                    <MoreHorizIcon style= {{float:"right"}}/>
+                </DataViewer>
+                <div>
+                    <h3>{plan.planName}</h3>
+                    <p>{plan.planDescription}</p>
+                </div>
+            </div>
         );
     }
     

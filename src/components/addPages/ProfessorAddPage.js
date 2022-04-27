@@ -20,7 +20,8 @@
  import './../../assets/styles/SideNav.css';
  import './../../assets/styles/AddPages.css';
  import SideNavigation from './../SideNavigation.js';
- import TopBar from './../TopBar.js'
+ import TopBar from './../TopBar.js';
+ import DataViewer from '../DataViewer';
  
   /**
   * The component that will be exported. This page will have an Add form and list the Professors that have been added and
@@ -371,7 +372,7 @@
         <div className='container'>
         {professors.map((currentProfessor, index) => (
           <ProfessorListItem key={index} professor={currentProfessor}
-          onDelete={onDelete} onEdit={onEdit}/>
+          onDelete={onDelete} onEdit={onEdit} professors = {professors}/>
         ))}
         </div>
       );
@@ -385,11 +386,14 @@
       * @param onDelete  - Handler function that deletes an individual item from the list
       * @returns         - React component that displays a single professor component
       */
-    const ProfessorListItem = ({professor, onDelete, onEdit}) => {
+    const ProfessorListItem = ({professor, onDelete, onEdit, professors}) => {
       return (
         <div className='item'>
-          <h3>{professor.firstName} {professor.lastName} <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer'}} onClick={onEdit(professor.id)}/> <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(professor.id)} /></h3>
-          {/* This stuff in the paragraph tag will become popover*/}
+          <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(professor.id)}/>
+          <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right"}} onClick={onEdit(professor.id)}/>
+          <DataViewer id={professor.id} dataState={professors} sx={{position:'absolute'}}>
+            <h3> {professor.firstName} {professor.lastName}</h3>
+          </DataViewer>
         </div>
       );
     }
