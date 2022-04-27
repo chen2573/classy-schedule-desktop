@@ -34,6 +34,7 @@
   */
    const ProfessorAddPage = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {
 
+    // Edit functionality state management
     const [profEditedId, setProfEditedId] = useState(null);
     const [editedProfessor, setEditedProfessor] = useState(null);
     const [refresh, setRefresh] = useState('');
@@ -42,6 +43,12 @@
       setProfEditedId(profId);
       setEditedProfessor(profId === null ? null : professors.find(p => p.id === profId));
       console.log({profId})
+    }
+
+    const resetState = () => {
+      setEditedProfessor(null);
+      setProfEditedId(null);
+      setRefresh('Refresh');
     }
 
     // Styling
@@ -70,12 +77,6 @@
       */
     const validate = (validateFN, stateSetter) => e => {
       stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
-    }
-
-    const resetState = () => {
-      setEditedProfessor(null);
-      setProfEditedId(null);
-      setRefresh('Refresh');
     }
       
     /**
@@ -206,7 +207,6 @@
           let id = profEditedId;
           onEditProfessor({id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
           resetState();
-          //console.log("Call to onEditProfessor function happens here.")
         }
       
         setProgram('');
@@ -428,11 +428,7 @@
       * @param courses        - State variable containing course objects
       * @param programs       - State variable containing program objects
       */
-      const ProfessorAddPageContent = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {
-    
-      //onEditProfessor={onEditProfessor} - not implemented
-    
-    
+      const ProfessorAddPageContent = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {    
     
       return (
         <div className="home">

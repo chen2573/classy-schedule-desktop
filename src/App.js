@@ -168,13 +168,15 @@ function App() {
           let capacity = data.capacity;
           let number = data.class_num;
           let credits = data.credits;
+          let tech = []; // Implement checking for length and tech from database
+          let length = 0;
           let name = data.class_name;
           const id = Math.floor(Math.random() * 10000) + 1;
           let elementClassName = "item";
           let sections = 0;
 
 
-          let newCourse = { id, program, number, name, credits, capacity, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          let newCourse = { id, program, number, name, credits, capacity, tech, length, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
           stateCourses.push(newCourse);
         });
@@ -435,7 +437,7 @@ function App() {
         let rbuilding = room.rbuilding;
         let rnumber = room.rnumber;
         let rcapacity = room.rcapacity;
-        let rtech = room.rtech;
+        let rtech = room.rtech; 
         let id = Math.floor(Math.random() * 10000) + 1;
         let elementClassName = "item";
 
@@ -457,7 +459,7 @@ function App() {
           let rbuilding = data.rbuilding;
           let rnumber = data.room_num;
           let rcapacity = data.capacity;
-          let rtech = data.rtech;
+          let rtech = [];                               // Implement checking for tech from database
           let id = data.room_id;
           let elementClassName = "item";
 
