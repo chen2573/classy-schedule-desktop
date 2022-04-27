@@ -53,7 +53,6 @@ const CourseAdd = ({ onAddCourse, programs }) => {
     const [capacity, setCapacity] = useState('');
     const [length, setLength] = useState('');
     const [tech, setTech] = useState([]);
-    const [courseID, setCourseID] = useState('');
 
     // Course Name must be less than 50 characters and have no numbers
     const validNameLength = name => name.length < 51;
@@ -82,11 +81,6 @@ const CourseAdd = ({ onAddCourse, programs }) => {
     const validLength = val => [...val.matchAll(/(200|1[0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
     // This function calls passes other functions to validate
     const validateLength = validate(validLength, setLength);
-
-    // Course ID (4 digits?)
-    const validID = val => [...val.matchAll(/([1-9][0-9][0-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
-    // This function calls passes other functions to validate
-    const validateID = validate(validID, setCourseID);
 
     /**
      * This function handles changes on the Technology dropdown
@@ -119,10 +113,6 @@ const CourseAdd = ({ onAddCourse, programs }) => {
             alert('Please enter a course name');
             return;
         }
-        if (!courseID) {
-            alert('Please enter the course ID');
-            return;
-        }
         if (!credits) {
             alert('Please enter the number of credits');
             return;
@@ -140,13 +130,12 @@ const CourseAdd = ({ onAddCourse, programs }) => {
             return;
         }
 
-        onAddCourse({program, number, name, courseID, credits, capacity, tech, length});
+        onAddCourse({program, number, name, credits, capacity, tech, length});
 
         setCapacity('');
         setProgram('');
         setNumber('');
         setName('');
-        setCourseID('');
         setCredits('');
         setLength('');
         setTech([]);
@@ -188,10 +177,6 @@ const CourseAdd = ({ onAddCourse, programs }) => {
                 </Box>
 
                 <br></br>
-
-                <Box>
-                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_id" label="Course ID" variant="outlined" value={courseID} onChange={validateID}/>
-                </Box>
 
                 <br></br>
 

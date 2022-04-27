@@ -47,15 +47,17 @@ export function updateProfessor(professor){
     window.DB.send(CHANNEL_PROFESSOR_TO_MAIN, _payload);
 
     // Recieve the results
-    window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (payload) => {
-        if(payload.status === 'SUCCESS'){
-            window.alert(payload.message);
-            return true;
-        }
-        else{
-            window.alert(payload.message + '\n' + payload.errorCode);
-            return false;
-        }
+    return new Promise((resolve, reject) => {
+        window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS'){
+                window.alert(payload.message);
+                resolve(true);
+            }
+            else{
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(false);
+            }
+        });
     });
 }
 
@@ -101,16 +103,20 @@ export function createCourse(course, programId){
     // Send a query to main
     window.DB.send(CHANNEL_COURSE_TO_MAIN, _payload);
 
-    // Recieve the results
-    window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (payload) => {
-        if(payload.status === 'SUCCESS'){
-            window.alert(payload.message);
-            return payload.profId
-        }
-        else{
-            window.alert(payload.message + '\n' + payload.errorCode);
-        }
+    return new Promise((resolve, reject) => {
+        // Recieve the results
+        window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS'){
+                window.alert(payload.message);
+                resolve(payload.status);
+            }
+            else{
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(payload.status);
+            }
+        });
     });
+
 }
 
 export function deleteCourse(courseNum, departmentId) {
@@ -126,13 +132,13 @@ export function deleteCourse(courseNum, departmentId) {
     
     return new Promise((resolve, reject) => {
         // Recieve the results
-        window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (payload) => {
-            if(payload.status === 'SUCCESS') {
-                window.alert(payload.message);
+        window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (data) => {
+            if(data.status === 'SUCCESS') {
+                window.alert(data.message);
                 resolve(true);
             } 
-            else if(payload.status === 'FAIL') {
-                window.alert(payload.message + '\n' + payload.errorCode);
+            else if(data.status === 'FAIL') {
+                window.alert(data.message + '\n' + data.errorCode);
                 resolve(false);
             }
         });
@@ -150,15 +156,18 @@ export function createRoom(room){
     // Send a query to main
     window.DB.send(CHANNEL_ROOM_TO_MAIN, _payload);
 
-    // Recieve the results
-    window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
-        if(payload.status === 'SUCCESS'){
-            window.alert(payload.message);
-            return payload.profId
-        }
-        else{
-            window.alert(payload.message + '\n' + payload.errorCode);
-        }
+    return new Promise((resolve, reject) => {
+        // Recieve the results
+        window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS'){
+                window.alert(payload.message);
+                resolve(payload.id);
+            }
+            else{
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(payload.status);
+            }
+        });
     });
 }
 
