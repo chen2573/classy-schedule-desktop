@@ -529,6 +529,7 @@ function addRoomChannel(){
                 let _payload = {
                     status: 'SUCCESS',
                     message: "Room added successfully!",
+                    id: payload.data.room_id
                 };
                 mainWindow.webContents.send('fromMain:Room', _payload);
 

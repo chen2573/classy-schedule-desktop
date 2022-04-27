@@ -156,15 +156,18 @@ export function createRoom(room){
     // Send a query to main
     window.DB.send(CHANNEL_ROOM_TO_MAIN, _payload);
 
-    // Recieve the results
-    window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
-        if(payload.status === 'SUCCESS'){
-            window.alert(payload.message);
-            return payload.profId
-        }
-        else{
-            window.alert(payload.message + '\n' + payload.errorCode);
-        }
+    return new Promise((resolve, reject) => {
+        // Recieve the results
+        window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS'){
+                window.alert(payload.message);
+                resolve(payload.id);
+            }
+            else{
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(payload.status);
+            }
+        });
     });
 }
 

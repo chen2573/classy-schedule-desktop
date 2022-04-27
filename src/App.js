@@ -146,7 +146,7 @@ function App() {
         let elementClassName = "item";
         let sections = 0;
 
-        var newCourse = { id, program, number, name, courseID, credits, capacity, elementClassName, sections };
+        var newCourse = { id, program, number, name, credits, capacity, elementClassName, sections };
         stateCourses.push(newCourse);
       });
       setCourses(stateCourses);
@@ -162,27 +162,8 @@ function App() {
 
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
-        //console.log(dataRows);
-        //console.log(typeof dataRows);
-
         dataRows.map((data) => {
-          // let programName;
-          // console.log(programs);
-          // let programNameArray = programs.filter((program) => {
-          //   //console.log(program.programId);
-          //   //console.log(data.dept_id);
-          //   if (program.programId === data.dept_id) {
-          //     return program.programName;
-          //   }
-          // });
-          // if (programNameArray.length === 0){
-          //   //window.alert('Uh-oh! There is a bug here. We are working on it :)');
-          // }
-          // else {
-          //   programName = programNameArray[0].programName;
-          // }
 
-          let courseID = " ";
           let program = data.dept_name;
           let capacity = data.capacity;
           let number = data.class_num;
@@ -193,7 +174,7 @@ function App() {
           let sections = 0;
 
 
-          let newCourse = { id, program, number, name, courseID, credits, capacity, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          let newCourse = { id, program, number, name, credits, capacity, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
           stateCourses.push(newCourse);
         });
@@ -415,6 +396,10 @@ function App() {
     }
   };
 
+  /**
+   * Updates an existing professor.
+   * @param professor - the new professor information. 
+   */
   const editProfessor = (professor) => {
       DBFunction.updateProfessor(professor).then(result => {
 
@@ -494,14 +479,18 @@ function App() {
     let newRoom;
     
     if(USE_DATABASE){
-      id = DBFunction.createRoom(room);
-      newRoom = { id, ...room }
+      DBFunction.createRoom(room).then((response) => {
+        id = response;
+        newRoom = { id, ...room }
+        setRooms([...rooms, newRoom]);
+      });
     }
     else{
       id = Math.floor(Math.random() * 10000) + 1;
       newRoom= { id, ...room }
+      setRooms([...rooms, newRoom]);
     }
-    setRooms([...rooms, newRoom]);
+    
   };
 
   /**
@@ -509,13 +498,14 @@ function App() {
    * @param id - the room id that is being deleted. 
    */
   const deleteRoom = (id) => {
+    console.log(id);
+    console.log(rooms);
     // Confirm with user if they want to delete. This will be permenant.
     let deletedResponse = window.confirm("Are you sure you want to remove this Room?\n This will be permanent.");
 
     if(deletedResponse){
       //delete from database
       DBFunction.deleteRoom(id).then((shouldDeleteFromUI) => {
-        console.log(shouldDeleteFromUI);
         if(shouldDeleteFromUI){
           //delete from UI
           setRooms(rooms.filter((room) => room.id !== id));
