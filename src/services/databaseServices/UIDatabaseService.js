@@ -15,21 +15,25 @@ export function createProfessor(professor){
         message: 'Renderer CREATE Professor',
         firstName: professor.firstName,
         lastName: professor.lastName,
-        teachLoad: professor.teach_load
+        teachLoad: professor.teach_load,
+        email: professor.email
     };
     
     // Send a query to main
     window.DB.send(CHANNEL_PROFESSOR_TO_MAIN, _payload);
 
-    // Recieve the results
-    window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (payload) => {
-        if(payload.status === 'SUCCESS'){
-            window.alert(payload.message);
-            return payload.profId
-        }
-        else{
-            window.alert(payload.message + '\n' + payload.errorCode);
-        }
+    return new Promise((resolve, reject) => {
+        // Recieve the results
+        window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS'){
+                window.alert(payload.message);
+                resolve(payload.profId)
+            }
+            else{
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(payload.status);
+            }
+        });
     });
 }
 
@@ -74,6 +78,7 @@ export function deleteProfessor(professorId) {
     return new Promise((resolve, reject) => {
         // Recieve the results
         window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (payload) => {
+            console.log(payload);
             if(payload.status === 'SUCCESS') {
                 window.alert(payload.message);
                 resolve(true);
@@ -139,6 +144,35 @@ export function deleteCourse(courseNum, departmentId) {
             } 
             else if(data.status === 'FAIL') {
                 window.alert(data.message + '\n' + data.errorCode);
+                resolve(false);
+            }
+        });
+    });
+}
+
+export function updateCourse(course, programId) {
+    let _payload = {
+        request: 'UPDATE',
+        message: 'Renderer UPDATE Course',
+        number: course.number,
+        deptId: programId,
+        name: course.name,
+        capacity: course.capacity,
+        credits: course.capacity
+    };
+    
+    // Send a query to main
+    window.DB.send(CHANNEL_COURSE_TO_MAIN, _payload);
+
+    // Recieve the results
+    return new Promise((resolve, reject) => {
+        window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS'){
+                window.alert(payload.message);
+                resolve(true);
+            }
+            else{
+                window.alert(payload.message + '\n' + payload.errorCode);
                 resolve(false);
             }
         });

@@ -385,7 +385,6 @@ function addProfessorChannel(){
                 let _payload = {
                     status: 'SUCCESS',
                     message: "Professor deleted successfully!",
-                    profId: payload.data.professor_id
                 };
 
                 mainWindow.webContents.send('fromMain:Professor', _payload);
@@ -405,7 +404,7 @@ function addProfessorChannel(){
             console.log("DATABASE LOG --> " + "Making request UPDATE a PROFESSOR")
             console.log(args)
     
-            DB.updateProfessor(args.id, args.firstName, args.lastName, args.teachLoad).then((payload) => {
+            DB.updateProfessor(args.id, args.firstName, args.lastName, args.teachLoad, args.email).then((payload) => {
                 console.log("DATABASE LOG--> Successfully updated PROFESSOR \n");
 
                 let _payload = {
@@ -479,18 +478,42 @@ function addCourseChannel(){
             DB.deleteCourse(args.classNum, args.deptId).then((payload) => {
                 console.log("DATABASE LOG--> Successfully deleted COURSE with course number: " + args.classNum + "\n");
 
-                let data = {
+                let _payload = {
                     status: 'SUCCESS',
                     message: "Course deleted successfully!",
                 };
                 console.log(data);
 
-                mainWindow.webContents.send('fromMain:Course', data);
+                mainWindow.webContents.send('fromMain:Course', _payload);
             }).catch((error) => {
                 console.log('!!!DATABASE LOG--> ERROR deleting COURSE: ' + error + '\n');
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to delete course.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Course', _payload);
+            });
+        }
+        else if(args.request === 'UPDATE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request UPDATE a COURSE")
+
+            DB.updateCourse(args.number, args.deptId, args.name, args.capacity, args.credits).then((payload) => {
+                console.log("DATABASE LOG--> Successfully updated COURSE with course number: " + args.number + "\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Course updated successfully!",
+                };
+
+                mainWindow.webContents.send('fromMain:Course', _payload);
+            }).catch((error) => {
+                console.log('!!!DATABASE LOG--> ERROR updating COURSE: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to update course.",
                     errorCode: error
                 };
 

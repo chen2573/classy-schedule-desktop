@@ -126,7 +126,7 @@ function App() {
   /**
  * Gets the latest data for courses.
  */
-    const getLatestCourses = () => {
+  const getLatestCourses = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
@@ -252,13 +252,37 @@ function App() {
     }
   };
 
+  const editCourse = (course) => {
+    let tempCourse = courses;
+    let tempPrograms = programs;
+
+    let programName = getDepartmentName(tempCourse, course.id);
+    let programId = getDepartmentId(tempPrograms, programName);
+
+    DBFunction.updateCourse(course, programId).then(result => {
+      let id = course.id;
+      let stateCourses = [];
+
+      if (result) {
+        courses.map(curCourse => {
+          if (curCourse.id === id) {
+            stateCourses.push(course);
+          } else {
+            stateCourses.push(curCourse);
+          }
+        })
+        setProfessors(stateCourses);
+      }
+    });   
+  }
+
   /**
  * This is a helper function to get the Course name given a course id.
  * @param courseList - a list of temp course objects to iterate over
  * @param targetID - the id of the the course to search for.
  * @returns the name of the program that is specified.
  */
-   const getCourseNumber = (courseList, targetID) => {
+  function getCourseNumber(courseList, targetID) {
     for(const key in courseList) {
       if(courseList[key].id === targetID){
         return courseList[key].number;
@@ -272,7 +296,7 @@ function App() {
  * @param targetID - the id of the the course to search for.
  * @returns the name of the program that is specified.
  */
-  const getDepartmentName = (courseList, targetID) => {
+  function getDepartmentName(courseList, targetID) {
     for(const key in courseList) {
       if(courseList[key].id === targetID){
         return courseList[key].program;
@@ -286,7 +310,7 @@ function App() {
  * @param targetName - the name of the the department to search for.
  * @returns the name of the program that is specified.
  */
-   const getDepartmentId = (programList, targetName) => {
+  function getDepartmentId(programList, targetName) {
     for(const key in programList) {
       if(programList[key].programName === targetName){
         return programList[key].programId;
@@ -336,11 +360,12 @@ function App() {
       window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (dataRows) => {
 
           dataRows.map((data) => {
+            console.log(data);
               let id = data.professor_id
               let firstName = data.first_name;
               let lastName = data.last_name;
               let teach_load = data.teach_load;
-              let email = '';
+              let email = data.user_email;
               let time_block = '';
               let can_teach = []; 
               let want_teach = [];
@@ -363,16 +388,20 @@ function App() {
   const addProfessor = (professor) => {
     let id;
     let newProfessor;
-    
+  
     if(USE_DATABASE){
-      id = DBFunction.createProfessor(professor);
-      newProfessor = { id, ...professor }
+      id = DBFunction.createProfessor(professor).then((response) => {
+        let id = response;
+        newProfessor = { id, ...professor };
+        setProfessors([...professors, newProfessor]);
+      });
     }
     else{
       id = Math.floor(Math.random() * 10000) + 1;
       newProfessor = { id, ...professor }
+      setProfessors([...professors, newProfessor]);
     }
-    setProfessors([...professors, newProfessor]);
+    
   };
 
   /**
@@ -380,8 +409,6 @@ function App() {
    * @param id - the professor id that is being deleted. 
    */
   const deleteProfessor = (id) => {
-    getLatestProfessors();
-
     // Confirm with user if they want to delete. This will be permenant.
     let deletedResponse = window.confirm("Are you sure you want to remove this Professor?\n This will be permanent.");
 
@@ -665,7 +692,7 @@ function App() {
   {
     if (currentPage === 'course')
     {
-      return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} courses={courses} programs={programs}/>
+      return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} onEditCourse={editCourse} courses={courses} programs={programs}/>
     }
     else if (currentPage === 'lab')
     {

@@ -139,6 +139,29 @@ class DatabaseService {
         });
     }
 
+    /**
+     * Updates the course with the specified course number and department id.
+     * @param classNum - the number of the course to be deleted.
+     * @param deptId - the department id of the course being deleted
+     */
+    updateCourse(number, deptId, name, capacity, credits) {
+        return axios({
+            method: 'PUT',
+            url: API_BASE + 'class-management/classes/update/' + number + '/' + deptId,
+            data: {
+                'class_num': number,
+                'dept_id': deptId,
+                'class_name': name,
+                'capacity': capacity,
+                'credits': credits
+            },
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
     // ======== Professor methods ===========
     /**
      * Get the latest professors
@@ -197,7 +220,7 @@ class DatabaseService {
      * Updates the professor with the specified ID.
      * @param profId - the ID of the professor that will be updated. 
      */
-    updateProfessor(profId, firstName, lastName, teachLoad) {
+    updateProfessor(profId, firstName, lastName, teachLoad, email) {
         return axios({
             method: 'PUT',
             url: API_BASE + 'professor-management/professors/update/' + profId,
@@ -205,7 +228,8 @@ class DatabaseService {
                 'professor_id': profId,
                 'first_name': firstName,
                 'last_name': lastName,
-                'teach_load': teachLoad
+                'teach_load': teachLoad,
+                'user_email': email
             },
             headers: {
                 'accept': 'application/json',
