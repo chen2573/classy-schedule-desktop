@@ -97,37 +97,114 @@ const CourseAdd = ({ onAddCourse, programs }) => {
         );
     };
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        e.target.reset();
+    /**
+     * This component represents the form that will be used by the user to enter in new course data.
+     * @param onAddCourse - the addSubmit function that is passed down from App.js
+     * @param programs - the programs that is passed down from App.js
+     * @returns - the component that represents the form that will be used by the user to enter in new course data.
+     */
+    const CourseAdd = ({ onAddCourse, onEditCourse, programs }) => {
+        const [program, setProgram] = useState(courseEditedId === null ? '' : editedCourse.program);
+        const [number, setNumber] = useState(courseEditedId === null ? '' : editedCourse.number);
+        const [name, setName] = useState(courseEditedId === null ? '' : editedCourse.name);
+        const [credits, setCredits] = useState(courseEditedId === null ? '' : editedCourse.credits);
+        const [capacity, setCapacity] = useState(courseEditedId === null ? '' : editedCourse.capacity);
+        const [length, setLength] = useState(courseEditedId === null ? '' : editedCourse.length);
+        const [tech, setTech] = useState(courseEditedId === null ? [] : editedCourse.tech);
 
-        if (!program) {
-            alert('Please enter a program');
-            return;
-        }
-        if (!number) {
-            alert('Please enter the course number');
-            return;
-        }
-        if (!name) {
-            alert('Please enter a course name');
-            return;
-        }
-        if (!credits) {
-            alert('Please enter the number of credits');
-            return;
-        }
-        if (!capacity) {
-            alert('Please enter the course capacity');
-            return;
-        }
-        if (!tech) {
-            alert('Please enter the technology the course will need');
-            return;
-        }
-        if (!length) {
-            alert('Please enter the meeting length for the course');
-            return;
+        // Course Name must be less than 50 characters and have no numbers
+        const validNameLength = name => name.length < 51;
+        const validNameChar = val => [...val.matchAll(/(^[^0-9]+$)?/g)].some(x => x[0] == val) || val === '';
+        const validName = name => validNameLength(name) && validNameChar(name)
+        // This function calls passes other functions to validate
+        const validateName = validate(validName, setName);
+
+        // Course Number must be a value between 100 and 999
+        // FIX LOWER BOUND
+        const validNumber = val => [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+        // This function calls passes other functions to validate
+        const validateNumber = validate(validNumber, setNumber);
+
+        // Credits must be a integer between 0 and 4
+        const validCredits = val => [...val.matchAll(/([0-4])?/g)].some(x => x[0] == val) || val === '';
+        // This function calls passes other functions to validate
+        const validateCredits = validate(validCredits, setCredits);
+
+        // Course Capacity must be a value between 0 and 1000
+        const validCapacity = val => [...val.matchAll(/(1000|[1-9][0-9][0-9]|[1-9][0-9]|[0-9])?/g)].some(x => x[0] == val) || val === '';
+        // This function calls passes other functions to validate
+        const validateCapacity = validate(validCapacity, setCapacity);
+
+        // Meeting Length (I'm not sure what constraints are for this)
+        const validLength = val => [...val.matchAll(/(200|1[0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+        // This function calls passes other functions to validate
+        const validateLength = validate(validLength, setLength);
+
+        /**
+         * This function handles changes on the Technology dropdown
+         * 
+         * @param e - onChange event
+         */
+        const handleTechChange = (e) => {
+            const {
+                target: { value },
+            } = e;
+            setTech(
+                // On autofill we get a stringified value.
+                typeof value === 'string' ? value.split(',') : value,
+            );
+        };
+
+        const onSubmit = (e) => {
+            e.preventDefault();
+            e.target.reset();
+
+            if (!program) {
+                alert('Please enter a program');
+                return;
+            }
+            if (!number) {
+                alert('Please enter the course number');
+                return;
+            }
+            if (!name) {
+                alert('Please enter a course name');
+                return;
+            }
+            if (!credits) {
+                alert('Please enter the number of credits');
+                return;
+            }
+            if (!capacity) {
+                alert('Please enter the course capacity');
+                return;
+            }
+            if (!tech) {
+                alert('Please enter the technology the course will need');
+                return;
+            }
+            if (!length) {
+                alert('Please enter the meeting length for the course');
+                return;
+            }
+
+            let elementClassName = 'item';
+            let sections = 0;
+            if(courseEditedId === null){
+                onAddCourse({program, number, name, credits, capacity, tech, length, elementClassName, sections}); // Implement checking for length and tech from database
+            } else {
+                let id = courseEditedId;
+                onEditCourse({id, program, number, name, credits, capacity, tech, length, elementClassName, sections});
+                resetState();
+            }
+
+            setCapacity('');
+            setProgram('');
+            setNumber('');
+            setName('');
+            setCredits('');
+            setLength('');
+            setTech([]);
         }
 
         onAddCourse({program, number, name, credits, capacity, tech, length});
