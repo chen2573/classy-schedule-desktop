@@ -1,4 +1,4 @@
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField } from '@mui/material';
+import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Checkbox, FormControlLabel} from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useState, useEffect } from 'react';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
@@ -82,6 +82,8 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
         const [capacity, setCapacity] = useState(courseEditedId === null ? '' : editedCourse.capacity);
         const [length, setLength] = useState(courseEditedId === null ? '' : editedCourse.length);
         const [tech, setTech] = useState(courseEditedId === null ? [] : editedCourse.tech);
+        const [lab, setLab] = useState(courseEditedId === null ? [] : editedCourse.lab);
+        const [lcourse, setLCourse] = useState(courseEditedId === null ? [] : editedCourse.lcourse);
 
         // Course Name must be less than 50 characters and have no numbers
         const validNameLength = name => name.length < 51;
@@ -126,6 +128,23 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
             );
         };
 
+        /**
+     * This function handles unique list items and removal of list items
+     * 
+     * @param courseInfo - Object containing all relevant course information
+     * @returns - newValue with old state and specified course added, or oldValue with specified course removed
+     */
+    const handleAssociatedCourseClick = courseInfo => e => {
+        setLCourse(oldValue => {
+            if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
+                console.log({oldValue});
+                return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
+            }
+            const newValue = [courseInfo]
+            return newValue;
+        })
+    }
+
         const onSubmit = (e) => {
             e.preventDefault();
             e.target.reset();
@@ -158,6 +177,10 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                 alert('Please enter the meeting length for the course');
                 return;
             }
+            if (lab && !lcourse){
+                alert('Please pick a course that is associated with this lab');
+                return;
+            }
 
             let elementClassName = 'item';
             let sections = 0;
@@ -176,6 +199,8 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
             setCredits('');
             setLength('');
             setTech([]);
+            setLab(false);
+            setLCourse('');
         }
 
         return (
@@ -280,8 +305,45 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                             </Select>
                         </FormControl>
                     </Box>
-
+                    
                     <br></br>
+
+                    <Box sx={{ minWidth: 120 }}>
+                        <FormControl fullWidth>
+                            <FormControlLabel control={<Checkbox />} label = "Is This a Lab" labelPlacement='end' onChange={(e) => setLab(!lab.value)}/>
+                        </FormControl>
+                    </Box>
+                    <br></br>
+                {/* Associated Class
+                    <Box sx={{ minWidth: 120 }}>
+                        <FormControl fullWidth>
+                            <InputLabel shrink id="label">Associated Course</InputLabel>
+                            <Select
+                            labelId="label"
+                            id='associated_course_dropdown'
+                            notched
+                            MenuProps={{sx: {
+                                "&& .Mui-selected": {
+                                backgroundColor: "#90A4AE"
+                                }
+                            }}}
+                            value={lcourse.map(e => e.name)}
+                            label="Associated Course"
+                            >
+                                {courses.map(p => (
+                                    <MenuItem 
+                                        onClick={handleAssociatedCourseClick(p)}
+                                        key={p.id} 
+                                        value={p.name}
+                                    >
+                                        {p.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+
+            <br></br>*/}
 
                     {courseEditedId === null ? <input type="submit" value='Save Course' className='btn btn-block'/> 
                     : <><input type="submit" value='Save Edits' className='btn btn-block'/><br /> 

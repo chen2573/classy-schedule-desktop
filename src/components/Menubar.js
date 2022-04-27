@@ -45,12 +45,6 @@ export function MenuBar ({setCurrentPage})
                     </Box>
                 </Button>
 
-                <Button variant="text" onClick={()=>{setCurrentPage('lab')}}>
-                    <Box>
-                        <ScienceIcon color="secondary"/>
-                        <p className="button-text">Labs</p>
-                    </Box>
-                </Button>
 
                 <Button variant="text" onClick={()=>{setCurrentPage('room')}}>
                     <Box>
