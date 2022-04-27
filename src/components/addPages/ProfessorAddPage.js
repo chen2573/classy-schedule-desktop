@@ -30,9 +30,8 @@
   * @param professors     - The state of professors passed from App.js
   * @param onDelete       - Handler function that deletes an individual item from the list
   * @param courses        - State variable containing course objects
-  * @param programs       - State variable containing program objects
   */
-   const ProfessorAddPage = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {
+   const ProfessorAddPage = ({onAddProfessor, onEditProfessor, professors, onDelete, courses}) => {
 
     // Edit functionality state management
     const [profEditedId, setProfEditedId] = useState(null);
@@ -84,13 +83,12 @@
       * 
       * @param onAddProfessor - The addSubmit function that is passed down from App.js
       * @param courses        - State variable containing course objects
-      * @param programs       - State variable containing program objects
       * @returns              - React component div used to enter and submit professor information
       */
-    const ProfessorAdd = ({onAddProfessor, onEditProfessor, courses, programs}) => {
-      const [program, setProgram] = useState('');
+    const ProfessorAdd = ({onAddProfessor, onEditProfessor, courses}) => {
       const [firstName, setFirstName] = useState(profEditedId === null ? '' : editedProfessor.firstName);
       const [lastName, setLastName] = useState(profEditedId === null ? '' : editedProfessor.lastName);
+      const [email, setEmail] = useState(profEditedId === null ? '' : editedProfessor.email);
       const [teach_load, setTeachLoad] = useState(profEditedId === null ? '6' : editedProfessor.teach_load);
       const [time_block, setTimeBlock] = useState(profEditedId === null ? '' : editedProfessor.time_block);
       const [can_teach, setCanTeach] = useState(profEditedId === null ? [] : editedProfessor.can_teach);
@@ -120,6 +118,13 @@
       const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').includes(c));
       
       /**
+        * This function enforces that the input is alphanumeric lower or upper case or ' '
+        * @param email - Input value
+        * @returns    - True if the input is valid, otherwise false
+        */
+      const validEmailChars = email => email.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').concat('@').includes(c));
+    
+      /**
         *  This function enforces that the input is less than 30 characters
         * @param name - Input value
         * @returns    - True if the input is valid, otherwise false
@@ -134,8 +139,12 @@
     
       // This function calls passes other functions to validate
       const validateLastName = validate(validName, setLastName);
+
+      // This function combines two different validate functions
+      const validEmailText = name => validEmailChars(name) && validNameLength(name);
     
-    
+      // This function calls passes other functions to validate
+      const validateEmail = validate(validEmailText, setLastName);
     
     
       /**
@@ -169,8 +178,8 @@
       const onSubmit = (e) => {
         e.preventDefault();
         e.target.reset();
-        if (!program) {
-          alert('Please enter a program');
+        if (!email) {
+          alert('Please enter an email');
           return;
         }
         if (!firstName) {
@@ -189,29 +198,21 @@
           alert('Please enter a meeting time');
           return;
         }
-        if (!can_teach) {
-          alert('text');
-          return;
-        }
-        if (!want_teach) {
-          alert('text');
-          return;
-        }
       
             
         let elementClassName = 'item';
 
         if(profEditedId === null){
-          onAddProfessor({program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
+          onAddProfessor({firstName, lastName, email, teach_load, time_block, can_teach, want_teach, elementClassName});
         } else {
           let id = profEditedId;
-          onEditProfessor({id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName});
+          onEditProfessor({id, firstName, lastName, email, teach_load, time_block, can_teach, want_teach, elementClassName});
           resetState();
         }
       
-        setProgram('');
         setFirstName('');
         setLastName('');
+        setEmail('');
         setTeachLoad('6');
         setCanTeach([]);
         setWantTeach([]);
@@ -224,47 +225,23 @@
           <h2>{profEditedId !== null ? "Edit" : "Add"} A Professor</h2>
           <form onSubmit={onSubmit}>
     
-            <br></br>
-    
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel shrink id="label">Program</InputLabel>
-                <Select
-                  labelId="label"
-                  id='program_dropdown'
-                  notched
-                  MenuProps={{sx: {
-                    "&& .Mui-selected": {
-                      backgroundColor: "#90A4AE"
-                    }
-                  }}}
-                  value={program}
-                  label="Program"
-                  onChange={(e) => setProgram(e.target.value)}
-                >
-                  {programs.map(p => (
-                    <MenuItem 
-                      key={p.id} 
-                      value={p.programName}
-                    >
-                      {p.programName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-    
     
             <br></br>
                 
             <Box>
-              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_name" label="First Name" variant="outlined" value={firstName} onChange={validateFirstName}/>
+              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_first_name" label="First Name" variant="outlined" value={firstName} onChange={validateFirstName}/>
             </Box>
             
             <br></br>
     
             <Box>
-              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_name" label="Last Name" variant="outlined" value={lastName} onChange={validateLastName}/>
+              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_last_name" label="Last Name" variant="outlined" value={lastName} onChange={validateLastName}/>
+            </Box>
+    
+            <br></br>
+
+            <Box>
+              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_email" label="Email" variant="outlined" value={email} onChange={validateEmail}/>
             </Box>
     
             <br></br>
@@ -411,9 +388,9 @@
     const ProfessorListItem = ({professor, onDelete, onEdit}) => {
       return (
         <div className='item'>
-          <h3>{professor.firstName} {professor.lastName} <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer'}} onClick={onEdit(professor.id)}/><FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(professor.id)} /></h3>
+          <h3>{professor.firstName} {professor.lastName} <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer'}} onClick={onEdit(professor.id)}/> <FaTimes style={{color: 'red', cursor: 'pointer'}} onClick={() => onDelete(professor.id)} /></h3>
           {/* This stuff in the paragraph tag will become popover*/}
-          <p>Program: {professor.program}<br></br></p>
+          <p>Email: {professor.email}<br></br></p>
         </div>
       );
     }
@@ -426,14 +403,13 @@
       * @param professors     - The state of professors passed from App.js
       * @param onDelete       - Handler function that deletes an individual item from the list
       * @param courses        - State variable containing course objects
-      * @param programs       - State variable containing program objects
       */
-      const ProfessorAddPageContent = ({onAddProfessor, onEditProfessor, professors, onDelete, courses, programs}) => {    
+      const ProfessorAddPageContent = ({onAddProfessor, onEditProfessor, professors, onDelete, courses}) => {    
     
       return (
         <div className="home">
           <div className='element-page'>
-            <ProfessorAdd onAddProfessor={onAddProfessor} onEditProfessor={onEditProfessor} courses={courses} programs={programs}/>
+            <ProfessorAdd onAddProfessor={onAddProfessor} onEditProfessor={onEditProfessor} courses={courses}/>
             <ProfessorList onDelete={onDelete} professors={professors} onEdit={onEdit}/> 
           </div>
         </div>
@@ -453,7 +429,7 @@
                <TopBar></TopBar>
  
                <div className="container-home">
-                 <ProfessorAddPageContent onAddProfessor={onAddProfessor} onEditProfessor={onEditProfessor} professors={professors} onDelete={onDelete} courses={courses} programs={programs}></ProfessorAddPageContent>
+                 <ProfessorAddPageContent onAddProfessor={onAddProfessor} onEditProfessor={onEditProfessor} professors={professors} onDelete={onDelete} courses={courses}></ProfessorAddPageContent>
                </div>
            </div>
        </div>

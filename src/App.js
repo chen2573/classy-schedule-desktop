@@ -340,12 +340,13 @@ function App() {
               let firstName = data.first_name;
               let lastName = data.last_name;
               let teach_load = data.teach_load;
+              let email = '';
               let time_block = '';
               let can_teach = []; 
               let want_teach = [];
               let elementClassName = 'item';
 
-              let newProf = { id, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName };
+              let newProf = { id, firstName, lastName, email, teach_load, time_block, can_teach, want_teach, elementClassName };
               stateProfessors.push(newProf);
           });
 
