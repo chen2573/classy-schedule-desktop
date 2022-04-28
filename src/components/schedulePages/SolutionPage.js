@@ -5,6 +5,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
+
+import * as SolutionService from './../../services/databaseServices/saveSolutionService.js'
 //const solutionData = require("../../utils/solution.json");
 
 
@@ -16,8 +18,8 @@ import './../../assets/styles/Solution.css';
  */
 const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
 {
-    console.log(courses);
-    console.log(courseEntries);
+    //console.log(courses);
+    //console.log(courseEntries);
     //populate items in the time slot row 
     const item = <tr key={time} className="row">
                     <th scope="row">{time}</th>
@@ -53,7 +55,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
                                 if (rooms.filter((item) => item.id === entry.room)[0] != undefined)
                                 {
                                     name = Object.entries(rooms.filter((item) => item.id === entry.room)[0]);
-                                    console.log('Name', name);
+                                    //console.log('Name', name);
                                     name = name[1][1] + " " + name[2][1];
                                 }
 
@@ -266,9 +268,22 @@ export function SolutionPage ({professors, courses, rooms, times})
     }
       
     TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
+
+    //================ Saving Schedule Functions ==============================
+    const saveSchedule = (solutionNum) => () => {
+        console.log(tempSolutionEntries[solutionNum]);
+        SolutionService.createPlan().then((data) => {
+            //SolutionService.saveScheduleToPlan()
+            console.log(data);
+        })
+        .catch((error) => {
+            window.alert(error);
+        });
+    }
+
     
     useEffect(() => {
-        console.log(tempSolutionEntries);
+        //console.log(tempSolutionEntries);
     }, [tempSolutionEntries]);   
 
     return (
@@ -297,7 +312,6 @@ export function SolutionPage ({professors, courses, rooms, times})
                     {
                         
                         let solutionTimes = getTimes(solution.entry);
-
                         return <TabPanel value={page} index={solution.solutionNum}>
                                     <table className="schedule">
                                         <tbody>
@@ -320,6 +334,11 @@ export function SolutionPage ({professors, courses, rooms, times})
                                             }
                                         </tbody>
                                     </table>
+                                    <Button variant="contained" 
+                                        onClick={saveSchedule(solution.solutionNum)}
+                                        sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
+                                        <Typography variant="text" color="secondary">Save Solution</Typography>
+                                    </Button>
                                 </TabPanel>;
                     }
                 )}

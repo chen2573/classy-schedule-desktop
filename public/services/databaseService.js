@@ -185,14 +185,15 @@ class DatabaseService {
      * @param teachLoad - professor teach load.
      * @returns 
      */
-    createProfessor(firstName, lastName, teachLoad) {
+    createProfessor(firstName, lastName, teachLoad, email) {
         return axios({
             method: 'POST',
             url: API_BASE + 'professor-management/professors/create',
             data: {
                 'first_name': firstName,
                 'last_name': lastName,
-                'teach_load': teachLoad
+                'teach_load': teachLoad,
+                'user_email': email
             },
             headers: {
                 'accept': 'application/json',
