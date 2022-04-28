@@ -18,7 +18,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
         console.log('SolutionList', plans);
         return(
         <div className='container'>
-            <h1>plans</h1>
+            <h1>Schedules</h1>
             {plans.map((currentSolution, index) => (
                 <SolutionItem key={index} plan={currentSolution} plans={plans}/>
             ))}
@@ -38,8 +38,8 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
                     <MoreHorizIcon style= {{float:"right"}}/>
                 </DataViewer>
                 <div>
-                    <h3>{plan.planName}</h3>
-                    <p>{plan.planDescription}</p>
+                    <h3>{plan.name}</h3>
+                    <p>{plan.description}</p>
                 </div>
             </div>
         );
