@@ -360,7 +360,7 @@ function App() {
       window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (dataRows) => {
 
           dataRows.map((data) => {
-            console.log(data);
+            //console.log(data);
               let id = data.professor_id
               let firstName = data.first_name;
               let lastName = data.last_name;
@@ -650,15 +650,16 @@ function App() {
 
       // Recieve the results
       window.DB.receive(CHANNEL_PLAN_FROM_MAIN, (dataRows) => {
-        console.log("PLANS: ", dataRows);
+        //console.log(dataRows)
+        //console.log("PLANS: ", dataRows);
           dataRows.map((data) => {
               let id = data.plan_id
-              let planName = data.plan_name;
-              let planDescription = data.plan_description;
-              let semesterYear = data.semester_year;
-              let semesterNum = data.semester_num; 
+              let name = data.plan_name;
+              let description = data.plan_description;
+              let year = data.semester_year;
+              let semester = data.semester_num; 
 
-              let newPlan= { id, planName, planDescription, semesterYear, semesterNum};
+              let newPlan= { id, name, description, year, semester};
               statePlans.push(newPlan);
           });
 

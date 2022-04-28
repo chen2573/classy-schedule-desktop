@@ -688,7 +688,6 @@ function addModalWindows(){
  function addPlanChannel(){
     // Get all Rooms
     ipcMain.on("toMain:Plan", (event, args) => {
-
         if(args.request === 'REFRESH'){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request REFRESH all PLANS")
@@ -785,10 +784,6 @@ function addModalWindows(){
         //     if(err) console.log('!!!JSON LOG --> ERROR creating json file', err);
         // });
     });
-}
-
-function addPlanChannel(){
-
 }
 
 //const exec = require('child_process').execFile;
