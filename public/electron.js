@@ -26,6 +26,7 @@ let mainWindow;
 let addWindow;
 let logInWindow;
 let mainMenuTemplate;
+let newPlanDialogue;
 
 //This variable is a global variable that keeps track of a user session
 let userLoggedIn = false;
@@ -76,6 +77,31 @@ function displayMainWindow() {
 
     // Insert menu
     Menu.setApplicationMenu(mainMenu);
+
+    // Child process for Creating new Schedule
+    ipcMain.on("toMain:Modal", (event, args) => {
+        if(args.request === 'NEW_PLAN') {
+            newPlanDialogue = new BrowserWindow({
+                parent: mainWindow,
+                webPreferences: {
+                    nodeIntegration: false,
+                    enableRemoteModule: true,
+                    contextIsolation: true,
+                    preload: path.join(__dirname, 'preload.js')
+                },
+                width:600,
+                height:670,
+                resizable: false,
+                center: true,
+                modal: true,
+            })
+            newPlanDialogue.loadURL(`file://${path.join(__dirname, '/views/newPlan/plan.html')}`);
+
+            newPlanDialogue.on('close', function () {
+                newPlanDialogue = null;
+            });
+        }
+    });
 }
 
 /**
@@ -354,7 +380,7 @@ function addProfessorChannel(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request CREATE a PROFESSOR")
     
-            DB.createProfessor(args.firstName, args.lastName, args.teachLoad).then((payload) => {
+            DB.createProfessor(args.firstName, args.lastName, args.teachLoad, args.email).then((payload) => {
                 console.log("DATABASE LOG--> Successfully added PROFESSOR \n");
 
                 let _payload = {
@@ -402,7 +428,6 @@ function addProfessorChannel(){
         else if(args.request === 'UPDATE'){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request UPDATE a PROFESSOR")
-            console.log(args)
     
             DB.updateProfessor(args.id, args.firstName, args.lastName, args.teachLoad, args.email).then((payload) => {
                 console.log("DATABASE LOG--> Successfully updated PROFESSOR \n");
@@ -621,7 +646,38 @@ function addModalWindows(){
                     mainWindow.webContents.send('fromMain:Modal', response);
                 }
             })
-            .catch(console.error);
+        }
+        else if(args.request === "ADD_PLAN") {
+            newPlanDialogue.close();
+            console.log("MODAL WINDOW LOG --> " + args.message)
+            console.log("MODAL WINDOW LOG --> " + "Adding plan to database")
+
+            console.log(args);
+            DB.createPlan(args.planName, args.description, args.year, args.semester).then((payload) => {
+                console.error('Successfully create PLAN with id: ' + payload.data.plan_id + '\n');
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Plan created successfully!",
+                    id: payload.data.plan_id
+                };
+                
+
+                mainWindow.webContents.send('fromMain:Modal', _payload);
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR adding PLAN: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to add Plan.",
+                    errorCode: error,
+                    id: -1
+                };
+
+                mainWindow.webContents.send('fromMain:Modal', _payload);
+            });
+        }
+        else if(args.request === "CANCEL_PLAN") {
+            newPlanDialogue.close();
+            console.log("MODAL WINDOW LOG --> " + args.message);
         }
     });
 }
@@ -719,8 +775,8 @@ function addModalWindows(){
  function addJsonChannel(){
     // Get all Programs
     ipcMain.on("toMain:Json", (event, data) => {
-        console.log("JSON LOG --> Creating json")
-        console.log(data);
+        //console.log("JSON LOG --> Creating json")
+        //console.log(data);
         let tempData = JSON.stringify(data);
         executeAlgorithm(tempData);
 
@@ -729,6 +785,10 @@ function addModalWindows(){
         //     if(err) console.log('!!!JSON LOG --> ERROR creating json file', err);
         // });
     });
+}
+
+function addPlanChannel(){
+
 }
 
 //const exec = require('child_process').execFile;
