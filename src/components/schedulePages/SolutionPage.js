@@ -277,7 +277,7 @@ export function SolutionPage ({professors, courses, rooms, times})
             console.log(data);
         })
         .catch((error) => {
-            window.alert(error);
+            console.log(error);
         });
     }
 

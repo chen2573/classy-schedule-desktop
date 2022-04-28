@@ -646,13 +646,34 @@ function addModalWindows(){
                     mainWindow.webContents.send('fromMain:Modal', response);
                 }
             })
-            .catch(console.error);
         }
         else if(args.request === "ADD_PLAN") {
             newPlanDialogue.close();
             console.log("MODAL WINDOW LOG --> " + args.message)
             console.log("MODAL WINDOW LOG --> " + "Adding plan to database")
+
             console.log(args);
+            DB.createPlan(args.planName, args.description, args.year, args.semester).then((payload) => {
+                console.error('Successfully create PLAN with id: ' + payload.data.plan_id + '\n');
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Plan created successfully!",
+                    id: payload.data.plan_id
+                };
+                
+
+                mainWindow.webContents.send('fromMain:Modal', _payload);
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR adding PLAN: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to add Plan.",
+                    errorCode: error,
+                    id: -1
+                };
+
+                mainWindow.webContents.send('fromMain:Modal', _payload);
+            });
         }
         else if(args.request === "CANCEL_PLAN") {
             newPlanDialogue.close();

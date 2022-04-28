@@ -303,6 +303,31 @@ class DatabaseService {
             }
         });
     }
+
+    /**
+     * Creates a new plan.
+     * @param name - the name of the plan.
+     * @param description - a description of the plan.
+     * @param year - the year the plan is being created for.
+     * @param semester - the semester the plan is being created for.
+     * @returns 
+     */
+    createPlan(name, description, year, semester) {
+        return axios({
+            method: 'POST',
+            url: API_BASE + 'plan-management/plans/create',
+            data: {
+                plan_name: name,
+                plan_description: description,
+                semester_year: year,
+                semester_num: semester
+            },
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
 }
 
 /**

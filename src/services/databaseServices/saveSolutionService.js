@@ -8,8 +8,15 @@ export function createPlan(){
     window.DB.send("toMain:Modal", _payload);
 
     return new Promise((resolve, reject) => {
-        window.DB.recieve("fromMain:Plan", (data) => {
-            console.log(data);
+        window.DB.receive('fromMain:Modal', (data) => {
+            if(data.id === -1){
+                window.alert(data.message + '\n' + data.errorCode);
+                resolve(data.id);
+            }
+            else {
+                window.alert(data.message);
+                resolve(data.id);
+            } 
         });
     })
 }
