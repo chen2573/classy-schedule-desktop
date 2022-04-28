@@ -163,6 +163,7 @@ function App() {
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
+          console.log(data);
 
           let program = data.dept_name;
           let capacity = data.capacity;
@@ -171,18 +172,30 @@ function App() {
           let tech = []; // Implement checking for length and tech from database
           let length = 0;
           let name = data.class_name;
-          const id = Math.floor(Math.random() * 10000) + 1;
+          
           let elementClassName = "item";
           let sections = 0;
+          let isLab = data.is_lab;
+          let deptId = data.dept_id;
 
+          const id = cantorPairing(deptId, number);
+          //const id = Math.floor(Math.random() * 10000) + 1;
 
           let newCourse = { id, program, number, name, credits, capacity, tech, length, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
-
           stateCourses.push(newCourse);
         });
         setCourses(stateCourses);
       });
     }
+  }
+
+  /**
+   * This function maps two numbers a and b to always be the same single number.
+   * This is to map a unique department with course.
+   * @returns int
+   */
+  function cantorPairing(a, b) {
+    return (a + b) * (a + b + 1) / 2 + a;
   }
 
   /**
@@ -195,7 +208,7 @@ function App() {
     let programId;
 
     if(USE_DATABASE){
-      id = Math.floor(Math.random() * 10000) + 1;
+      //id = Math.floor(Math.random() * 10000) + 1;
       
       let programIdArray = programs.filter((program) => {
         if (program.programName === course.program) {
@@ -209,6 +222,9 @@ function App() {
       else {
         programId = programIdArray[0].programId;
       }
+      console.log(programId);
+      console.log(parseInt(course.number));
+      id = cantorPairing(programId, parseInt(course.number));
 
       DBFunction.createCourse(course, programId).then((response) => {
         if(response === "SUCCESS"){

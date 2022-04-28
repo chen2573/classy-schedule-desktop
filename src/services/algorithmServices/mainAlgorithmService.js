@@ -1,24 +1,4 @@
 
-export function runAlgorithm(){
-    let _payload = {
-        request: 'RUN',
-        message: 'Renderer RUN Algorithm',
-    };
-    
-    // Send a query to main
-    window.DB.send("toMain:Algo", _payload);
-
-    // Recieve the results
-    window.DB.receive("fromMain:Algo", (payload) => {
-        if(payload.status === 'SUCCESS'){
-            window.alert(payload.message);
-        }
-        else{
-            window.alert(payload.message + '\n' + payload.errorCode);
-        }
-    });
-}
-
 /**
  * This function will create a json object that will be sent as input to our algorithm.
  * Got help from this stack overflow: https://stackoverflow.com/questions/65015651/how-to-create-a-json-object-using-javascript
@@ -45,7 +25,7 @@ export function createScheduleFromData(courses, rooms, professors, labs){
         tempRoom.id = rooms[key].id;
         tempRoom.name = rooms[key].rbuilding + ' ' + rooms[key].rnumber;
         tempRoom.capacity = rooms[key].rcapacity;
-        tempRoom.tech = [];
+        tempRoom.techs = [];
 
         jsonObject.rooms.push(tempRoom);
     }
@@ -61,6 +41,8 @@ export function createScheduleFromData(courses, rooms, professors, labs){
         tempCourse.number = courses[key].number;
         tempCourse.credits = courses[key].credits;
         tempCourse.sections = courses[key].sections;
+        tempCourse.techs = [];
+        tempCourse.isLab = false;
 
         jsonObject.courses.push(tempCourse);
     }
@@ -73,6 +55,8 @@ export function createScheduleFromData(courses, rooms, professors, labs){
         tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
         tempProfessor.canTeach = [];
         tempProfessor.courseLoad = professors[key].teach_load;
+        tempProfessor.preferredCourses = [];
+        tempProfessor.preferredTimeSlot = [];
 
 
         jsonObject.professors.push(tempProfessor);
