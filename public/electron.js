@@ -507,7 +507,6 @@ function addCourseChannel(){
                     status: 'SUCCESS',
                     message: "Course deleted successfully!",
                 };
-                console.log(data);
 
                 mainWindow.webContents.send('fromMain:Course', _payload);
             }).catch((error) => {
@@ -762,7 +761,12 @@ function addModalWindows(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request RUN ALGORITHM")
     
-            executeAlgorithm();
+            executeAlgorithm().then(() => {
+                console.log('SOLUTION LOG --> Running algorithm...');
+            })
+            .catch((error) => {
+                console.log('!!!SOLUTION LOG --> ERROR running algorithm: ' + error);
+            })
         }
 
     });
@@ -774,8 +778,9 @@ function addModalWindows(){
  function addJsonChannel(){
     // Get all Programs
     ipcMain.on("toMain:Json", (event, data) => {
-        //console.log("JSON LOG --> Creating json")
-        //console.log(data);
+        console.log("JSON LOG --> Creating json")
+        console.log(data);
+
         let tempData = JSON.stringify(data);
         executeAlgorithm(tempData);
 
@@ -791,7 +796,8 @@ const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
 async function executeAlgorithm(data) {
     if(process.platform == 'darwin'){
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/CSP-selective2.exe'), [data]);
+        console.log('SOLUTION LOG --> Running Algorithm...');
+        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/CSP-selective2.exe'), [3,5,data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
         let payload = JSON.parse(stdout);
 

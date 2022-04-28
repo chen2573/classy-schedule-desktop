@@ -131,6 +131,7 @@ export function deleteCourse(courseNum, departmentId) {
         classNum: courseNum,
         deptId: departmentId
     };
+    console.log(_payload)
 
     // Send a query to main
     window.DB.send(CHANNEL_COURSE_TO_MAIN, _payload);
