@@ -7,7 +7,7 @@
  * @param professors - professors that have been selected for the algorithm. 
  * @param labs - labs that have been selected for the algorithm.  
  */
-export function createScheduleFromData(courses, rooms, professors, labs){
+export function createJsonOfSelectedStates(courses, rooms, professors, labs){
     //console.log(courses);
     //The main object that will be returned back;
     let jsonObject = {};
@@ -53,6 +53,7 @@ export function createScheduleFromData(courses, rooms, professors, labs){
         
         tempProfessor.id = professors[key].id;
         tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
+        //tempProfessor.canTeach = [5152, 5254, 7751, 7876];
         tempProfessor.canTeach = [];
         tempProfessor.courseLoad = professors[key].teach_load;
         tempProfessor.preferredCourses = [];

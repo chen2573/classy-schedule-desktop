@@ -259,12 +259,13 @@ class DatabaseService {
      * @param roomNum - the number of the room being added.
      * @param capacity - the capacity of the room being added.
      */
-    createRoom(roomNum, capacity) {
+    createRoom(roomNum, capacity, building) {
         return axios({
             method: 'POST',
             url: API_BASE + 'room-management/rooms/create',
             data: {
                 'room_num': roomNum,
+                'building_name': building,
                 'capacity': capacity
             },
             headers: {
@@ -282,6 +283,27 @@ class DatabaseService {
         return axios({
             method: 'DELETE',
             url: API_BASE + 'room-management/rooms/delete/'+roomId,
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
+    /**
+     * Updates a room
+     * @param roomId - the id of the room being updated. 
+     */
+    updateRoom(roomId, roomNum, capacity, building) {
+        return axios({
+            method: 'PUT',
+            url: API_BASE + 'room-management/rooms/update/'+roomId,
+            data: {
+                'room_id': roomId,
+                'room_num': roomNum,
+                'capacity': capacity,
+                'building_name': building
+            },
             headers: {
                 'accept': 'application/json',
                 Authorization: this.authenticationToken

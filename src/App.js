@@ -478,14 +478,14 @@ function App() {
       console.log('Using sample data');
 
       sampleRooms.map((room) => {
-        let rbuilding = room.rbuilding;
-        let rnumber = room.rnumber;
-        let rcapacity = room.rcapacity;
-        let rtech = room.rtech; 
+        let building = room.rbuilding;
+        let number = room.rnumber;
+        let capacity = room.rcapacity;
+        let tech = room.rtech; 
         let id = Math.floor(Math.random() * 10000) + 1;
         let elementClassName = "item";
 
-        let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, elementClassName};
+        let newRoom = { id, building, number, capacity, tech, elementClassName};
         stateRooms.push(newRoom);
       })
       setRooms(stateRooms);
@@ -500,14 +500,14 @@ function App() {
 
       window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
-          let rbuilding = data.rbuilding;
-          let rnumber = data.room_num;
-          let rcapacity = data.capacity;
-          let rtech = [];                               // Implement checking for tech from database
+          let building = data.building_name;
+          let number = data.room_num;
+          let capacity = data.capacity;
+          let tech = [];                               // Implement checking for tech from database
           let id = data.room_id;
           let elementClassName = "item";
 
-          let newRoom = { id, rbuilding, rnumber, rcapacity, rtech, elementClassName};
+          let newRoom = { id, building, number, capacity, tech, elementClassName};
 
           stateRooms.push(newRoom);
         });
@@ -523,6 +523,7 @@ function App() {
   const addRoom = (room) => {
     let id;
     let newRoom;
+    console.log(room);
     
     if(USE_DATABASE){
       DBFunction.createRoom(room).then((response) => {
@@ -530,7 +531,7 @@ function App() {
         newRoom = { id, ...room }
         setRooms([...rooms, newRoom]);
       });
-    }
+    } 
     else{
       id = Math.floor(Math.random() * 10000) + 1;
       newRoom= { id, ...room }
@@ -632,6 +633,29 @@ function App() {
     setLabs(labs.filter((lab) => lab.id !== id));
   };
 
+    /**
+   * Updates an existing room.
+   * @param professor - the new room information. 
+   */
+  const editRoom = (room) => {
+    DBFunction.updateRoom(room).then(result => {
+
+      let id = room.id;
+      let stateRooms = [];
+
+      if (result) {
+        rooms.map(curRoom => {
+          if (curRoom.id === id) {
+            stateRooms.push(rooms);
+          } else {
+            stateRooms.push(curRoom);
+          }
+        })
+        setProfessors(stateRooms);
+      }
+    });      
+  }
+
   //================= SOLUTION Functions =================================
   /**
    * Gets the latest data for programs.
@@ -721,7 +745,7 @@ function App() {
     }
     else if (currentPage === 'room')
     {
-      return <RoomPage onDelete={deleteRoom} onAddRoom={addRoom} rooms={rooms}/>;
+      return <RoomPage onDelete={deleteRoom} onEditRoom={editRoom} onAddRoom={addRoom} rooms={rooms}/>;
     }
     else if (currentPage === 'schedule')
     {
