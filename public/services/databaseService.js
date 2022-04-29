@@ -289,6 +289,27 @@ class DatabaseService {
         });
     }
 
+    /**
+     * Updates a room
+     * @param roomId - the id of the room being updated. 
+     */
+    updateRoom(roomId, roomNum, capacity, buildingName) {
+        return axios({
+            method: 'PUT',
+            url: API_BASE + 'room-management/rooms/update/'+roomId,
+            data: {
+                room_id: roomId,
+                room_num: roomNum,
+                capacity: capacity,
+                building_name: buildingName
+            },
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
     // ======== Plan methods ===========
     /**
      * Gets the latest rooms.

@@ -616,6 +616,31 @@ function addRoomChannel(){
                 mainWindow.webContents.send('fromMain:Room', _payload);
             });
         }
+        else if(args.request === 'UPDATE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request UPDATE a ROOM")
+    
+            DB.updateRoom(args.roomId, args.roomNum, args.capacity, args.buildingName).then((payload) => {
+                console.log("DATABASE LOG--> Successfully updated ROOM with room id: " + args.roomId + "\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Room updated successfully!",
+                    roomId: payload.data.roomId
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            }).catch((error) => {
+                console.log('!!!DATABASE LOG--> ERROR updating room: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to update room.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Room', _payload);
+            });
+        }
 
     });
 }
