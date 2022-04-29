@@ -569,8 +569,8 @@ function addRoomChannel(){
         else if(args.request === 'CREATE'){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request CREATE a ROOM")
-
-            DB.createRoom(args.roomNumber, args.capacity).then((payload) => {
+            console.log(args);
+            DB.createRoom(args.roomNumber, args.capacity, args.building).then((payload) => {
                 console.log("DATABASE LOG--> Successfully created ROOM\n");
 
                 let _payload = {
@@ -620,7 +620,7 @@ function addRoomChannel(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request UPDATE a ROOM")
     
-            DB.updateRoom(args.roomId, args.roomNum, args.capacity, args.buildingName).then((payload) => {
+            DB.updateRoom(args.roomId, args.roomNum, args.capacity, args.building).then((payload) => {
                 console.log("DATABASE LOG--> Successfully updated ROOM with room id: " + args.roomId + "\n");
 
                 let _payload = {

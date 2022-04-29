@@ -184,8 +184,9 @@ export function createRoom(room){
     let _payload = {
         request: 'CREATE',
         message: 'Renderer CREATE Room',
-        roomNumber: room.rnumber,
-        capacity: room.rcapacity,
+        roomNumber: room.number,
+        capacity: room.capacity,
+        building: room.building
     };
     
     // Send a query to main
@@ -211,6 +212,37 @@ export function deleteRoom(roomId) {
         request: 'DELETE',
         message: 'Renderer DELETE Room',
         roomId: roomId
+    };
+
+    // Send a query to main
+    window.DB.send(CHANNEL_ROOM_TO_MAIN, _payload);
+    
+    return new Promise((resolve, reject) => {
+        // Recieve the results
+        window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (payload) => {
+            if(payload.status === 'SUCCESS') {
+                window.alert(payload.message);
+                resolve(true);
+            } 
+            else if(payload.status === 'FAIL') {
+                window.alert(payload.message + '\n' + payload.errorCode);
+                resolve(false);
+            }
+            else {
+                reject('Room still being processed. Please wait to delete')
+            }
+        });
+    });
+}
+
+export function updateRoom(room) {
+    let _payload = {
+        request: 'UPDATE',
+        message: 'Renderer UPDATE Room',
+        roomId: room.id,
+        roomNum: room.number,
+        capacity: room.capacity,
+        building: room.building
     };
 
     // Send a query to main

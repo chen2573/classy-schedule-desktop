@@ -62,12 +62,12 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
      */
 
     const RoomAdd = ({onAddRoom, onEditRoom}) => {
-        const [rbuilding, setRBuilding] = useState(roomEditedId === null ? '' : editedRoom.rbuilding)
-        const [rnumber, setRNumber] = useState(roomEditedId === null ? '' : editedRoom.rnumber)
-        const [rcapacity, setRCapacity] = useState(roomEditedId === null ? '' : editedRoom.rcapacity)
-        const [rtech, setRTech] = useState(roomEditedId === null ? [] : editedRoom.rtech)
-        const [rtime, setRTime] = useState(roomEditedId === null ? '' : editedRoom.rtime)
-        const [rclasstime, setRClassTime] = useState(roomEditedId === null ? '' : editedRoom.rclasstime)
+        const [building, setRBuilding] = useState(roomEditedId === null ? '' : editedRoom.building)
+        const [number, setRNumber] = useState(roomEditedId === null ? '' : editedRoom.number)
+        const [capacity, setRCapacity] = useState(roomEditedId === null ? '' : editedRoom.capacity)
+        const [tech, setRTech] = useState(roomEditedId === null ? [] : editedRoom.tech)
+        const [rtime, setRTime] = useState(roomEditedId === null ? '' : editedRoom.time)
+        const [rclasstime, setRClassTime] = useState(roomEditedId === null ? '' : editedRoom.classtime)
 
         // Building Code must be all uppercase 3 letter code
         const validRBuilding = val => [...val.matchAll(/([A-Z][A-Z][A-Z]|[A-Z][A-Z]|[A-Z])?/g)].some(x => x[0] == val) || val === '';
@@ -103,16 +103,15 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         const onSubmit = (e) => {
             e.preventDefault()
             e.target.reset()
-            //UNCOMMENT ONCE BUILDING IS ADDED AGAIN - Anshul
-            /*if (!rbuilding) {
+            if (!building) {
                 alert('Please enter a three letter building code')
                 return;
-            }*/
-            if (!rnumber) {
+            }
+            if (!number) {
                 alert('Please enter the room number')
                 return;
             }
-            if (!rcapacity) {
+            if (!capacity) {
                 alert('Please enter the student capacity')
                 return;
             }
@@ -124,11 +123,12 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
             }
             */}
 
+            let elementClassName = 'item';
             if(roomEditedId === null){
-                onAddRoom({rbuilding, rnumber, rcapacity, rtech});   // Implement checking for tech from database
+                onAddRoom({building, number, capacity, tech, elementClassName});   // Implement checking for tech from database
             } else {
                 let id = roomEditedId;
-                onEditRoom({rbuilding, rnumber, rcapacity, rtech});
+                onEditRoom({id, building, number, capacity, tech, elementClassName});
                 resetState();
             }
 
@@ -149,15 +149,20 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
 
 
                 <br></br>
-
                 <Box>
-                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={rnumber} onChange={validateRNumber}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_building" label="Building" variant="outlined" value={building} onChange={validateRBuilidng}/>
                 </Box>
 
                 <br></br>
 
                 <Box>
-                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={rcapacity} onChange={validateRCapacity}/>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={number} onChange={validateRNumber}/>
+                </Box>
+
+                <br></br>
+
+                <Box>
+                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={capacity} onChange={validateRCapacity}/>
                 </Box>
 
                 <br></br>
@@ -171,7 +176,7 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
                         multiple
                         notched
                         onChange={handleTechChange}
-                        value={rtech}
+                        value={tech}
                         label="Required Technology"
                         input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
                         renderValue={(selected) => (
@@ -230,7 +235,7 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
             <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(room.id)}/>
             <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right"}} onClick={onEdit(room.id)}/>
             <DataViewer id={room.id} dataState={rooms} sx={{position:'absolute'}}>
-                <h3> {"Room: "}{room.rbuilding} {room.rnumber}</h3>
+                <h3> {"Room: "} {room.building}  {room.number}</h3>
             </DataViewer>
             </div>
         );
