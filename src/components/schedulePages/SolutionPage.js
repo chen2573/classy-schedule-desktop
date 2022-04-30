@@ -6,7 +6,7 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
-import * as SolutionService from './../../services/databaseServices/solutionService.js'
+import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
 //const solutionData = require("../../utils/solution.json");
 
 
