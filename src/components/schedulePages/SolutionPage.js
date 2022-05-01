@@ -6,7 +6,7 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
-import * as SolutionService from './../../services/databaseServices/solutionService.js'
+import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
 //const solutionData = require("../../utils/solution.json");
 
 
@@ -32,6 +32,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
                                 if (courses.filter((item) => item.id === entry.course)[0] != undefined)
                                 {
                                     name = Object.entries(courses.filter((item) => item.id === entry.course)[0]);
+                                    console.log('Name', name);
                                     name = name[1][1] + " " + name[2][1];
                                 }
 
@@ -184,6 +185,11 @@ export function SolutionPage ({professors, courses, rooms, times})
             "id": 3,
             "time": "MWF 10:55am",
             "partOfDay": "morning"
+        },
+        {
+            "id": 4,
+            "time": "TR 12:00pm",
+            "partOfDay": "afternoon"
         }
     ];
     
@@ -191,13 +197,14 @@ export function SolutionPage ({professors, courses, rooms, times})
     window.DB.receive('fromMain:Algo', (solutionData) => {
         //get solutions entries
         //console.log(solutionData);
-        for (let i=0; i<2; i++)
+        for (let i=0; i<solutionData.length; i++)
         {
             if (i > 10) {break;}
-            solutionEntries.push({"solutionNum": i, "entry": solutionData[i]});
-            
+            if(solutionData[i] != null){
+                solutionEntries.push({"solutionNum": i, "entry": solutionData[i]});
+            }
         }
-        //console.log(solutionEntries);
+        console.log(solutionEntries);
         //setTempState([]);
         setTempSolutionEntries(solutionEntries);
     });
@@ -231,7 +238,7 @@ export function SolutionPage ({professors, courses, rooms, times})
                 }
             }
         }
-        console.log(solutionTimes)
+        //console.log(solutionTimes)
         return solutionTimes;
     }
 
@@ -270,9 +277,8 @@ export function SolutionPage ({professors, courses, rooms, times})
     TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
 
     //================ Saving Schedule Functions ==============================
-    const saveSchedule = (solutionNum) => () => {
-        console.log(tempSolutionEntries[solutionNum]);
-        SolutionService.createPlan().then((data) => {
+    const saveSchedule = (solution) => () => {
+        SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
             //SolutionService.saveScheduleToPlan()
             console.log(data);
         })
@@ -296,7 +302,7 @@ export function SolutionPage ({professors, courses, rooms, times})
             <div className="schedule-container">
                 {/* Tabs */}
                 <Tabs value={page} onChange={handleChange} aria-label="basic tabs example">
-                    
+                    {console.log('Solution', tempSolutionEntries)}
                     {tempSolutionEntries?.map((solution) =>
                     {
                         const tabName = "Solution " + (solution.solutionNum + 1);
@@ -310,8 +316,9 @@ export function SolutionPage ({professors, courses, rooms, times})
                     They display different schedule solutions */}
                 {tempSolutionEntries?.map((solution) =>
                     {
-                        
+                        console.log(solution);
                         let solutionTimes = getTimes(solution.entry);
+                        console.log(solutionTimes);
                         return <TabPanel value={page} index={solution.solutionNum}>
                                     <table className="schedule">
                                         <tbody>
@@ -335,7 +342,7 @@ export function SolutionPage ({professors, courses, rooms, times})
                                         </tbody>
                                     </table>
                                     <Button variant="contained" 
-                                        onClick={saveSchedule(solution.solutionNum)}
+                                        onClick={saveSchedule(solution)}
                                         sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
                                         <Typography variant="text" color="secondary">Save Solution</Typography>
                                     </Button>

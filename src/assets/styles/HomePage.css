@@ -12,7 +12,7 @@
 /*Styles for Top Bar*/
 .topbar {
     width: 100%;
-    height: 50px;
+    height: 70px;
     background-color: white;
     position: sticky;
     top: 0;
@@ -29,7 +29,7 @@
 
 .logo {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 40px;
     color: #546e7a;
     cursor: pointer;
 }
@@ -62,8 +62,8 @@
 }
 
 .topAvatar {
-    width: 40px;
-    height: 40px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
 }
 

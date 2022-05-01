@@ -16,7 +16,7 @@ const {
 } = electron;
 
 // Module that contains the database object
-const DatabaseService = require(path.join(__dirname, 'services/databaseService.js'));
+const DatabaseService = require(path.join(__dirname, 'services/mainDBService.js'));
 
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
@@ -676,9 +676,10 @@ function addModalWindows(){
             console.log("MODAL WINDOW LOG --> " + args.message)
             console.log("MODAL WINDOW LOG --> " + "Adding plan to database")
 
-            console.log(args);
+            //console.log(args);
             DB.createPlan(args.planName, args.description, args.year, args.semester).then((payload) => {
                 console.error('Successfully create PLAN with id: ' + payload.data.plan_id + '\n');
+                console.error(payload);
                 let _payload = {
                     status: 'SUCCESS',
                     message: "Plan created successfully!",
@@ -723,30 +724,31 @@ function addModalWindows(){
                 console.error('!!!DATABASE LOG--> ERROR returning PLANS: ' + error + + '\n');
             });
         }
-        // else if(args.request === 'CREATE'){
-        //     console.log("DATABASE LOG --> " + args.message)
-        //     console.log("DATABASE LOG --> " + "Making request CREATE a ROOM")
+        else if(args.request === 'CREATE_MULTIPLE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request CREATE MULTIPLE SECTIONS")
+            console.log(args.data);
 
-        //     DB.createRoom(args.roomNumber, args.capacity).then((payload) => {
-        //         console.log("DATABASE LOG--> Successfully created ROOM\n");
+            DB.createMultipleSections(args.data).then((payload) => {
+                console.log("DATABASE LOG--> Successfully created SECTIONS\n");
 
-        //         let _payload = {
-        //             status: 'SUCCESS',
-        //             message: "Room added successfully!",
-        //         };
-        //         mainWindow.webContents.send('fromMain:Room', _payload);
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Plan created successfully!",
+                };
+                mainWindow.webContents.send('fromMain:Plan', _payload);
 
-        //     }).catch((error) => {
-        //         console.error('!!!DATABASE LOG--> ERROR adding ROOM: ' + error + + '\n');
-        //         let _payload = {
-        //             status: 'FAIL',
-        //             message: "Error! Unable to add room.",
-        //             errorCode: error
-        //         };
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR adding SECTIONS: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to create plan.",
+                    errorCode: error
+                };
 
-        //         mainWindow.webContents.send('fromMain:Room', _payload);
-        //     });
-        // }
+                mainWindow.webContents.send('fromMain:Plan', _payload);
+            });
+        }
         // else if(args.request === 'DELETE'){
         //     console.log("DATABASE LOG --> " + args.message)
         //     console.log("DATABASE LOG --> " + "Making request DELETE a ROOM")
@@ -822,7 +824,7 @@ const execFile = util.promisify(require('child_process').execFile);
 async function executeAlgorithm(data) {
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/CSP-selective2.exe'), [3,5,data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/CSP-selective2.exe'), [300,3,data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
         let payload = JSON.parse(stdout);
 

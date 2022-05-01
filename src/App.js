@@ -10,7 +10,7 @@ import SolutionPage from './components/schedulePages/SolutionPage.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, samplePlans } from './utils/sampleData';
-import * as DBFunction from './services/databaseServices/UIDatabaseService';
+import * as DBFunction from './services/databaseServices/appDBService';
 
 import varValueConvert from 'cross-env/src/variable';
 import SolutionGenerate from './components/schedulePages/AddSolution';

@@ -133,7 +133,38 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             setSelectedLabs(selectedLabs.filter((remaingLabs) => remaingLabs.id !== id));
         }
     }
+
+    /**
+     * This function is called when the Add Schedule button is clicked.
+     * This function will reset all the cards to unselected style.
+     */
+    function createAndRefresh(){
+        resetStyles();    
+        createNewSchedule();
+    }
     
+    /**
+     * This function resets all the styles back to unselected state.
+     */
+    function resetStyles() {
+        for(const key in courses){
+            courses[key].elementClassName = 'item';
+            //courses[key].sections = 0;
+        }
+
+        for(const key in rooms){
+            rooms[key].elementClassName = 'item';
+        }
+
+        for(const key in professors){
+            professors[key].elementClassName = 'item';
+        }
+
+        for(const key in labs){
+            labs[key].elementClassName = 'item';
+        }
+    }
+
     /**
      * Sends the selected values from this state to the algorithm service. The algo service will create
      * a json from the variables and run the scheduling algorithm. The current page will then move to the solution viewer page.
@@ -277,7 +308,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             {/* this needs to change to a location if more than one building is used number is not unique*/}
             <div onClick = {onClickRoom(room)}>
                 <br></br>
-                <h3>Room: {room.rnumber} </h3>
+                <h3>{room.building} {room.number} </h3>
             </div>
             
             {/*Do we want to add a subheader like the video*/}
@@ -361,6 +392,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         //console.log('ROOMS', selectedRooms);
         //console.log('PROFS', selectedProfessors);
         //console.log('LABS', selectedLabs)
+        window.addEventListener('beforeunload', (event) => {
+            // Cancel the event as stated by the standard.
+            event.preventDefault();
+            
+          
+            createAndRefresh()
+          });
     }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
 
 
@@ -380,7 +418,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
                     </div>
                     
                     {/* generate schedule button */}
-                    <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}} onClick={createNewSchedule}>
+                    <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}} onClick={createAndRefresh}>
                         <Typography variant="text" color="secondary">Generate Schedule</Typography>
                     </Button>
                 </div>
