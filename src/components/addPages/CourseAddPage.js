@@ -178,17 +178,17 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                 return;
             }
             if (lab && !lcourse){
-                alert('Please pick a course that is associated with this lab');
-                return;
+                //alert('Please pick a course that is associated with this lab');
+                //return;
             }
 
             let elementClassName = 'item';
             let sections = 0;
             if(courseEditedId === null){
-                onAddCourse({program, number, name, credits, capacity, tech, length, elementClassName, sections}); // Implement checking for length and tech from database
+                onAddCourse({program, number, name, credits, capacity, tech, length, lab, elementClassName, sections}); // Implement checking for length and tech from database
             } else {
                 let id = courseEditedId;
-                onEditCourse({id, program, number, name, credits, capacity, tech, length, elementClassName, sections});
+                onEditCourse({id, program, number, name, credits, capacity, tech, length, lab, elementClassName, sections});
                 resetState();
             }
 
@@ -310,7 +310,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
 
                     <Box sx={{ minWidth: 120 }}>
                         <FormControl fullWidth>
-                            <FormControlLabel control={<Checkbox />} label = "Is This a Lab" labelPlacement='end' onChange={(e) => setLab(!lab.value)}/>
+                            <FormControlLabel control={<Checkbox />} label = "Lab" labelPlacement='end' onChange={(e) => setLab(!lab.value)}/>
                         </FormControl>
                     </Box>
                     <br></br>

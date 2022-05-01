@@ -66,10 +66,10 @@ function App() {
    */
   const updateAllStates = () => {
     getLatestPrograms();
-    getLatestCourses();
+    getLatestCoursesLabs();
     getLatestProfessors();
     getLatestRooms();
-    getLatestLabs();
+    //getLatestLabs();
     getLatestPlans();
   };
 
@@ -126,11 +126,12 @@ function App() {
   /**
  * Gets the latest data for courses.
  */
-  const getLatestCourses = () => {
+  const getLatestCoursesLabs = () => {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
     let stateCourses = [];
+    let stateLabs = [];
 
     if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
@@ -175,16 +176,23 @@ function App() {
           
           let elementClassName = "item";
           let sections = 0;
-          let isLab = data.is_lab;
+          let lab = data.is_lab;
           let deptId = data.dept_id;
 
           const id = cantorPairing(deptId, number);
           //const id = Math.floor(Math.random() * 10000) + 1;
 
-          let newCourse = { id, program, number, name, credits, capacity, tech, length, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
-          stateCourses.push(newCourse);
+          let newCourse = { id, program, number, name, credits, capacity, tech, length, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+
+          if(!lab){
+            stateCourses.push(newCourse);
+          }
+          else{
+            stateLabs.push(newCourse);
+          }
         });
         setCourses(stateCourses);
+        setLabs(stateLabs);
       });
     }
   }
