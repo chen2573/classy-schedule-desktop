@@ -350,6 +350,23 @@ class DatabaseService {
             }
         });
     }
+
+    // ======== Section methods ===========
+    /**
+     * Creates multiple sections to add to a created plan.
+     * @param sections - an array of json objects created in solutionDBService.js
+     */
+     createMultipleSections(sections) {
+        return axios({
+            method: 'POST',
+            url: API_BASE + 'sections-management/sections/create/multiple',
+            data: sections,
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
 }
 
 /**

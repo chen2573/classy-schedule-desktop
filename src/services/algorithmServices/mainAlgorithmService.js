@@ -23,8 +23,8 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs){
         let tempRoom = {};
         
         tempRoom.id = rooms[key].id;
-        tempRoom.name = rooms[key].rbuilding + ' ' + rooms[key].rnumber;
-        tempRoom.capacity = rooms[key].rcapacity;
+        tempRoom.name = rooms[key].building + ' ' + rooms[key].number;
+        tempRoom.capacity = rooms[key].capacity;
         tempRoom.techs = [];
 
         jsonObject.rooms.push(tempRoom);
@@ -40,11 +40,11 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs){
         tempCourse.department = courses[key].program;
         tempCourse.number = courses[key].number;
         tempCourse.credits = courses[key].credits;
-        tempCourse.sections = courses[key].sections;
+        tempCourse.sections = parseInt(courses[key].sections);
         tempCourse.techs = [];
         tempCourse.isLab = false;
 
-        jsonObject.courses.push(tempCourse);
+        jsonObject.courses.push(tempCourse); //fix back
     }
 
     //Add all Professors
@@ -53,9 +53,8 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs){
         
         tempProfessor.id = professors[key].id;
         tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
-        //tempProfessor.canTeach = [5152, 5254, 7751, 7876];
-        tempProfessor.canTeach = [];
-        tempProfessor.courseLoad = professors[key].teach_load;
+        tempProfessor.canTeach = [5152, 5254, 7751, 7876];
+        tempProfessor.courseLoad = parseInt(professors[key].teach_load);
         tempProfessor.preferredCourses = [];
         tempProfessor.preferredTimeSlot = [];
 
@@ -92,6 +91,12 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs){
     temp3.time = "MWF 10:55am";
     temp3.timeBlock = "morning";
     jsonObject.times.push(temp3);
+
+    let temp4 = {};
+    temp4.id = 4;
+    temp4.time = "TR 12:00pm";
+    temp4.timeBlock = "afternoon";
+    jsonObject.times.push(temp4);
 
     //Sends data to electron to run algorithm
     window.DB.send('toMain:Json', jsonObject);

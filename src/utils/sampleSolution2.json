@@ -1,0 +1,36 @@
+[{
+    "professor": 3,
+    "course": 4,
+    "time": 7,
+    "room": 6
+}, {
+    "professor": 4,
+    "course": 6,
+    "time": 7,
+    "room": 6
+}, {
+    "professor": 5,
+    "course": 7,
+    "time": 7,
+    "room": 6
+}, {
+    "professor": 6,
+    "course": 3,
+    "time": 7,
+    "room": 6
+}, {
+    "professor": 7,
+    "course": 2,
+    "time": 7,
+    "room": 6
+}, {
+    "professor": 8,
+    "course": 1,
+    "time": 7,
+    "room": 6
+}, {
+    "professor": 8,
+    "course": 5,
+    "time": 6,
+    "room": 6
+}]

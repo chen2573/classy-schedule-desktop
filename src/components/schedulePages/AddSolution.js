@@ -149,6 +149,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     function resetStyles() {
         for(const key in courses){
             courses[key].elementClassName = 'item';
+            //courses[key].sections = 0;
         }
 
         for(const key in rooms){
