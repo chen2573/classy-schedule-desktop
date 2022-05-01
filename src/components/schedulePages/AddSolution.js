@@ -140,7 +140,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
     function createNewSchedule(){
         AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs);
-        setCurrentPage('schedule')
+        setCurrentPage('schedule');
     }
 
 
