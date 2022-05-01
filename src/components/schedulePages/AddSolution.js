@@ -198,13 +198,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const LabListItem = ({lab, onClickLab, labs}) => {
         return(
             <div className={lab.elementClassName}>
-                {/*<DataViewer id={lab.id} dataState={labs} sx={{position:'absolute'}}>
+                <DataViewer id={lab.id} dataState={labs} sx={{position:'absolute'}}>
                     <MoreHorizIcon style= {{float:"right"}}/>
-        </DataViewer>*/}
+                </DataViewer>
                 {/* this needs to change to a location if more than one building is used number is not unique*/}
                 <div onClick = {onClickLab(lab)}>
-                    <h3>Lab: {lab.lname}</h3>
-                    <p><em>Course: {lab.lcourse[0].name}</em></p>
+                    <h3>Lab: {lab?.name}</h3>
+                    <p><em>Course: {lab?.number}</em></p>
                 </div>
             </div>
 
