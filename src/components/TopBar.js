@@ -23,10 +23,11 @@ function openNav() {
                 </div>
                 <div className="topRight">
                     <div className="topBarIconContainer">
-                        <NotificationsNone/>
-                        <span className="topIconBadge">2</span>
+                        {/**<NotificationsNone/>
+                        <span className="topIconBadge">2</span>**/}
                     </div>
-                    <a href="#"><img onClick={openNav} src="https://pm1.narvii.com/7443/6cd967b9b43e84a408cf5ba385e4d9bc55e3fd9ar1-2048-2048v2_hq.jpg" alt="" className="topAvatar"/></a>
+                    {/*<a href="#"><img onClick={openNav} src="https://pm1.narvii.com/7443/6cd967b9b43e84a408cf5ba385e4d9bc55e3fd9ar1-2048-2048v2_hq.jpg" alt="" className="topAvatar"/></a>*/}
+                    <a href="#"><img onClick={openNav} src="https://avatars.dicebear.com/api/identicon/:seed.svg" alt="" className="topAvatar"/></a>
                 </div>
             </div>
         </div>
