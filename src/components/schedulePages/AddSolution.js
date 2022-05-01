@@ -140,7 +140,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
     function createNewSchedule(){
         AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs);
-        setCurrentPage('schedule')
+        setCurrentPage('schedule');
     }
 
 
@@ -276,6 +276,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             </DataViewer>
             {/* this needs to change to a location if more than one building is used number is not unique*/}
             <div onClick = {onClickRoom(room)}>
+                <br></br>
                 <h3>Room: {room.rnumber} </h3>
             </div>
             
