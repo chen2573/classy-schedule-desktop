@@ -390,7 +390,7 @@
       return (
         <div className='item'>
           <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(professor.id)}/>
-          <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right"}} onClick={onEdit(professor.id)}/>
+          <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right", clear: "right"}} onClick={onEdit(professor.id)}/>
           <DataViewer id={professor.id} dataState={professors} sx={{position:'absolute'}}>
             <h3> {professor.firstName} {professor.lastName}</h3>
           </DataViewer>

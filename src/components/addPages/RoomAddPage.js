@@ -233,7 +233,7 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
 
             <div className='item'>
             <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(room.id)}/>
-            <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right"}} onClick={onEdit(room.id)}/>
+            <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right", clear: "right"}} onClick={onEdit(room.id)}/>
             <DataViewer id={room.id} dataState={rooms} sx={{position:'absolute'}}>
                 <h3> {"Room: "} {room.building}  {room.number}</h3>
             </DataViewer>

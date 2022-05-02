@@ -381,7 +381,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
         return (
             <div className='item'>
             <FaTimes style={{color: 'red', cursor: 'pointer', float:"right"}} onClick={() => onDelete(course.id)}/>
-            <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right"}} onClick={onEdit(course.id)}/>
+            <FaPencilAlt style={{color:'#90A4AE', cursor: 'pointer', float: "right", clear: "right"}} onClick={onEdit(course.id)}/>
             <DataViewer id={course.id} dataState={courses} sx={{position:'absolute'}}>
                 <h3>{course.program} {course.number}</h3>
                 {/* This stuff in the paragraph tag will become popover*/}
