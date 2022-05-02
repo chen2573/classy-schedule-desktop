@@ -288,6 +288,7 @@ function createIPCChannels() {
     addCourseChannel();
     addRoomChannel();
     addPlanChannel();
+    addUpdateAndViewPlanChannel()
     addModalWindows();
     addJsonChannel()
     addAlgorithmChannel();
@@ -775,6 +776,37 @@ function addModalWindows(){
         //     });
         // }
 
+    });
+}
+
+function addUpdateAndViewPlanChannel(){
+    ipcMain.on("toMain:SecondaryPlan", (event, args) => {
+        if(args.request === 'SAVED_PLAN'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request RETRIEVING SAVED SECTIONS for plan id: " + args.planName)
+
+            DB.getSavedSectionByPlanId(args.planId).then((payload) => {
+                console.log("DATABASE LOG--> Successfully created SECTIONS\n");
+                console.log(payload);
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Plan retrieved successfully!",
+                    data: payload.data,
+                    planName: args.planName
+                };
+                mainWindow.webContents.send('fromMain:SecondaryPlan', _payload);
+
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR retrieving saved SECTIONS: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to retrieve plan.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:SecondaryPlan', _payload);
+            });
+        }
     });
 }
 

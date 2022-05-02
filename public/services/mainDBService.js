@@ -367,6 +367,21 @@ class DatabaseService {
             }
         });
     }
+
+    /**
+     * Retrieves all the sections with a given plan id.
+     * @param id - the plan id of the sections we are retrieving.  
+     */
+    getSavedSectionByPlanId(id) {
+        return axios({
+            method: 'GET',
+            url: API_BASE + 'sections-management/sections/plan/' + id,
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
 }
 
 /**

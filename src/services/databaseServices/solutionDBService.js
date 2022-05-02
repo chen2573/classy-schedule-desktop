@@ -80,3 +80,11 @@ function mapRooms(targetId, allRooms) {
         }
     }
 }
+
+export function mapSectionToSolution(data) {
+    let solution = [];
+
+    for(let i=0; i<data.length; i++){
+        
+    }
+}

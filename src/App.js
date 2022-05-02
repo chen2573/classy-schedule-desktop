@@ -7,6 +7,7 @@ import LabPage from './components/addPages/LabAddPage.js';
 import ProfessorPage from './components/addPages/ProfessorAddPage.js';
 import RoomPage from './components/addPages/RoomAddPage.js'
 import SolutionPage from './components/schedulePages/SolutionPage.js';
+import UpdateSolution from './components/schedulePages/UpdateSolution.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, samplePlans } from './utils/sampleData';
@@ -766,6 +767,10 @@ function App() {
     else if(currentPage === 'SolutionDashboard')
     {
       return <SolutionDashboard plans = {plans} setCurrentPage={setCurrentPage}/>;
+    }
+    else if(currentPage === 'UpdateSolution')
+    {
+      return <UpdateSolution courses={courses} rooms={rooms} professors={professors} labs={labs}/>;
     }
     else
     {
