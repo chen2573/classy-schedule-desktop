@@ -863,7 +863,7 @@ async function executeAlgorithm(data) {
         mainWindow.webContents.send('fromMain:Algo', payload);
     }
     else {
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/CSP-selective2.exe'), [data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/CSP-selective2.exe'), [300, 3, data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
         let payload = JSON.parse(stdout);
 
