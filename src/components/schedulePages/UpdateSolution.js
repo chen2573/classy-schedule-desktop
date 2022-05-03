@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, TextField} from '@mui/material';
+import {Popover, Button, Tabs, Tab, Box, Typography} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
@@ -119,16 +119,6 @@ export function UpdateSolution ({professors, courses, rooms, times})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
-    const [numSolutions, setNumSolutions] = useState(300);
-    const [topSolutions, setTopSolutions] = useState(3);
-    const updateNumSolutions = (num) =>
-    {
-        setNumSolutions(num);
-    }
-    const updateTopSolutions = (num) =>
-    {
-        setTopSolutions(num);
-    }
     
     const dummyData = [
         {
@@ -351,37 +341,6 @@ export function UpdateSolution ({professors, courses, rooms, times})
                     <Typography variant="text" color="secondary">Generate Schedule</Typography>
                 </Button>*/}
 
-
-                {/* settings */}
-                <PopupState variant="popover">
-                    {(popupState) => (
-                        <React.Fragment>
-                            <Button variant="contained"
-                                    {...bindTrigger(popupState)} 
-                                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                <Typography variant="text" color="secondary">Settings</Typography>
-                            </Button>
-
-                            <Popover {...bindMenu(popupState)}
-                                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                                transformOrigin={{vertical: 'bottom', horizontal: 'left'}}
-                                sx={{width:"15%"}}>
-                                <Box>
-                                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="Number of Solutions Considered"
-                                               label="Number of Solutions Considered" variant="outlined"
-                                               value={numSolutions} onChange={updateNumSolutions}
-                                               sx={{margin:"5%", width:"90%"}}/>
-
-                                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="Top Solutions Returned"
-                                               label="Top Solutions Returned" variant="outlined"
-                                               value={topSolutions} onChange={updateTopSolutions}
-                                               sx={{margin:"5%", width:"90%"}}/>
-                                </Box>
-                                    
-                            </Popover>
-                        </React.Fragment>
-                    )}
-                </PopupState>
             </div>
         </div>
     );

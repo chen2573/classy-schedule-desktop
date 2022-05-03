@@ -7,7 +7,7 @@
  * @param professors - professors that have been selected for the algorithm. 
  * @param labs - labs that have been selected for the algorithm.  
  */
-export function createJsonOfSelectedStates(courses, rooms, professors, labs){
+export function createJsonOfSelectedStates(courses, rooms, professors, labs, totalSolutions, topSolutions){
     //console.log(courses);
     //The main object that will be returned back;
     let jsonObject = {};
@@ -98,8 +98,18 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs){
     temp4.timeBlock = "afternoon";
     jsonObject.times.push(temp4);
 
+    let _payload = {
+        courses: courses,
+        rooms: rooms,
+        professors: professors,
+        labs: labs,
+        data: jsonObject,
+        totalSolutions: totalSolutions,
+        topSolutions: topSolutions
+    }
+
     //Sends data to electron to run algorithm
-    window.DB.send('toMain:Json', jsonObject);
+    window.DB.send('toMain:Json', _payload);
 
     return jsonObject;
 }
