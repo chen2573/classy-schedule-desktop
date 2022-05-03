@@ -170,7 +170,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * a json from the variables and run the scheduling algorithm. The current page will then move to the solution viewer page.
      */
     function createNewSchedule(){
-        AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs);
+        AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs, 300, 3);
         setCurrentPage('schedule');
     }
 

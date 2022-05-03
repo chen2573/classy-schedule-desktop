@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
+import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
 import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
-//const solutionData = require("../../utils/solution.json");
+import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
+//const payload.data = require("../../utils/solution.json");
 
 
 /**
@@ -114,6 +115,28 @@ export function SolutionPage ({professors, courses, rooms, times})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
+    const [numSolutions, setNumSolutions] = useState(300);
+    const [topSolutions, setTopSolutions] = useState(3);
+    const [selectedCourses, setSelectedCourses] = useState([]);
+    const [selectedRooms, setSelectedRooms] = useState([]);
+    const [selectedProfessors, setSelectedProfessors] = useState([]);
+    const [selectedLabs, setSelectedLabs] = useState([]);
+    const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
+
+    function updateNumSolutions(num)
+    {
+        setNumSolutions(num);
+    }
+
+    function updateTopSolutions(num) {
+        setTopSolutions(num);
+    }
+
+    function getNewSolution() {
+        setIsAlgoCalculating(true);
+        AlgoService.createJsonOfSelectedStates(selectedCourses, selectedRooms, selectedProfessors, selectedLabs, 300, 2);
+    }
+
     //dummy data
     // professors = 
     // [
@@ -194,25 +217,31 @@ export function SolutionPage ({professors, courses, rooms, times})
     ];
     
     const solutionEntries = [];
-    window.DB.receive('fromMain:Algo', (solutionData) => {
+    window.DB.receive('fromMain:Algo', (payload) => {
         //get solutions entries
-        //console.log(solutionData);
-        for (let i=0; i<solutionData.length; i++)
+        //console.log(payload.data);
+        for (let i=0; i<payload.data.length; i++)
         {
             if (i > 10) {break;}
-            if(solutionData[i] != null){
-                solutionEntries.push({"solutionNum": i, "entry": solutionData[i]});
+            if(payload.data[i] != null){
+                solutionEntries.push({"solutionNum": i, "entry": payload.data[i]});
             }
         }
         console.log(solutionEntries);
         //setTempState([]);
         setTempSolutionEntries(solutionEntries);
+        setSelectedCourses(payload.setCourses);
+        setSelectedProfessors(payload.setProfessors);
+        setSelectedRooms(payload.setRooms);
+        setSelectedLabs(payload.setLabs);
+
+        setIsAlgoCalculating(false);
     });
 
-    // for (let i=0; i<solutionData.length; i++)
+    // for (let i=0; i<payload.data.length; i++)
     // {
     //     if (i > 10) {break;}
-    //     solutionEntries.push({"solutionNum": i, "entry": solutionData[i]});
+    //     solutionEntries.push({"solutionNum": i, "entry": payload.data[i]});
         
     // }
 
@@ -290,93 +319,123 @@ export function SolutionPage ({professors, courses, rooms, times})
     
     useEffect(() => {
         //console.log(tempSolutionEntries);
-    }, [tempSolutionEntries]);   
-
-    return (
-        <div className="solutions-container">
-            <Box sx={{ width: '100%'}}>
-                <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
-                <hr/>
+    }, [tempSolutionEntries]); 
+    
+    if(isAlgoCalculating){
+        return(
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',}}>
+                Calculating your Schedule
+                <CircularProgress />
             </Box>
+        );
+    }
+    else {
+        return (
+            <div className="solutions-container">
+                <Box sx={{ width: '100%'}}>
+                    <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
+                    <hr/>
+                </Box>
 
-            <div className="schedule-container">
-                {/* Tabs */}
-                <Tabs value={page} onChange={handleChange} aria-label="basic tabs example">
-                    {console.log('Solution', tempSolutionEntries)}
+                <div className="schedule-container">
+                    {/* Tabs */}
+                    <Tabs value={page} onChange={handleChange} aria-label="basic tabs example">
+                        {console.log('Solution', tempSolutionEntries)}
+                        {tempSolutionEntries?.map((solution) =>
+                        {
+                            const tabName = "Solution " + (solution.solutionNum + 1);
+                            return <Tab label={tabName} {...a11yProps(solution.solutionNum)} />;
+                        }) }
+                    </Tabs>
+
+                    
+
+                    {/* Tab panels switched based on Tabs.
+                        They display different schedule solutions */}
                     {tempSolutionEntries?.map((solution) =>
-                    {
-                        const tabName = "Solution " + (solution.solutionNum + 1);
-                        return <Tab label={tabName} {...a11yProps(solution.solutionNum)} />;
-                    }) }
-                </Tabs>
+                        {
+                            console.log(solution);
+                            let solutionTimes = getTimes(solution.entry);
+                            console.log(solutionTimes);
+                            return <TabPanel value={page} index={solution.solutionNum}>
+                                        <table className="schedule">
+                                            <tbody>
+                                                <tr className="row">
+                                                    <th scope="col">Time</th>
+                                                    <th scope="col">Course</th>
+                                                    <th scope="col">Room</th>
+                                                    <th scope="col">Professor</th>
+                                                </tr>
 
-                
-
-                {/* Tab panels switched based on Tabs.
-                    They display different schedule solutions */}
-                {tempSolutionEntries?.map((solution) =>
-                    {
-                        console.log(solution);
-                        let solutionTimes = getTimes(solution.entry);
-                        console.log(solutionTimes);
-                        return <TabPanel value={page} index={solution.solutionNum}>
-                                    <table className="schedule">
-                                        <tbody>
-                                            <tr className="row">
-                                                <th scope="col">Time</th>
-                                                <th scope="col">Course</th>
-                                                <th scope="col">Room</th>
-                                                <th scope="col">Professor</th>
-                                            </tr>
-
-                                            {solutionTimes.map((solutionTime) =>
-                                                {
-                                                    return <SolutionItem courseEntries={solutionTime.entries}
-                                                                         time={solutionTime.time}
-                                                                         professors={professors}
-                                                                         courses={courses}
-                                                                         rooms={rooms}
-                                                            />
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                    <Button variant="contained" 
-                                        onClick={saveSchedule(solution)}
-                                        sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                                        <Typography variant="text" color="secondary">Save Solution</Typography>
-                                    </Button>
-                                </TabPanel>;
-                    }
-                )}
-
-                {/*{/* generate schedule button }
-                <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                    <Typography variant="text" color="secondary">Generate Schedule</Typography>
-                </Button>*/}
-
-
-                {/* settings */}
-                <PopupState variant="popover">
-                    {(popupState) => (
-                        <React.Fragment>
-                            <Button variant="contained"
-                                    {...bindTrigger(popupState)} 
-                                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                <Typography variant="text" color="secondary">Settings</Typography>
-                            </Button>
-
-                            <Popover {...bindMenu(popupState)}
-                                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                                transformOrigin={{vertical: 'bottom', horizontal: 'left'}}>
-                                    
-                            </Popover>
-                        </React.Fragment>
+                                                {solutionTimes.map((solutionTime) =>
+                                                    {
+                                                        return <SolutionItem courseEntries={solutionTime.entries}
+                                                                            time={solutionTime.time}
+                                                                            professors={professors}
+                                                                            courses={courses}
+                                                                            rooms={rooms}
+                                                                />
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                        <Button variant="contained" 
+                                            onClick={saveSchedule(solution)}
+                                            sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
+                                            <Typography variant="text" color="secondary">Save Solution</Typography>
+                                        </Button>
+                                    </TabPanel>;
+                        }
                     )}
-                </PopupState>
+
+                    {/*{/* generate schedule button }
+                    <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
+                        <Typography variant="text" color="secondary">Generate Schedule</Typography>
+                    </Button>*/}
+
+
+                    {/* settings */}
+                    <PopupState variant="popover">
+                        {(popupState) => (
+                            <React.Fragment>
+                                <Button variant="contained"
+                                        {...bindTrigger(popupState)} 
+                                        sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                    <Typography variant="text" color="secondary">Settings</Typography>
+                                </Button>
+
+                                <Popover {...bindMenu(popupState)}
+                                    anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                                    transformOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                                    sx={{width:"15%"}}>
+                                    <Box>
+                                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="Number of Solutions Considered"
+                                                label="Number of Solutions Considered" variant="outlined"
+                                                value={numSolutions}
+                                                sx={{margin:"5%", width:"90%"}}/>
+
+                                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="Top Solutions Returned"
+                                                label="Top Solutions Returned" variant="outlined"
+                                                value={topSolutions}
+                                                sx={{margin:"5%", width:"90%"}}/>
+
+                                    <Button variant="contained" onClick={getNewSolution}>
+                                        <Typography variant="text" color="secondary">Update Settings</Typography>
+                                    </Button>
+
+                                    </Box>
+                                        
+                                </Popover>
+                            </React.Fragment>
+                        )}
+                    </PopupState>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default SolutionPage;

@@ -836,12 +836,12 @@ function addUpdateAndViewPlanChannel(){
  */
  function addJsonChannel(){
     // Get all Programs
-    ipcMain.on("toMain:Json", (event, data) => {
+    ipcMain.on("toMain:Json", (event, payload) => {
         console.log("JSON LOG --> Creating json")
-        console.log(data);
+        console.log(payload.data);
 
-        let tempData = JSON.stringify(data);
-        executeAlgorithm(tempData);
+        let tempData = JSON.stringify(payload.data);
+        executeAlgorithm(tempData, payload.courses, payload.rooms, payload.professors, payload.labs, payload.totalSolutions, payload.topSolutions);
 
         // let fs = require('fs');
         // fs.writeFile(path.join(__dirname, '/services/tempData.json'), tempData, (err, result) => {
@@ -853,21 +853,33 @@ function addUpdateAndViewPlanChannel(){
 //const exec = require('child_process').execFile;
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
-async function executeAlgorithm(data) {
+async function executeAlgorithm(data, courses, rooms, professors, labs, totalSolutions, topSolutions) {
+    let _payload = {
+        setCourses: courses,
+        setRooms: rooms,
+        setProfessors: professors,
+        setLabs: labs,
+        totalSolutions: totalSolutions,
+        topSolutions: topSolutions
+    }
+
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/CSP-selective2.exe'), [300,3,data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/CSP-selective2.exe'), [totalSolutions,topSolutions,data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
-        let payload = JSON.parse(stdout);
+        let solution = JSON.parse(stdout);
 
-        mainWindow.webContents.send('fromMain:Algo', payload);
+        _payload.data = solution;
+
+        mainWindow.webContents.send('fromMain:Algo', _payload);
     }
     else {
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/CSP-selective2.exe'), [300, 3, data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/CSP-selective2.exe'), [totalSolutions,topSolutions, data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
-        let payload = JSON.parse(stdout);
 
-        mainWindow.webContents.send('fromMain:Algo', payload);
+        let solution = JSON.parse(stdout);
+        _payload.data = solution
+        mainWindow.webContents.send('fromMain:Algo', _payload);
     }
     
 }
