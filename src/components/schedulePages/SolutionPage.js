@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress} from '@mui/material';
+import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
@@ -17,7 +17,7 @@ import * as AlgoService from './../../services/algorithmServices/mainAlgorithmSe
  * @param time the time slot
  * @returns a table row item containing all courses entry in a time slot
  */
-const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
+const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode}) =>
 {
     //console.log(courses);
     //console.log(courseEntries);
@@ -38,13 +38,44 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
                                 }
 
                                 //return table entry
-                                return <table key={entry.course}><tbody><tr key={entry.course} ><td>
-                                            <DataViewer id={entry.course} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                                <Button className="entry-button" variant="text"color="inherit">
-                                                    {name}
-                                                </Button>
-                                            </DataViewer>
+                                if(!editMode){
+                                    return <table key={entry.course}><tbody><tr key={entry.course} ><td>
+                                                <DataViewer id={entry.course} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                    <Button className="entry-button" variant="text"color="inherit">
+                                                        {name}
+                                                    </Button>
+                                                </DataViewer>
+                                        </td></tr></tbody></table>
+                                }
+                                else {
+                                    return <table key={entry.course}><tbody><tr key={entry.course} ><td>
+                                    <FormControl fullWidth>
+                                        <InputLabel shrink id="label">Course</InputLabel>
+                                        <Select
+                                        labelId="label"
+                                        id='course_dropdown'
+                                        notched
+                                        MenuProps={{sx: {
+                                            "&& .Mui-selected": {
+                                            backgroundColor: "#90A4AE"
+                                            }
+                                        }}}
+                                        value={entry.course}
+                                        label="Course Name"
+                                        onChange={(e) => console.log(e.target.value)}
+                                        >
+                                        {courses.map(course => (
+                                            <MenuItem 
+                                            key={course.id} 
+                                            value={course.id}
+                                            >
+                                            <b>{course.program} {course.number}</b>: <i>{course.name}</i>
+                                            </MenuItem>
+                                        ))}
+                                        </Select>
+                                    </FormControl>
                                     </td></tr></tbody></table>
+                                }
                             })
                         }
                     </td>}
@@ -62,14 +93,45 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
                                 }
 
                                 //return table entry
-                                return <table key={entry.room}><tbody><tr key={entry.room} ><td>
-                                            <DataViewer id={entry.room} dataState={rooms} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                                <Button className="entry-button" variant="text"color="inherit">
-                                                    {name}
-                                                </Button>
-                                            </DataViewer>
+                                if(!editMode){
+                                    return <table key={entry.room}><tbody><tr key={entry.room} ><td>
+                                                <DataViewer id={entry.room} dataState={rooms} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                    <Button className="entry-button" variant="text"color="inherit">
+                                                        {name}
+                                                    </Button>
+                                                </DataViewer>
+                                        </td></tr></tbody></table>
+                                }
+                                else {
+                                    return <table key={entry.room}><tbody><tr key={entry.room} ><td>
+                                    <FormControl fullWidth>
+                                        <InputLabel shrink id="label">Room</InputLabel>
+                                        <Select
+                                        labelId="room-label"
+                                        id='room_dropdown'
+                                        notched
+                                        MenuProps={{sx: {
+                                            "&& .Mui-selected": {
+                                            backgroundColor: "#90A4AE"
+                                            }
+                                        }}}
+                                        value={entry.room}
+                                        label="Room"
+                                        onChange={(e) => console.log(e.target.value)}
+                                        >
+                                        {rooms.map(room => (
+                                            <MenuItem 
+                                            key={room.id} 
+                                            value={room.id}
+                                            >
+                                            <b>{room.building}</b> {room.number}
+                                            </MenuItem>
+                                        ))}
+                                        </Select>
+                                    </FormControl>
                                     </td></tr></tbody></table>
-                                })
+                                }
+                            })
                         }
                     </td>}
 
@@ -85,14 +147,46 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
                                 }
 
                                 //return table entry
-                                return <table key={entry.professor}><tbody><tr key={entry.professor} ><td>
-                                            <DataViewer id={entry.professor} dataState={professors} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                                <Button className="entry-button" variant="text"color="inherit">
-                                                    {name}
-                                                </Button>
-                                            </DataViewer>
+                                if(!editMode){
+                                    return <table key={entry.professor}><tbody><tr key={entry.professor} ><td>
+                                                <DataViewer id={entry.professor} dataState={professors} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                    <Button className="entry-button" variant="text"color="inherit">
+                                                        {name}
+                                                    </Button>
+                                                </DataViewer>
+                                        </td></tr></tbody></table>
+                                }
+                                else {
+                                    return <table key={entry.professor}><tbody><tr key={entry.professor} ><td>
+                                    <FormControl fullWidth>
+                                        <InputLabel shrink id="label">Professor</InputLabel>
+                                        <Select
+                                        labelId="prof-label"
+                                        id='prof_dropdown'
+                                        notched
+                                        MenuProps={{sx: {
+                                            "&& .Mui-selected": {
+                                            backgroundColor: "#90A4AE"
+                                            }
+                                        }}}
+                                        value={entry.professor}
+                                        label="Professor"
+                                        onChange={(e) => console.log(e.target.value)}
+                                        >
+                                        {professors.map(professor => (
+                                            <MenuItem 
+                                            key={professor.id} 
+                                            value={professor.id}
+                                            >
+                                            <b>{professor.firstName} {professor.lastName}</b>
+                                            </MenuItem>
+                                        ))}
+                                        </Select>
+                                    </FormControl>
                                     </td></tr></tbody></table>
-                                })
+                                }
+                                
+                            })
                         }
                     </td>}
                 </tr>;
@@ -122,6 +216,8 @@ export function SolutionPage ({professors, courses, rooms, times})
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
+
+    const [editMode, setEditMode] = useState(false);
 
     function updateNumSolutions(num)
     {
@@ -302,6 +398,35 @@ export function SolutionPage ({professors, courses, rooms, times})
           </div>
         );
     }
+
+    function editSolution() {
+        setEditMode(true);
+    }
+
+    function saveEdits() {
+        setEditMode(false);
+    }
+
+    function EditButtons() {
+        if(!editMode) {
+            return (
+                <Button variant="contained"
+                    onClick={editSolution}
+                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                    <Typography variant="text" color="secondary">Edit Solution</Typography>
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button variant="contained"
+                    onClick={saveEdits}
+                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                    <Typography variant="text" color="secondary">Save Edits</Typography>
+                </Button>
+            )
+        }
+    }
       
     TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
 
@@ -377,11 +502,14 @@ export function SolutionPage ({professors, courses, rooms, times})
                                                                             professors={professors}
                                                                             courses={courses}
                                                                             rooms={rooms}
+                                                                            editMode = {editMode}
                                                                 />
                                                     })
                                                 }
                                             </tbody>
                                         </table>
+                                        <EditButtons></EditButtons>
+
                                         <Button variant="contained" 
                                             onClick={saveSchedule(solution)}
                                             sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
@@ -391,13 +519,7 @@ export function SolutionPage ({professors, courses, rooms, times})
                         }
                     )}
 
-                    {/*{/* generate schedule button }
-                    <Button variant="contained" sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                        <Typography variant="text" color="secondary">Generate Schedule</Typography>
-                    </Button>*/}
-
-
-                    {/* settings */}
+                    {/* settings 
                     <PopupState variant="popover">
                         {(popupState) => (
                             <React.Fragment>
@@ -431,7 +553,7 @@ export function SolutionPage ({professors, courses, rooms, times})
                                 </Popover>
                             </React.Fragment>
                         )}
-                    </PopupState>
+                    </PopupState>*/}
                 </div>
             </div>
         );
