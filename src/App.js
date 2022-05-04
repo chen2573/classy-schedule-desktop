@@ -296,7 +296,7 @@ function App() {
             stateCourses.push(curCourse);
           }
         })
-        setProfessors(stateCourses);
+        setCourses(stateCourses);
       }
     });   
   }
@@ -655,12 +655,12 @@ function App() {
       if (result) {
         rooms.map(curRoom => {
           if (curRoom.id === id) {
-            stateRooms.push(rooms);
+            stateRooms.push(room);
           } else {
             stateRooms.push(curRoom);
           }
         })
-        setProfessors(stateRooms);
+        setRooms(stateRooms);
       }
     });      
   }
