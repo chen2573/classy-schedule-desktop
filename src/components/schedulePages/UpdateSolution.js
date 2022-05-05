@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import DataViewer from './../DataViewer.js';
+import ScheduleDataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
 import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
@@ -18,6 +18,7 @@ import * as SolutionService from '../../services/databaseServices/solutionDBServ
  */
 const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
 {
+
     function getCantorPairing(a, b){
         return (a + b) * (a + b + 1) / 2 + a;
     }
@@ -43,11 +44,11 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
 
                                 //return table entry
                                 return <table key={courseId}><tbody><tr key={courseId} ><td>
-                                            <DataViewer id={courseId} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                            <ScheduleDataViewer id={courseId} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
                                                 <Button className="entry-button" variant="text"color="inherit">
                                                     {name}
                                                 </Button>
-                                            </DataViewer>
+                                            </ScheduleDataViewer>
                                     </td></tr></tbody></table>
                             })
                         }
@@ -67,11 +68,11 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
 
                                 //return table entry
                                 return <table key={entry.room_id}><tbody><tr key={entry.room_id} ><td>
-                                            <DataViewer id={entry.room_id} dataState={rooms} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                            <ScheduleDataViewer id={entry.room_id} dataState={rooms} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
                                                 <Button className="entry-button" variant="text"color="inherit">
                                                     {name}
                                                 </Button>
-                                            </DataViewer>
+                                            </ScheduleDataViewer>
                                     </td></tr></tbody></table>
                                 })
                         }
@@ -90,11 +91,11 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms}) =>
 
                                 //return table entry
                                 return <table key={entry.professor_id}><tbody><tr key={entry.professor_id} ><td>
-                                            <DataViewer id={entry.professor_id} dataState={professors} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                            <ScheduleDataViewer id={entry.professor_id} dataState={professors} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
                                                 <Button className="entry-button" variant="text"color="inherit">
                                                     {name}
                                                 </Button>
-                                            </DataViewer>
+                                            </ScheduleDataViewer>
                                     </td></tr></tbody></table>
                                 })
                         }
@@ -221,7 +222,32 @@ export function UpdateSolution ({professors, courses, rooms, times})
         return solutionTimes;
     }
 
+    const [savedCourses, setSavedCourses] = useState({});
+    const [savedProfessors, setSavedProfessors] = useState({});
+    const [savedRooms, setSavedRooms] = useState({});
 
+
+    function getCantorPairing(a, b){
+        return (a + b) * (a + b + 1) / 2 + a;
+    }
+
+    const setDataViewerStates = (solutionTimes) => {
+
+        console.log("solutionTimes", solutionTimes);
+
+        for(let savedCourses of solutionTimes){
+            for(let curCourse of savedCourses.entries){
+                console.log("tempSave",curCourse);
+                let courses = {
+                    courseID: getCantorPairing(curCourse.dept_id,curCourse.class_num),
+                    professors: [],
+                    rooms: [],
+                    times: []
+                };
+                console.log("CourseEntry", courses);
+            }
+        }
+    };
     //tab states and functions
 
 
@@ -297,7 +323,7 @@ export function UpdateSolution ({professors, courses, rooms, times})
                     {
                         console.log(solution);
                         let solutionTimes = getTimes(solution.entry);
-                        console.log(solutionTimes);
+                        setDataViewerStates(solutionTimes);
                         return <TabPanel value={page} index={0}>
                                     <table className="schedule">
                                         <tbody>
