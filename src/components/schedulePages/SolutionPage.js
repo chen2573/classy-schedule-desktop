@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
+import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
@@ -11,6 +12,8 @@ import * as AlgoService from './../../services/algorithmServices/mainAlgorithmSe
 //const payload.data = require("../../utils/solution.json");
 
 
+
+
 /**
  * automatically populates solutions items
  * @param courseEntries courses assigned to a time slot by the GenerateSolutions component
@@ -19,11 +22,57 @@ import * as AlgoService from './../../services/algorithmServices/mainAlgorithmSe
  */
 const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode}) =>
 {
+    console.log("Entries", courseEntries);
+    console.log("Time", time);
+
+    const TimeDisplay = ({time, editMode}) => {
+        if(!editMode) {
+            return <th scope="row">{time}</th>
+        }
+        else {
+            return <><th scope="row">
+                        {time} 
+                        <br></br> 
+                        <div class="tooltip" >
+                            <AddCircleSharpIcon></AddCircleSharpIcon>
+                            <span class="tooltiptext">Add Section</span> 
+                        </div>
+                    </th></>
+        }
+    }
+
+    const DeleteColumnElement = ({entries}) => {
+        return (entries.map((entry) =>
+        {
+            //return table entry
+            if(!editMode){
+            }
+            else {
+                return(<table key={'delete-table'}><tbody><tr key={'delete-table'} ><td>x</td></tr></tbody></table>)
+            }
+                
+        }))
+
+    }
+
+    const DeleteColumn = ({entries, editMode}) => {
+        if(editMode) {
+            return (
+                <td className="delete-row-container">
+                    <DeleteColumnElement entries={entries}></DeleteColumnElement>
+                </td>
+            )
+        }
+        else {
+            return <></>
+        }
+    }
+
     //console.log(courses);
     //console.log(courseEntries);
     //populate items in the time slot row 
     const item = <tr key={time} className="row">
-                    <th scope="row">{time}</th>
+                    <TimeDisplay time={time} editMode={editMode}></TimeDisplay>
 
                     {<td className="course-container">
                         {courseEntries.map((entry) =>
@@ -188,7 +237,11 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                 
                             })
                         }
+
                     </td>}
+                    
+                    <DeleteColumn entries={courseEntries} editMode={editMode}></DeleteColumn>
+
                 </tr>;
 
 
@@ -445,6 +498,30 @@ export function SolutionPage ({professors, courses, rooms, times})
     useEffect(() => {
         //console.log(tempSolutionEntries);
     }, [tempSolutionEntries]); 
+
+    const TableHeaders = () => {
+        if(!editMode) {
+            return (
+            <tr className="row">
+                <th scope="col">Time</th>
+                <th scope="col">Course</th>
+                <th scope="col">Room</th>
+                <th scope="col">Professor</th>
+            </tr>
+            )
+        }
+        else {
+            return (
+                <tr className="row">
+                    <th scope="col">Time</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Room</th>
+                    <th scope="col">Professor</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            )
+        }
+    }
     
     if(isAlgoCalculating){
         return(
@@ -482,18 +559,14 @@ export function SolutionPage ({professors, courses, rooms, times})
                         They display different schedule solutions */}
                     {tempSolutionEntries?.map((solution) =>
                         {
+                            console.log('tempSolutionEntries', tempSolutionEntries);
                             console.log(solution);
                             let solutionTimes = getTimes(solution.entry);
                             console.log(solutionTimes);
                             return <TabPanel value={page} index={solution.solutionNum}>
                                         <table className="schedule">
                                             <tbody>
-                                                <tr className="row">
-                                                    <th scope="col">Time</th>
-                                                    <th scope="col">Course</th>
-                                                    <th scope="col">Room</th>
-                                                    <th scope="col">Professor</th>
-                                                </tr>
+                                                <TableHeaders></TableHeaders>
 
                                                 {solutionTimes.map((solutionTime) =>
                                                     {
