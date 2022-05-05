@@ -117,3 +117,10 @@
     position: relative;
     right: 30%;
   }
+  .sticky {
+    position: sticky;
+    top: -7%;
+    z-index: 100; /* this is optional and should be different for every project */
+    background-color: white;
+    margin: auto;
+  }
