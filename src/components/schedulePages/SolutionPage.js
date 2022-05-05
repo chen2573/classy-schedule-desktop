@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
+import Checkbox from '@mui/material/Checkbox';
+import { FaTimes, FaPencilAlt} from 'react-icons/fa';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
@@ -20,12 +22,12 @@ import * as AlgoService from './../../services/algorithmServices/mainAlgorithmSe
  * @param time the time slot
  * @returns a table row item containing all courses entry in a time slot
  */
-const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode}) =>
+const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, solutionNumber}) =>
 {
     console.log("Entries", courseEntries);
-    console.log("Time", time);
+    //console.log("Item", solutionNumber);
 
-    const TimeDisplay = ({time, editMode}) => {
+    const TimeDisplay = ({time, editMode, solutionNumber, onAddEditSection}) => {
         if(!editMode) {
             return <th scope="row">{time}</th>
         }
@@ -33,7 +35,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
             return <><th scope="row">
                         {time} 
                         <br></br> 
-                        <div class="tooltip" >
+                        <div class="tooltip" onClick={() => onAddEditSection(time, solutionNumber)}>
                             <AddCircleSharpIcon></AddCircleSharpIcon>
                             <span class="tooltiptext">Add Section</span> 
                         </div>
@@ -45,11 +47,14 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
         return (entries.map((entry) =>
         {
             //return table entry
-            if(!editMode){
-            }
-            else {
-                return(<table key={'delete-table'}><tbody><tr key={'delete-table'} ><td>x</td></tr></tbody></table>)
-            }
+            return(
+            <table ><tbody><tr  ><td>
+                <div className="tooltip checkbox-div" >
+                <Checkbox size="large" inputProps={{ 'aria-label': 'controlled' }}/>
+                    <span className="tooltiptext">Delete Section</span> 
+                </div>    
+            </td></tr></tbody></table>)
+            
                 
         }))
 
@@ -72,7 +77,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
     //console.log(courseEntries);
     //populate items in the time slot row 
     const item = <tr key={time} className="row">
-                    <TimeDisplay time={time} editMode={editMode}></TimeDisplay>
+                    <TimeDisplay time={time} editMode={editMode} onAddEditSection={onAddEditSection} solutionNumber={solutionNumber}></TimeDisplay>
 
                     {<td className="course-container">
                         {courseEntries.map((entry) =>
@@ -82,7 +87,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                 if (courses.filter((item) => item.id === entry.course)[0] != undefined)
                                 {
                                     name = Object.entries(courses.filter((item) => item.id === entry.course)[0]);
-                                    console.log('Name', name);
+                                    //console.log('Name', name);
                                     name = name[1][1] + " " + name[2][1];
                                 }
 
@@ -268,76 +273,16 @@ export function SolutionPage ({professors, courses, rooms, times})
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
-    const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
+    const [editSolutionEntries, setEditSolutionEntries] = useState(tempSolutionEntries);
 
+    const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
     const [editMode, setEditMode] = useState(false);
 
-    function updateNumSolutions(num)
-    {
-        setNumSolutions(num);
-    }
-
-    function updateTopSolutions(num) {
-        setTopSolutions(num);
-    }
 
     function getNewSolution() {
         setIsAlgoCalculating(true);
         AlgoService.createJsonOfSelectedStates(selectedCourses, selectedRooms, selectedProfessors, selectedLabs, 300, 2);
     }
-
-    //dummy data
-    // professors = 
-    // [
-    //     {
-    //         "id": 1,
-    //         "name": "Dr. Hardt",
-    //         "canTeach": [],
-    //         "courseLoad": "16"
-    //     },
-
-    //     {
-    //         "id": 2,
-    //         "name": "Dr. Marrinan",
-    //         "canTeach": [],
-    //         "courseLoad": "8"
-    //     }
-    // ];
-
-    // courses = 
-    // [
-    //     {
-    //         "id": 1,
-    //         "name": "data",
-    //         "credits": "4",
-    //         "capacity": "23",
-    //         "sections": "2"
-    //     },
-    //     {
-    //         "id": 2,
-    //         "name": "capstone",
-    //         "credits": "4",
-    //         "capacity": "20",
-    //         "sections": "1"
-    //     }
-    // ];
-
-    // rooms = 
-    // [
-    //     {
-    //         "id": 1,
-    //         "name": "room 1",
-    //         "capacity": "22",
-    //         "tech": []
-    //     },
-
-    //     {
-    //         "id": 2,
-    //         "name": "room 2",
-    //         "capacity": "25",
-    //         "tech": []
-    //     }
-    // ];
 
     times = 
     [
@@ -376,9 +321,11 @@ export function SolutionPage ({professors, courses, rooms, times})
                 solutionEntries.push({"solutionNum": i, "entry": payload.data[i]});
             }
         }
-        console.log(solutionEntries);
+        //console.log(solutionEntries);
         //setTempState([]);
         setTempSolutionEntries(solutionEntries);
+        setEditSolutionEntries(solutionEntries);
+
         setSelectedCourses(payload.setCourses);
         setSelectedProfessors(payload.setProfessors);
         setSelectedRooms(payload.setRooms);
@@ -420,6 +367,14 @@ export function SolutionPage ({professors, courses, rooms, times})
         return solutionTimes;
     }
 
+    function mapTimeStringToId(timeString) {
+        for(let i=0; i<times.length; i++){
+            if(times[i].time == timeString){
+                return times[i].id;
+            }
+        }
+    }
+
 
     //tab states and functions
 
@@ -452,6 +407,7 @@ export function SolutionPage ({professors, courses, rooms, times})
         );
     }
 
+    //====== Edit Flow Functions ===============
     function editSolution() {
         setEditMode(true);
     }
@@ -460,7 +416,14 @@ export function SolutionPage ({professors, courses, rooms, times})
         setEditMode(false);
     }
 
-    function EditButtons() {
+    function cancelEdits() {
+        setEditMode(false);
+    }
+    //===========================================
+
+
+
+    const EditButtons = () => {
         if(!editMode) {
             return (
                 <Button variant="contained"
@@ -472,11 +435,18 @@ export function SolutionPage ({professors, courses, rooms, times})
         }
         else {
             return (
-                <Button variant="contained"
-                    onClick={saveEdits}
-                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                    <Typography variant="text" color="secondary">Save Edits</Typography>
-                </Button>
+                <div>
+                    <Button variant="contained"
+                        onClick={saveEdits}
+                        sx={{position:'absolute', bottom:'12vh', left:'13.5vw'}}>
+                        <Typography variant="text" color="secondary">Save Edits</Typography>
+                    </Button>
+                    <Button variant="contained"
+                        onClick={cancelEdits}
+                        sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                        <Typography variant="text" color="secondary">Cancel Edits</Typography>
+                    </Button>
+                </div>
             )
         }
     }
@@ -497,7 +467,7 @@ export function SolutionPage ({professors, courses, rooms, times})
     
     useEffect(() => {
         //console.log(tempSolutionEntries);
-    }, [tempSolutionEntries]); 
+    }, [tempSolutionEntries, editSolutionEntries]); 
 
     const TableHeaders = () => {
         if(!editMode) {
@@ -511,7 +481,7 @@ export function SolutionPage ({professors, courses, rooms, times})
             )
         }
         else {
-            return (
+            return ( 
                 <tr className="row">
                     <th scope="col">Time</th>
                     <th scope="col">Course</th>
@@ -522,14 +492,108 @@ export function SolutionPage ({professors, courses, rooms, times})
             )
         }
     }
+
+    //====== Edit Funcitonality Functions ======================
+
+    function addEditSection(timeString, solutionNumber){
+        let tempSolutions = editSolutionEntries;
+        console.log('Temp', tempSolutions);
+        let timeId = mapTimeStringToId(timeString);
+
+        let newEntry = {
+            professor: 0,
+            course: 0,
+            time: timeId,
+            room: 0
+        }
+        /**
+         * Desired structure =>
+         * temp = [{..}, {..}] =>
+         * temp[0] = {solutionNum: 0, entry:Array(2)}
+         * temp[0].entry[0] = {professor: 51, course: 7876, time: 4, room: 6}
+         * 
+         * temp[solutionNumber].entry,push(newEntry)
+         */
+        let tempEntryArray = tempSolutions[solutionNumber].entry
+        tempEntryArray.push(newEntry);
+
+        tempSolutions[solutionNumber].entry = tempEntryArray;
+        console.log('Temp', tempSolutions);
+
+        setEditSolutionEntries(tempSolutions);
+    }
+
+    const SolutionItemDisplay = ({solutionTimes, solutionNumber}) => {
+        return solutionTimes.map((solutionTime) => 
+        {
+            return <SolutionItem courseEntries={solutionTime.entries}
+                                time={solutionTime.time}
+                                professors={professors}
+                                courses={courses}
+                                rooms={rooms}
+                                editMode = {editMode}
+                                solutionNumber = {solutionNumber}
+                                onAddEditSection = {addEditSection}/>
+        })
+    }
+
+    const SolutionTabs = () => {
+
+        if(!editMode){
+            return tempSolutionEntries?.map((solution) =>
+            {
+                //console.log('tempSolutionEntries', tempSolutionEntries);
+                //console.log(solution);
+                let solutionTimes = getTimes(solution.entry);
+                console.log(solutionTimes);
+                return <TabPanel value={page} index={solution.solutionNum}>
+                            <table className="schedule">
+                                <tbody>
+                                    <TableHeaders></TableHeaders>
+
+                                    <SolutionItemDisplay solutionTimes={solutionTimes} solutionNumber={solution.solutionNum}></SolutionItemDisplay>
+
+                                </tbody>
+                            </table>
+                            <EditButtons></EditButtons>
+
+                            <Button variant="contained" 
+                                onClick={saveSchedule(solution)}
+                                sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
+                                <Typography variant="text" color="secondary">Save Solution</Typography>
+                            </Button>
+                        </TabPanel>;
+            })
+        }
+        else {
+            return editSolutionEntries?.map((solution) =>
+            {
+                //console.log('EDITSolutionEntries', editSolutionEntries);
+                //console.log(solution);
+                let solutionTimes = getTimes(solution.entry);
+                //console.log(solutionTimes);
+                return <TabPanel value={page} index={solution.solutionNum}>
+                            <table className="schedule">
+                                <tbody>
+                                    <TableHeaders></TableHeaders>
+
+                                    <SolutionItemDisplay solutionTimes={solutionTimes} solutionNumber={solution.solutionNum}></SolutionItemDisplay>
+
+                                </tbody>
+                            </table>
+                            <EditButtons></EditButtons>
+
+                        </TabPanel>;
+            })
+        }
+    }
     
     if(isAlgoCalculating){
         return(
             <Box sx={{ 
-                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',}}>
-                Calculating your Schedule
+                <h4>Calculating your Schedule</h4> <br />
                 <CircularProgress />
             </Box>
         );
@@ -545,7 +609,7 @@ export function SolutionPage ({professors, courses, rooms, times})
                 <div className="schedule-container">
                     {/* Tabs */}
                     <Tabs value={page} onChange={handleChange} aria-label="basic tabs example">
-                        {console.log('Solution', tempSolutionEntries)}
+                        {/*console.log('Solution', tempSolutionEntries)*/}
                         {tempSolutionEntries?.map((solution) =>
                         {
                             const tabName = "Solution " + (solution.solutionNum + 1);
@@ -557,40 +621,7 @@ export function SolutionPage ({professors, courses, rooms, times})
 
                     {/* Tab panels switched based on Tabs.
                         They display different schedule solutions */}
-                    {tempSolutionEntries?.map((solution) =>
-                        {
-                            console.log('tempSolutionEntries', tempSolutionEntries);
-                            console.log(solution);
-                            let solutionTimes = getTimes(solution.entry);
-                            console.log(solutionTimes);
-                            return <TabPanel value={page} index={solution.solutionNum}>
-                                        <table className="schedule">
-                                            <tbody>
-                                                <TableHeaders></TableHeaders>
-
-                                                {solutionTimes.map((solutionTime) =>
-                                                    {
-                                                        return <SolutionItem courseEntries={solutionTime.entries}
-                                                                            time={solutionTime.time}
-                                                                            professors={professors}
-                                                                            courses={courses}
-                                                                            rooms={rooms}
-                                                                            editMode = {editMode}
-                                                                />
-                                                    })
-                                                }
-                                            </tbody>
-                                        </table>
-                                        <EditButtons></EditButtons>
-
-                                        <Button variant="contained" 
-                                            onClick={saveSchedule(solution)}
-                                            sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                                            <Typography variant="text" color="secondary">Save Solution</Typography>
-                                        </Button>
-                                    </TabPanel>;
-                        }
-                    )}
+                    <SolutionTabs></SolutionTabs>
 
                     {/* settings 
                     <PopupState variant="popover">

@@ -66,6 +66,10 @@ td
     position: relative;
     display: inline-block;
   }
+
+  .tooltip:hover {
+    cursor: pointer;
+  }
   
   /* Tooltip text */
   .tooltip .tooltiptext {
@@ -105,4 +109,9 @@ td
   .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+  }
+
+  .checkbox-dev {
+    margin: auto;
+    text-align: center;
   }
