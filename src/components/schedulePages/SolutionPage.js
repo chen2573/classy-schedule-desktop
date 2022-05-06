@@ -23,7 +23,7 @@ import { TempleHinduSharp } from '@mui/icons-material';
  * @param time the time slot
  * @returns a table row item containing all courses entry in a time slot
  */
-const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, onDeleteEditSection, solutionNumber}) =>
+const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, onDeleteEditSection, solutionNumber, onChangeDropDown}) =>
 {
     console.log("Entries", courseEntries);
     //console.log("Item", solutionNumber);
@@ -102,6 +102,8 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         </td></tr></tbody></table>
                                 }
                                 else {
+
+
                                     return <table key={entry.course}><tbody><tr key={entry.course} ><td>
                                     <FormControl fullWidth>
                                         <InputLabel shrink id="label">Course</InputLabel>
@@ -116,7 +118,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         }}}
                                         value={entry.course}
                                         label="Course Name"
-                                        onChange={(e) => console.log(e.target.value)}
+                                        onChange={(e) => onChangeDropDown(time, solutionNumber, entry.id, e.target.value, 'COURSE')}
                                         >
                                         {courses.map(course => (
                                             <MenuItem 
@@ -171,7 +173,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         }}}
                                         value={entry.room}
                                         label="Room"
-                                        onChange={(e) => console.log(e.target.value)}
+                                        onChange={(e) => onChangeDropDown(time, solutionNumber, entry.id, e.target.value, 'ROOM')}
                                         >
                                         {rooms.map(room => (
                                             <MenuItem 
@@ -225,7 +227,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         }}}
                                         value={entry.professor}
                                         label="Professor"
-                                        onChange={(e) => console.log(e.target.value)}
+                                        onChange={(e) => onChangeDropDown(time, solutionNumber, entry.id, e.target.value, 'PROF')}
                                         >
                                         {professors.map(professor => (
                                             <MenuItem 
@@ -561,6 +563,63 @@ export function SolutionPage ({professors, courses, rooms, times})
         return tempSolutions;
     }
 
+    function setNewDropValue(time, solutionNumber, entryId, newValue, valueChanging) {
+            let tempSolutions = editSolutionEntries;
+            setEditSolutionEntries([...helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging)])
+    }
+
+    function helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging) {
+        if(valueChanging === 'COURSE'){
+            let entryArray = tempSolutions[solutionNumber].entry;
+            
+            let newArray = entryArray.map((temp) => {
+                if(temp.id === entryId){
+                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room}
+                    return ret;
+                }
+                else{
+                    return temp;
+                }
+            });
+            
+            tempSolutions[solutionNumber].entry = newArray;
+            return tempSolutions;
+        }
+        else if(valueChanging === 'ROOM'){
+            let entryArray = tempSolutions[solutionNumber].entry;
+            
+            let newArray = entryArray.map((temp) => {
+                if(temp.id === entryId){
+                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue}
+                    return ret;
+                }
+                else{
+                    return temp;
+                }
+            });
+            
+            tempSolutions[solutionNumber].entry = newArray;
+            return tempSolutions;
+            
+        }
+        else if(valueChanging === 'PROF'){
+            let entryArray = tempSolutions[solutionNumber].entry;
+            
+            let newArray = entryArray.map((temp) => {
+                if(temp.id === entryId){
+                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room}
+                    return ret;
+                }
+                else{
+                    return temp;
+                }
+            });
+            
+            tempSolutions[solutionNumber].entry = newArray;
+            return tempSolutions;
+        }
+    }
+
     const SolutionItemDisplay = ({solutionTimes, solutionNumber}) => {
         return solutionTimes.map((solutionTime) => 
         {   
@@ -572,7 +631,8 @@ export function SolutionPage ({professors, courses, rooms, times})
                                 editMode = {editMode}
                                 solutionNumber = {solutionNumber}
                                 onAddEditSection = {addEditSection}
-                                onDeleteEditSection = {deleteEditSection}/>
+                                onDeleteEditSection = {deleteEditSection}
+                                onChangeDropDown = {setNewDropValue}/>
         })
     }
 
