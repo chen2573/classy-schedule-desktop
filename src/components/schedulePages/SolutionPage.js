@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
-import Checkbox from '@mui/material/Checkbox';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -23,7 +23,7 @@ import { TempleHinduSharp } from '@mui/icons-material';
  * @param time the time slot
  * @returns a table row item containing all courses entry in a time slot
  */
-const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, solutionNumber}) =>
+const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, onDeleteEditSection, solutionNumber}) =>
 {
     console.log("Entries", courseEntries);
     //console.log("Item", solutionNumber);
@@ -47,11 +47,10 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
     const DeleteColumnElement = ({entries}) => {
         return (entries.map((entry) =>
         {
-            //return table entry
             return(
             <table ><tbody><tr  ><td>
-                <div className="tooltip checkbox-div" >
-                <Checkbox size="large" inputProps={{ 'aria-label': 'controlled' }}/>
+                <div className="tooltip checkbox-div" onClick={() => onDeleteEditSection(time, solutionNumber, entry.id)}>
+                <DeleteIcon size="large" inputProps={{ 'aria-label': 'controlled' }}/>
                     <span className="tooltiptext">Delete Section</span> 
                 </div>    
             </td></tr></tbody></table>)
@@ -415,10 +414,12 @@ export function SolutionPage ({professors, courses, rooms, times})
     }
 
     function saveEdits() {
+        setTempSolutionEntries(editSolutionEntries);
         setEditMode(false);
     }
 
     function cancelEdits() {
+        setEditSolutionEntries(tempSolutionEntries);
         setEditMode(false);
     }
     //===========================================
@@ -505,13 +506,23 @@ export function SolutionPage ({professors, courses, rooms, times})
         let tempSolutions = editSolutionEntries;
         
         setEditSolutionEntries([...helperAddEditSection(timeString, solutionNumber, tempSolutions)]);
-        console.log('Temp', tempSolutions);
+        //console.log('Temp', tempSolutions);
     }
 
+    /**
+     * 
+     * @param timeString - the time period to add the section
+     * @param solutionNumber - the solution number we are working with.
+     * @param tempSolutions = a soft copy of the state variable of edit solutions.
+     * @returns 
+     */
     function helperAddEditSection(timeString, solutionNumber, tempSolutions){
         let timeId = mapTimeStringToId(timeString);
-        
+
+        const id = Math.floor(Math.random() * 10000) + 1;
+
         let newEntry = {
+            id: id,
             professor: -1,
             course: -1,
             time: timeId,
@@ -532,9 +543,27 @@ export function SolutionPage ({professors, courses, rooms, times})
         return tempSolutions;
     }
 
+    function deleteEditSection(timeString, solutionNumber, entryId){
+        let tempSolutions = editSolutionEntries;
+        console.log(tempSolutions);
+        
+        setEditSolutionEntries([...helperDeleteEditSection(timeString, solutionNumber, tempSolutions, entryId)]);
+        //console.log('Temp', tempSolutions);
+    }
+
+    function helperDeleteEditSection(timeString, solutionNumber, tempSolutions, entryId) {
+
+        let entryArray = tempSolutions[solutionNumber].entry
+        let tempEntryArray = entryArray.filter((entry) => entry.id != entryId);
+
+        tempSolutions[solutionNumber].entry = tempEntryArray;
+
+        return tempSolutions;
+    }
+
     const SolutionItemDisplay = ({solutionTimes, solutionNumber}) => {
         return solutionTimes.map((solutionTime) => 
-        {
+        {   
             return <SolutionItem courseEntries={solutionTime.entries}
                                 time={solutionTime.time}
                                 professors={professors}
@@ -542,7 +571,8 @@ export function SolutionPage ({professors, courses, rooms, times})
                                 rooms={rooms}
                                 editMode = {editMode}
                                 solutionNumber = {solutionNumber}
-                                onAddEditSection = {addEditSection}/>
+                                onAddEditSection = {addEditSection}
+                                onDeleteEditSection = {deleteEditSection}/>
         })
     }
 
