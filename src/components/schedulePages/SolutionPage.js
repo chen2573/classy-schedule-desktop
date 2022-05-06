@@ -11,6 +11,7 @@ import './../../assets/styles/Solution.css';
 
 import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
 import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
+import { TempleHinduSharp } from '@mui/icons-material';
 //const payload.data = require("../../utils/solution.json");
 
 
@@ -347,6 +348,7 @@ export function SolutionPage ({professors, courses, rooms, times})
     const getTimes = (solution) =>
     {
         let solutionTimes = [];
+        console.log(solution);
 
         for (let time of times)
         {
@@ -464,11 +466,6 @@ export function SolutionPage ({professors, courses, rooms, times})
         });
     }
 
-    
-    useEffect(() => {
-        //console.log(tempSolutionEntries);
-    }, [tempSolutionEntries, editSolutionEntries]); 
-
     const TableHeaders = () => {
         if(!editMode) {
             return (
@@ -495,16 +492,30 @@ export function SolutionPage ({professors, courses, rooms, times})
 
     //====== Edit Funcitonality Functions ======================
 
+    /**
+     * This function is attached to the add symbol in the Time column. This function is designed to add a section into
+     * a specified time slot. With the help with the helper function we are able to do this.
+     * 
+     * https://www.youtube.com/watch?v=0iNDB-2fg8A&ab_channel=WebDevJunkie 
+     * This video helped me solve the issue of the parent component not rendering when I wanted it to.
+     * @param timeString - the string found in the time object
+     * @param solutionNumber - the solution number we are working with
+     */
     function addEditSection(timeString, solutionNumber){
         let tempSolutions = editSolutionEntries;
+        
+        setEditSolutionEntries([...helperAddEditSection(timeString, solutionNumber, tempSolutions)]);
         console.log('Temp', tempSolutions);
-        let timeId = mapTimeStringToId(timeString);
+    }
 
+    function helperAddEditSection(timeString, solutionNumber, tempSolutions){
+        let timeId = mapTimeStringToId(timeString);
+        
         let newEntry = {
-            professor: 0,
-            course: 0,
+            professor: -1,
+            course: -1,
             time: timeId,
-            room: 0
+            room: -1
         }
         /**
          * Desired structure =>
@@ -512,15 +523,13 @@ export function SolutionPage ({professors, courses, rooms, times})
          * temp[0] = {solutionNum: 0, entry:Array(2)}
          * temp[0].entry[0] = {professor: 51, course: 7876, time: 4, room: 6}
          * 
-         * temp[solutionNumber].entry,push(newEntry)
+         * temp[solutionNumber].entry.push(newEntry)
          */
         let tempEntryArray = tempSolutions[solutionNumber].entry
         tempEntryArray.push(newEntry);
 
         tempSolutions[solutionNumber].entry = tempEntryArray;
-        console.log('Temp', tempSolutions);
-
-        setEditSolutionEntries(tempSolutions);
+        return tempSolutions;
     }
 
     const SolutionItemDisplay = ({solutionTimes, solutionNumber}) => {
@@ -568,7 +577,7 @@ export function SolutionPage ({professors, courses, rooms, times})
         else {
             return editSolutionEntries?.map((solution) =>
             {
-                //console.log('EDITSolutionEntries', editSolutionEntries);
+                console.log('EDITSolutionEntries', editSolutionEntries);
                 //console.log(solution);
                 let solutionTimes = getTimes(solution.entry);
                 //console.log(solutionTimes);
@@ -587,7 +596,12 @@ export function SolutionPage ({professors, courses, rooms, times})
             })
         }
     }
-    
+
+
+    useEffect(() => {
+        console.log('USEEffect',editSolutionEntries);
+    }, [tempSolutionEntries, editSolutionEntries]);
+
     if(isAlgoCalculating){
         return(
             <Box sx={{ 
