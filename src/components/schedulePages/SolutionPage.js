@@ -11,7 +11,7 @@ import './../../assets/styles/Solution.css';
 
 import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
 import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
-import { TempleHinduSharp } from '@mui/icons-material';
+
 //const payload.data = require("../../utils/solution.json");
 
 
@@ -118,7 +118,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         }}}
                                         value={entry.course}
                                         label="Course Name"
-                                        onChange={(e) => onChangeDropDown(time, solutionNumber, entry.id, e.target.value, 'COURSE')}
+                                        onChange={(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'COURSE')}
                                         >
                                         {courses.map(course => (
                                             <MenuItem 
@@ -173,7 +173,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         }}}
                                         value={entry.room}
                                         label="Room"
-                                        onChange={(e) => onChangeDropDown(time, solutionNumber, entry.id, e.target.value, 'ROOM')}
+                                        onChange={(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'ROOM')}
                                         >
                                         {rooms.map(room => (
                                             <MenuItem 
@@ -227,7 +227,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                         }}}
                                         value={entry.professor}
                                         label="Professor"
-                                        onChange={(e) => onChangeDropDown(time, solutionNumber, entry.id, e.target.value, 'PROF')}
+                                        onChange={(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'PROF')}
                                         >
                                         {professors.map(professor => (
                                             <MenuItem 
@@ -512,11 +512,11 @@ export function SolutionPage ({professors, courses, rooms, times})
     }
 
     /**
-     * 
+     * This function is a helper function for the add button. It returns a new array with an added object for the specified time slot.
      * @param timeString - the time period to add the section
      * @param solutionNumber - the solution number we are working with.
      * @param tempSolutions = a soft copy of the state variable of edit solutions.
-     * @returns 
+     * @returns a new array with modified object
      */
     function helperAddEditSection(timeString, solutionNumber, tempSolutions){
         let timeId = mapTimeStringToId(timeString);
@@ -545,15 +545,27 @@ export function SolutionPage ({professors, courses, rooms, times})
         return tempSolutions;
     }
 
-    function deleteEditSection(timeString, solutionNumber, entryId){
+    /**
+     * This function deletes a section by id.
+     * @param solutionNumber - the solution number we are working with
+     * @param entryId - the id of the section that is being deleted.
+     */
+    function deleteEditSection(solutionNumber, entryId){
         let tempSolutions = editSolutionEntries;
         console.log(tempSolutions);
         
-        setEditSolutionEntries([...helperDeleteEditSection(timeString, solutionNumber, tempSolutions, entryId)]);
+        setEditSolutionEntries([...helperDeleteEditSection(solutionNumber, tempSolutions, entryId)]);
         //console.log('Temp', tempSolutions);
     }
 
-    function helperDeleteEditSection(timeString, solutionNumber, tempSolutions, entryId) {
+    /**
+     * This function deletes the section that is specified.
+     * @param solutionNumber - the solution number we are working with.
+     * @param tempSolutions - the a soft copy of the edit state.
+     * @param entryId - the id of the section we are working with
+     * @returns a new edit state with changed values.
+     */
+    function helperDeleteEditSection(solutionNumber, tempSolutions, entryId) {
 
         let entryArray = tempSolutions[solutionNumber].entry
         let tempEntryArray = entryArray.filter((entry) => entry.id != entryId);
@@ -563,11 +575,27 @@ export function SolutionPage ({professors, courses, rooms, times})
         return tempSolutions;
     }
 
-    function setNewDropValue(time, solutionNumber, entryId, newValue, valueChanging) {
+    /**
+     * This function updates the value being stored in the dropdown. This function runs when a value is changed for any dropdown.
+     * @param solutionNumber - the solution that number we are working with.
+     * @param entryId - the id of the section that is being changed.
+     * @param newValue - the value of the dropdown that is being changed.
+     * @param valueChanging - specifies which type of dropdown is changing (COURSE, ROOM, PROF)
+     */
+    function setNewDropValue(solutionNumber, entryId, newValue, valueChanging) {
             let tempSolutions = editSolutionEntries;
             setEditSolutionEntries([...helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging)])
     }
 
+    /**
+     * 
+     * @param solutionNumber - the solution number that we are working with.
+     * @param tempSolutions - a soft copy of the edit state.
+     * @param entryId - the id of the 
+     * @param newValue 
+     * @param valueChanging 
+     * @returns 
+     */
     function helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging) {
         if(valueChanging === 'COURSE'){
             let entryArray = tempSolutions[solutionNumber].entry;
