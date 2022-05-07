@@ -86,10 +86,17 @@ const SolutionDashboard = ({plans, setCurrentPage}) => {
                     </div>
                     
                     {/* generate schedule button */}
-                    <Button variant="contained" sx={{position:'absolute', bottom:'48vh', right:'24vw'}} onClick={()=>{setCurrentPage('AddSolution')}}>
+                    <Button variant="contained" sx={{position:'absolute', bottom:'48vh', right:'30vw'}} onClick={()=>{setCurrentPage('AddSolution')}}>
                         <Box>
                             <AddIcon color="secondary"/>
-                            <p className="button-text">Add Schedule</p>
+                            <p className="button-text">Optimized Schedule</p>
+                        </Box>
+                    </Button>
+
+                    <Button variant="contained" sx={{position:'absolute', bottom:'48vh', right:'16vw'}} onClick={()=>{setCurrentPage('CreateSchedule')}}>
+                        <Box>
+                            <AddIcon color="secondary"/>
+                            <p className="button-text">Create Schedule</p>
                         </Box>
                     </Button>
                 </div>
