@@ -60,6 +60,7 @@ function App() {
   const [professors, setProfessors] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [labs, setLabs] = useState([]);
+  const [times, setTimes] = useState([]);
   const [plans, setPlans] = useState([]);
 
   /**
@@ -71,6 +72,7 @@ function App() {
     getLatestCoursesLabs();
     getLatestProfessors();
     getLatestRooms();
+    getLatestTimes();
     //getLatestLabs();
     getLatestPlans();
   };
@@ -643,6 +645,44 @@ function App() {
     setLabs(labs.filter((lab) => lab.id !== id));
   };
 
+  //=============== TIME Function ==========================
+  const getLatestTimes = () => {
+    // Clears up the currently stored data and gets new data in the following code.
+    // There was a bug where with every refresh, we would get duplicate state.
+    //setCourses('')
+    let stateTimes = [];
+    //console.log(sampleSolution);
+    if (window.DB === undefined || !USE_DATABASE) {
+      console.log('Using sample data');
+
+    }
+    else {
+      let _payload = {
+        request: 'REFRESH',
+        message: 'Renderer REFRESH for Times',
+      }
+
+      // Send a query to main
+      window.DB.send('toMain:Time', _payload);
+
+      // Recieve the results
+      window.DB.receive('fromMain:Time', (dataRows) => {
+        //console.log(dataRows)
+        //console.log("PLANS: ", dataRows);
+          dataRows.map((data) => {
+              let id = data.id; 
+              let time = data.time;
+              let partOfDay = data.partOfDay;
+
+              let newTime = { id, time, partOfDay};
+              stateTimes.push(newTime);
+          });
+
+          setTimes(stateTimes);
+      });
+    }
+  }
+
     /**
    * Updates an existing room.
    * @param professor - the new room information. 
@@ -767,7 +807,7 @@ function App() {
     }
     else if(currentPage === 'CreateSchedule')
     {
-      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms}/>;
+      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times}/>;
     }
     else if(currentPage === 'SolutionDashboard')
     {

@@ -287,6 +287,7 @@ function createIPCChannels() {
     addProfessorChannel();
     addCourseChannel();
     addRoomChannel();
+    addTimeChannel();
     addPlanChannel();
     addUpdateAndViewPlanChannel()
     addModalWindows();
@@ -643,6 +644,26 @@ function addRoomChannel(){
             });
         }
 
+    });
+}
+
+/**
+ * This function creates a database channel for Times.
+ */
+ function addTimeChannel(){
+    // Get all Courses
+    ipcMain.on("toMain:Time", (event, args) => {
+        if(args.request === 'REFRESH'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request REFRESH all TIMES")
+    
+            DB.getTimes().then((payload) => {
+                console.log("DATABASE LOG--> Successfully returned the following TIME rows\n" + payload.data + "\n");
+                mainWindow.webContents.send('fromMain:Time', payload.data);
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR returning TIMES: ' + error + + '\n');
+            });
+        }
     });
 }
 
