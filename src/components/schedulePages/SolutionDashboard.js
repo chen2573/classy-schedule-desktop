@@ -18,7 +18,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
         console.log('SolutionList', plans);
         return(
         <div className='container'>
-            <h1>Schedules</h1>
+            <h1 className = 'sticky'>Schedules</h1>
             {plans.map((currentSolution, index) => (
                 <SolutionItem key={index} plan={currentSolution} plans={plans} setCurrentPage={setCurrentPage}/>
             ))}

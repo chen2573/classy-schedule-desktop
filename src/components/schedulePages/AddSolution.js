@@ -10,6 +10,7 @@ import TopBar from '../TopBar.js';
 import DataViewer from '../DataViewer';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
+
 import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
 
 const {
@@ -36,6 +37,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [tempState, setTempState] = useState([]);
+    const [roomScrollState, setRoomScrollState] = useState(0);
+    const [courseScrollState, setCourseScrollState] = useState(0);
+    const [professorScrollState, setProfessorScrollState] = useState(0);
+    const [labsScrollState, setLabsScrollState] = useState(0);
     const colorIsRed = true;
 
     //======================== Algorithm Calculation Functions ===========================
@@ -68,7 +73,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
                     course.elementClassName = "item-selected"; 
                     console.log(response);
                     course.sections = response;
-                    
+                    setCourseScrollState(document.querySelector('#courseScroll').scrollTop);
                     setCourseSections([...courseSections, course]);
                 }
             });
@@ -77,6 +82,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
             course.sections = 0;
 
             let id = course.id;
+            setCourseScrollState(document.querySelector('#courseScroll').scrollTop);
             setCourseSections(courseSections.filter((remaingCourses) => remaingCourses.id !== id));
         }
     }
@@ -89,11 +95,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const selectRooms = (room) => () => {
         if(room.elementClassName === "item"){
             room.elementClassName = "item-selected";
-            setSelectedRooms([...selectedRooms, room]); 
+            setRoomScrollState(document.querySelector('#roomScroll').scrollTop);
+            setSelectedRooms([...selectedRooms, room]);
         }else{
             room.elementClassName = "item";
 
             let id = room.id;
+            setRoomScrollState(document.querySelector('#roomScroll').scrollTop);
             setSelectedRooms(selectedRooms.filter((remaingRooms) => remaingRooms.id !== id));
         }
     }
@@ -106,12 +114,14 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const selectProfessors = (professor) => () => {
         //console.log(professor)
         if(professor.elementClassName === "item"){
-            professor.elementClassName = "item-selected"; 
+            professor.elementClassName = "item-selected";
+            setProfessorScrollState(document.querySelector('#professorScroll').scrollTop); 
             setSelectedProfessors([...selectedProfessors, professor]); 
         }else{
             professor.elementClassName = "item";
 
             let id = professor.id;
+            setProfessorScrollState(document.querySelector('#professorScroll').scrollTop);
             setSelectedProfessors(selectedProfessors.filter((remaingProfs) => remaingProfs.id !== id));
         }
     }
@@ -124,12 +134,14 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const selectLabs = (lab) => () => {
         //console.log(lab)
         if(lab.elementClassName === "item"){
-            lab.elementClassName = "item-selected"; 
+            lab.elementClassName = "item-selected";
+            setLabsScrollState(document.querySelector('#labsScroll').scrollTop); 
             setSelectedLabs([...selectedLabs, lab]);
         }else{
             lab.elementClassName = "item";
 
             let id = lab.id;
+            setLabsScrollState(document.querySelector('#labsScroll').scrollTop);
             setSelectedLabs(selectedLabs.filter((remaingLabs) => remaingLabs.id !== id));
         }
     }
@@ -149,7 +161,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     function resetStyles() {
         for(const key in courses){
             courses[key].elementClassName = 'item';
-            //courses[key].sections = 0;
+            courses[key].sections = 0;
         }
 
         for(const key in rooms){
@@ -182,12 +194,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
         const LabList = ({labs, onClickLab}) => {
         return(
-        <div className='container'>
-        <h1>Labs</h1>
-        {labs.map((currentLab, index) => (
-            <LabListItem key={index} lab={currentLab} onClickLab={onClickLab} labs={labs}/>
-        ))}
-        </div>
+            <div className='container' id = "labsScroll">
+                <h1 className='sticky'>Labs</h1>
+                {labs.map((currentLab, index) => (
+                    <LabListItem key={index} lab={currentLab} onClickLab={onClickLab} labs={labs}/>
+                ))}
+            </div>
         );
     }
     
@@ -234,12 +246,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
     const ProfessorList = ({professors, onClickProfessor}) => {
         return (
-        <div className='container'>
-            <h1>Professors</h1>
-        {professors.map((currentProfessor, index) => (
-            <ProfessorListItem key={index} professor={currentProfessor} onClickProfessor={onClickProfessor} professors={professors}/>
-        ))}
-        </div>
+                <div className='container' id = "professorScroll">
+                    <h1 className = "sticky">Professors</h1>                    
+                    {professors.map((currentProfessor, index) => (
+                        <ProfessorListItem key={index} professor={currentProfessor} onClickProfessor={onClickProfessor} professors={professors}/>
+                    ))}
+                </div>
+
         );
     }
    
@@ -286,12 +299,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
         const RoomList = ({ rooms, onClickRoom }) => {
             return(
-            <div className='container'>
-            <h1>Rooms</h1>
-            {rooms.map((currentRoom, index) => (
-                <RoomListItem key={index} room={currentRoom} onClickRoom={onClickRoom} rooms={rooms}/>
-            ))}
-            </div>
+                <div className='container' id = "roomScroll">
+                    <h1 className='sticky'>Rooms</h1>
+                    {rooms.map((currentRoom, index) => (
+                        <RoomListItem key={index} room={currentRoom} onClickRoom={onClickRoom} rooms={rooms}/>
+                    ))}
+                </div>
+
             );
     }
 
@@ -338,12 +352,13 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      */
     const CourseList = ({ courses, onClickCourse }) => {
         return (
-            <div className='container'>
-                <h1>Courses</h1>
+            <div className='container' id = "courseScroll">
+                <h1 className='sticky'>Courses</h1>                
                 {courses.map((currentCourse, index) => (
                     <CourseListItem key={index} course={currentCourse} onClickCourse={onClickCourse}/>
                 ))}
             </div>
+
         );
     }
 
@@ -391,7 +406,11 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
         //console.log('COURSES', courseSections);
         //console.log('ROOMS', selectedRooms);
         //console.log('PROFS', selectedProfessors);
-        //console.log('LABS', selectedLabs)
+        //console.log('LABS', selectedLabs);
+        document.querySelector('#roomScroll').scrollTop = roomScrollState;
+        document.querySelector('#courseScroll').scrollTop = courseScrollState;
+        document.querySelector('#labsScroll').scrollTop = labsScrollState;
+        document.querySelector('#professorScroll').scrollTop = professorScrollState;
         window.addEventListener('beforeunload', (event) => {
             // Cancel the event as stated by the standard.
             event.preventDefault();
@@ -399,7 +418,21 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
           
             createAndRefresh()
           });
-    }, [courseSections, selectedRooms, selectedProfessors, selectedLabs]);
+    }, [courseSections, selectedRooms, selectedProfessors, selectedLabs, roomScrollState, courseScrollState, labsScrollState, professorScrollState]);
+    /**
+     * Resets the UI style when user leaves the page
+     */
+    useEffect(() => {
+        return () => {
+            let choice = window.confirm("You are leaving this page. Nothing will be saved!");
+            if(choice){
+                resetStyles();
+            }else{
+                setCurrentPage('AddSolution');
+            }
+
+        }
+      }, []);
 
 
     return (
