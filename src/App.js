@@ -17,6 +17,7 @@ import varValueConvert from 'cross-env/src/variable';
 import SolutionGenerate from './components/schedulePages/AddSolution';
 import AddSolution from './components/schedulePages/AddSolution.js';
 import SolutionDashboard from './components/schedulePages/SolutionDashboard';
+import CreateSolutionPage from './components/schedulePages/CreateSolutionPage';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -763,6 +764,10 @@ function App() {
     else if(currentPage === 'AddSolution')
     {
       return <AddSolution courses={courses} rooms={rooms} professors={professors} labs={labs} setCurrentPage={setCurrentPage}/>;
+    }
+    else if(currentPage === 'CreateSchedule')
+    {
+      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms}/>;
     }
     else if(currentPage === 'SolutionDashboard')
     {
