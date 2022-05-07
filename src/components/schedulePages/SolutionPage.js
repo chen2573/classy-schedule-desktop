@@ -25,7 +25,7 @@ import * as AlgoService from './../../services/algorithmServices/mainAlgorithmSe
  */
 const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, onDeleteEditSection, solutionNumber, onChangeDropDown}) =>
 {
-    console.log("Entries", courseEntries);
+    //console.log("Entries", courseEntries);
     //console.log("Item", solutionNumber);
 
     const TimeDisplay = ({time, editMode, solutionNumber, onAddEditSection}) => {
@@ -275,7 +275,7 @@ export function SolutionPage ({professors, courses, rooms, times})
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
-    const [editSolutionEntries, setEditSolutionEntries] = useState(tempSolutionEntries);
+    const [editSolutionEntries, setEditSolutionEntries] = useState([]);
 
     const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
     const [editMode, setEditMode] = useState(false);
@@ -325,8 +325,15 @@ export function SolutionPage ({professors, courses, rooms, times})
         }
         //console.log(solutionEntries);
         //setTempState([]);
-        setTempSolutionEntries(solutionEntries);
-        setEditSolutionEntries(solutionEntries);
+
+        // This makes a deep copy of the 2D array which an array of objects.
+        // This fixes aliasing issues that were occuring when working with two arrays.
+        // REF: https://attacomsian.com/blog/javascript-deep-clone-array
+        let mainArray = JSON.parse(JSON.stringify(solutionEntries));
+        let editArray = JSON.parse(JSON.stringify(solutionEntries));
+
+        setTempSolutionEntries(mainArray);
+        setEditSolutionEntries(editArray);
 
         setSelectedCourses(payload.setCourses);
         setSelectedProfessors(payload.setProfessors);
@@ -349,7 +356,7 @@ export function SolutionPage ({professors, courses, rooms, times})
     const getTimes = (solution) =>
     {
         let solutionTimes = [];
-        console.log(solution);
+        //console.log(solution);
 
         for (let time of times)
         {
@@ -416,12 +423,39 @@ export function SolutionPage ({professors, courses, rooms, times})
     }
 
     function saveEdits() {
-        setTempSolutionEntries(editSolutionEntries);
-        setEditMode(false);
+        let newArray = JSON.parse(JSON.stringify(editSolutionEntries));
+        let areAllDropDownsValid = checkForMissingValues(newArray);
+
+        if(areAllDropDownsValid){
+            setTempSolutionEntries(newArray);
+            setEditMode(false);
+        }
+    }
+
+    function checkForMissingValues(array) {
+        let entryArrays = array[page].entry;
+
+        for(let i=0; i<entryArrays.length; i++){
+            if(entryArrays[i].course === -1){
+                window.alert('Invalid Input.\nPlease select a Course!');
+                return false;
+            }
+            if(entryArrays[i].room === -1){
+                window.alert('Invalid Input.\nPlease select a Room!');
+                return false;
+            }
+            if(entryArrays[i].professor === -1){
+                window.alert('Invalid Input.\nPlease select a Professor!');
+                return false;
+            }
+        }
+        return true;
     }
 
     function cancelEdits() {
-        setEditSolutionEntries(tempSolutionEntries);
+        let newArray = JSON.parse(JSON.stringify(tempSolutionEntries));
+
+        setEditSolutionEntries(newArray);
         setEditMode(false);
     }
     //===========================================
@@ -462,7 +496,7 @@ export function SolutionPage ({professors, courses, rooms, times})
     const saveSchedule = (solution) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
             //SolutionService.saveScheduleToPlan()
-            console.log(data);
+            //console.log(data);
         })
         .catch((error) => {
             console.log(error);
@@ -494,10 +528,9 @@ export function SolutionPage ({professors, courses, rooms, times})
     }
 
     //====== Edit Funcitonality Functions ======================
-
     /**
      * This function is attached to the add symbol in the Time column. This function is designed to add a section into
-     * a specified time slot. With the help with the helper function we are able to do this.
+     * a specified time slot. With the help of the helper function we are able to do this.
      * 
      * https://www.youtube.com/watch?v=0iNDB-2fg8A&ab_channel=WebDevJunkie 
      * This video helped me solve the issue of the parent component not rendering when I wanted it to.
@@ -588,13 +621,12 @@ export function SolutionPage ({professors, courses, rooms, times})
     }
 
     /**
-     * 
+     * This is a helper function that create the new array with the modified values.
      * @param solutionNumber - the solution number that we are working with.
      * @param tempSolutions - a soft copy of the edit state.
      * @param entryId - the id of the 
      * @param newValue 
-     * @param valueChanging 
-     * @returns 
+     * @param valueChanging  
      */
     function helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging) {
         if(valueChanging === 'COURSE'){
@@ -672,7 +704,7 @@ export function SolutionPage ({professors, courses, rooms, times})
                 //console.log('tempSolutionEntries', tempSolutionEntries);
                 //console.log(solution);
                 let solutionTimes = getTimes(solution.entry);
-                console.log(solutionTimes);
+                //(solutionTimes);
                 return <TabPanel value={page} index={solution.solutionNum}>
                             <table className="schedule">
                                 <tbody>
@@ -695,7 +727,7 @@ export function SolutionPage ({professors, courses, rooms, times})
         else {
             return editSolutionEntries?.map((solution) =>
             {
-                console.log('EDITSolutionEntries', editSolutionEntries);
+                //('EDITSolutionEntries', editSolutionEntries);
                 //console.log(solution);
                 let solutionTimes = getTimes(solution.entry);
                 //console.log(solutionTimes);
@@ -717,7 +749,8 @@ export function SolutionPage ({professors, courses, rooms, times})
 
 
     useEffect(() => {
-        console.log('USEEffect',editSolutionEntries);
+        console.log('USEEffect EDIT',editSolutionEntries);
+        console.log('USEEffect MAIN', tempSolutionEntries);
     }, [tempSolutionEntries, editSolutionEntries]);
 
     if(isAlgoCalculating){
@@ -731,6 +764,9 @@ export function SolutionPage ({professors, courses, rooms, times})
         );
     }
     else {
+        console.log(tempSolutionEntries);
+        console.log(editSolutionEntries);
+
         return (
             <div className="solutions-container">
                 <Box sx={{ width: '100%'}}>
