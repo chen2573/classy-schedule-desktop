@@ -41,6 +41,8 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const [courseScrollState, setCourseScrollState] = useState(0);
     const [professorScrollState, setProfessorScrollState] = useState(0);
     const [labsScrollState, setLabsScrollState] = useState(0);
+
+    const [stateCurrentPage, setStateCurrentPage] = useState('');
     const colorIsRed = true;
 
     //======================== Algorithm Calculation Functions ===========================
@@ -150,9 +152,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * This function is called when the Add Schedule button is clicked.
      * This function will reset all the cards to unselected style.
      */
-    function createAndRefresh(){
-        resetStyles();    
+    function createAndRefresh(){   
         createNewSchedule();
+        resetStyles(); 
     }
     
     /**
@@ -182,6 +184,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * a json from the variables and run the scheduling algorithm. The current page will then move to the solution viewer page.
      */
     function createNewSchedule(){
+        setStateCurrentPage('schedule');
         AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs, 300, 3);
         setCurrentPage('schedule');
     }
@@ -422,17 +425,18 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     /**
      * Resets the UI style when user leaves the page
      */
-    useEffect(() => {
-        return () => {
-            let choice = window.confirm("You are leaving this page. Nothing will be saved!");
-            if(choice){
-                resetStyles();
-            }else{
-                setCurrentPage('AddSolution');
-            }
-
-        }
-      }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         if(stateCurrentPage !== 'schedule'){
+    //             let choice = window.confirm("You are about to leave this page. Your selections will be lost!");
+    //             if(choice){
+    //                 resetStyles();
+    //             }else{
+    //                 setCurrentPage('AddSolution');
+    //             }
+    //         }
+    //     }
+    //   }, [stateCurrentPage]);
 
 
     return (
