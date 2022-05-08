@@ -18,6 +18,7 @@ import SolutionGenerate from './components/schedulePages/AddSolution';
 import AddSolution from './components/schedulePages/AddSolution.js';
 import SolutionDashboard from './components/schedulePages/SolutionDashboard';
 import CreateSolutionPage from './components/schedulePages/CreateSolutionPage';
+import ViewSolution from './components/schedulePages/ViewSolution';
 
 /**
  * Toggle to get data from database or use sample data.
@@ -799,7 +800,7 @@ function App() {
     }
     else if (currentPage === 'schedule')
     {
-      return <SolutionPage professors={professors} courses={courses} rooms={rooms}/>;
+      return <SolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
     }
     else if(currentPage === 'AddSolution')
     {
@@ -809,13 +810,17 @@ function App() {
     {
       return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
     }
+    else if (currentPage === 'UpdateSolution')
+    {
+      return <ViewSolution professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
+    }
     else if(currentPage === 'SolutionDashboard')
     {
       return <SolutionDashboard plans = {plans} setCurrentPage={setCurrentPage}/>;
     }
-    else if(currentPage === 'UpdateSolution')
+    else if(currentPage === 'a')
     {
-      return <UpdateSolution courses={courses} rooms={rooms} professors={professors} labs={labs}/>;
+      return <UpdateSolution courses={courses} rooms={rooms} professors={professors} labs={labs} times={times}/>;
     }
     else
     {
