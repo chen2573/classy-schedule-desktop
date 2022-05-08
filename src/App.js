@@ -807,7 +807,7 @@ function App() {
     }
     else if(currentPage === 'CreateSchedule')
     {
-      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times}/>;
+      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
     }
     else if(currentPage === 'SolutionDashboard')
     {
