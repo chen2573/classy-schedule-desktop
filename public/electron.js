@@ -818,7 +818,7 @@ function addModalWindows(){
 
                 let _payload = {
                     status: 'SUCCESS',
-                    message: "Schedule updated successfully!",
+                    message: "Schedule created successfully!",
                 };
                 mainWindow.webContents.send('fromMain:Plan', _payload);
 
@@ -858,32 +858,44 @@ function addModalWindows(){
                 mainWindow.webContents.send('fromMain:Plan', _payload);
             });
         }
-        // else if(args.request === 'DELETE'){
-        //     console.log("DATABASE LOG --> " + args.message)
-        //     console.log("DATABASE LOG --> " + "Making request DELETE a ROOM")
+        else if(args.request === 'DELETE_PLAN'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request DELETE section for plan: "+args.id);
+
+            DB.deleteMultipleSections(args.id).then((payload) => {
+                console.log("DATABASE LOG--> Successfully deleted SECTIONS for planId: " +args.id+ "\n");
+                console.log("DATABASE LOG --> " + "Making request DELETE plan: "+args.id);
+                
+                DB.deletePlan(args.id).then((payload) => {
+                    console.log("DATABASE LOG --> " + "Successfully deleted plan: "+args.id);
+                    let _payload = {
+                        status: 'SUCCESS',
+                        message: "Schedule deleted successfully!",
+                    };
+                    mainWindow.webContents.send('fromMain:Plan', _payload);
+
+                }).catch((error) => {
+                    console.error('!!!DATABASE LOG--> ERROR deleting PLAN: ' + error + '\n');
+                    let _payload = {
+                        status: 'FAIL',
+                        message: "Error! Unable to delete Schedule.",
+                        errorCode: error
+                    };
     
-        //     DB.deleteRoom(args.roomId).then((payload) => {
-        //         console.log("DATABASE LOG--> Successfully deleted ROOM with room id: " + args.roomId + "\n");
+                    mainWindow.webContents.send('fromMain:Plan', _payload);
+                });
 
-        //         let _payload = {
-        //             status: 'SUCCESS',
-        //             message: "Room deleted successfully!",
-        //             roomId: payload.data.roomId
-        //         };
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR deleting SECTIONS: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to delete sections.",
+                    errorCode: error
+                };
 
-        //         mainWindow.webContents.send('fromMain:Room', _payload);
-        //     }).catch((error) => {
-        //         console.log('!!!DATABASE LOG--> ERROR deleting room: ' + error + '\n');
-        //         let _payload = {
-        //             status: 'FAIL',
-        //             message: "Error! Unable to delete room.",
-        //             errorCode: error
-        //         };
-
-        //         mainWindow.webContents.send('fromMain:Room', _payload);
-        //     });
-        // }
-
+                mainWindow.webContents.send('fromMain:Plan', _payload);
+            });
+        }
     });
 }
 

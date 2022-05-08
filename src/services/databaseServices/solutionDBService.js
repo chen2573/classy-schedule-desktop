@@ -109,6 +109,42 @@ export function createPlan(solution, professors, courses, rooms, programs) {
 }
 
 /**
+ * This function will send a signal to electron to make an API call to delete a plan.
+ * @param planId - the id of the plan going to be deleted. This will be used for deleting the sections and then the plan.
+ */
+export function deletePlan(planId) {
+    let _payload = {
+        request: 'DELETE_PLAN',
+        message: 'Renderer making request to delete plan.',
+        id: planId,
+    }
+
+    let choice = window.confirm('Are you sure you want to remove this Schedule?\nThis will be permanent.')
+    
+    if(choice){
+        window.DB.send("toMain:Plan", _payload);
+
+        return new Promise((resolve, reject) => {
+            window.DB.receive('fromMain:Plan', (data) => {
+                if(data.status === 'SUCCESS') {
+                    window.alert(data.message);
+                    resolve(1);
+                }
+                else {
+                    window.alert(data.message);
+                    resolve(-1);
+                }
+            });
+        });
+    }
+    else {
+        return new Promise((resolve, reject) => {
+            resolve('User Cancelled');
+        });
+    }
+}
+
+/**
  * 
  * @param planId - the plan id that was generated from a DB call.
  * @param solution - the solution generated from a schedule page.
