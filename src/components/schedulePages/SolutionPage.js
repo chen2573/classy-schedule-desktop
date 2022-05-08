@@ -265,7 +265,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * @param rooms rooms state
  * @returns the solutions page
  */
-export function SolutionPage ({professors, courses, rooms, times})
+export function SolutionPage ({professors, courses, rooms, times, programs})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
@@ -494,7 +494,7 @@ export function SolutionPage ({professors, courses, rooms, times})
 
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution) => () => {
-        SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
+        SolutionService.createPlan(solution, professors, courses, rooms, programs).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
         })
@@ -632,9 +632,16 @@ export function SolutionPage ({professors, courses, rooms, times})
         if(valueChanging === 'COURSE'){
             let entryArray = tempSolutions[solutionNumber].entry;
             
+            let sectionNumber = 0;
+            for(let i=0; i<entryArray.length; i++){
+                if(entryArray[i].course === newValue){
+                    sectionNumber++;
+                }
+            }
+            
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room}
+                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: sectionNumber}
                     return ret;
                 }
                 else{
@@ -650,7 +657,7 @@ export function SolutionPage ({professors, courses, rooms, times})
             
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue}
+                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue, sectionNum: temp.sectionNum}
                     return ret;
                 }
                 else{
@@ -667,7 +674,7 @@ export function SolutionPage ({professors, courses, rooms, times})
             
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room}
+                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
                     return ret;
                 }
                 else{

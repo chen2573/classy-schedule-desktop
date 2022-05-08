@@ -764,11 +764,11 @@ function addModalWindows(){
 
             //console.log(args);
             DB.updatePlan(args.id, args.planName, args.description, args.year, args.semester).then((payload) => {
-                console.error('Successfully updated PLAN');
-                console.error(payload);
+                console.error('DATABASE LOG --> Successfully updated PLAN');
+                //console.error(payload);
                 let _payload = {
                     status: 'SUCCESS',
-                    message: "Plan updated successfully!",
+                    message: 'Plan updated successfully!',
                     id: payload.data.plan_id
                 };
                 
@@ -778,7 +778,6 @@ function addModalWindows(){
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to update Plan.",
-                    errorCode: error,
                     id: -1
                 };
 
@@ -818,7 +817,7 @@ function addModalWindows(){
                 console.log("DATABASE LOG--> Successfully created SECTIONS\n");
 
                 let _payload = {
-                    status: 'SUCCESS_A',
+                    status: 'SUCCESS',
                     message: "Schedule updated successfully!",
                 };
                 mainWindow.webContents.send('fromMain:Plan', _payload);
@@ -826,7 +825,7 @@ function addModalWindows(){
             }).catch((error) => {
                 console.error('!!!DATABASE LOG--> ERROR adding SECTIONS: ' + error + '\n');
                 let _payload = {
-                    status: 'FAIL_B',
+                    status: 'FAIL',
                     message: "Error! Unable to create plan.",
                     errorCode: error
                 };
@@ -843,7 +842,7 @@ function addModalWindows(){
                 console.log("DATABASE LOG--> Successfully updated SECTIONS for planId: " +args.planId+ "\n");
 
                 let _payload = {
-                    status: 'SUCCESS_B',
+                    status: 'SUCCESS',
                     message: "Schedule updated successfully!",
                 };
                 mainWindow.webContents.send('fromMain:Plan', _payload);
@@ -851,7 +850,7 @@ function addModalWindows(){
             }).catch((error) => {
                 console.error('!!!DATABASE LOG--> ERROR updating SECTIONS: ' + error + '\n');
                 let _payload = {
-                    status: 'FAIL_B',
+                    status: 'FAIL',
                     message: "Error! Unable to update plan.",
                     errorCode: error
                 };
@@ -895,8 +894,7 @@ function addUpdateAndViewPlanChannel(){
             console.log("DATABASE LOG --> " + "Making request RETRIEVING SAVED SECTIONS for plan id: " + args.planName)
 
             DB.getSavedSectionByPlanId(args.planId).then((payload) => {
-                console.log("DATABASE LOG--> Successfully created SECTIONS\n");
-                console.log(payload);
+                console.log("DATABASE LOG--> Successfully retrieved SECTIONS\n");
                 let _payload = {
                     status: 'SUCCESS',
                     message: "Plan retrieved successfully!",

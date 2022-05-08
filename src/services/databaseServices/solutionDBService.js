@@ -19,10 +19,10 @@ export function createPlan(solution, professors, courses, rooms, programs) {
     window.DB.send("toMain:Modal", _payload);
 
     window.DB.receive('fromMain:Modal', (data) => {
-        if(data.status === 'FAIL_A'){
+        if(data.status === 'FAIL'){
             window.alert(data.message + '\n' + data.errorCode);
         }
-        else if(data.status === 'SUCCESS_A'){
+        else if(data.status === 'SUCCESS'){
             let sectionJson = createSectionsJson(data.id, solution.entry, professors, courses, rooms, programs);
 
             let _payload = {
@@ -75,10 +75,10 @@ export function createPlan(solution, professors, courses, rooms, programs) {
     window.DB.send("toMain:Modal", _payload);
 
     window.DB.receive('fromMain:Modal', (data) => {
-        if(data.status === 'FAIL_B'){
-            window.alert(data.message + '\n' + data.errorCode);
+        if(data.status === 'FAIL'){
+            window.alert(data.message);
         }
-        else if(data.status === 'SUCCESS_B'){
+        else if(data.status === 'SUCCESS'){
             let sectionJson = createSectionsJson(planId, solution.entry, professors, courses, rooms, programs);
 
             let _payload = {
