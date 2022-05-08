@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="plan.css">
+    
+    <title>New Schedule</title>
+</head>
+<body>
+    <div class="container">
+        <form action="#" id="planForm">
+            <div class="title">Update Existing Schedule</div>
+            <div class="form-control">
+                <input type="text" placeholder="Enter Schedule Name" id="name" maxlength="50">
+                <div class="underline"></div>
+            </div>
+            <div class="form-control">
+                <input type="number" min="2022" max="2099" step="1" value="2022" id="year"/>
+                <div class="underline"></div>
+            </div>
+            <div class="form-control">
+                <select name="Semester" id="semester">
+                    <option value="-1">Select A Semester</option>
+                    <option value="1">J-Term</option>
+                    <option value="2">Spring</option>
+                    <option value="3">Summer</option>
+                    <option value="4">Fall</option>
+                </select>
+                <div class="underline"></div>
+            </div>
+            <div class="form-control">
+                <textarea id="description" name="description" cols="50" rows="5" placeholder="Enter schedule description..."></textarea>
+                <div class="underline"></div>
+            </div>
+            <input type="submit" value="Update" class="btn btn-block">
+            <input type="reset" value="Cancel" class="btn btn-block">
+        </form>
+    </div>
+
+    <script src="plan.js"></script>
+</body>
+</html>

@@ -101,6 +101,41 @@ function displayMainWindow() {
                 newPlanDialogue = null;
             });
         }
+        else if(args.request === 'UPDATE_PLAN') {
+            newPlanDialogue = new BrowserWindow({
+                parent: mainWindow,
+                webPreferences: {
+                    nodeIntegration: false,
+                    enableRemoteModule: true,
+                    contextIsolation: true,
+                    preload: path.join(__dirname, 'preload.js')
+                },
+                width:600,
+                height:670,
+                resizable: false,
+                center: true,
+                modal: true,
+            })
+            let payload = {
+                id: args.id,
+                name: args.name,
+                description: args.description,
+                year: args.year,
+                semester: args.semester
+            }
+            
+            newPlanDialogue.loadURL(`file://${path.join(__dirname, '/views/updatePlan/plan.html')}`);
+            setTimeout(sendContents, 1200)
+            
+            function sendContents() {
+                newPlanDialogue.webContents.send('fromMain:ModalElectron', payload);
+            }
+
+            
+            newPlanDialogue.on('close', function () {
+                newPlanDialogue = null;
+            });
+        }
     });
 }
 
@@ -722,6 +757,33 @@ function addModalWindows(){
                 mainWindow.webContents.send('fromMain:Modal', _payload);
             });
         }
+        else if(args.request === "UPDATE_EXISTING_PLAN") {
+            newPlanDialogue.close();
+            console.log("MODAL WINDOW LOG --> " + args.message)
+            console.log("MODAL WINDOW LOG --> " + "Updating plan in database")
+
+            //console.log(args);
+            DB.updatePlan(args.id, args.planName, args.description, args.year, args.semester).then((payload) => {
+                console.error('DATABASE LOG --> Successfully updated PLAN');
+                //console.error(payload);
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: 'Plan updated successfully!',
+                    id: payload.data.plan_id
+                };
+                
+                mainWindow.webContents.send('fromMain:Modal', _payload);
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR updating PLAN: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to update Plan.",
+                    id: -1
+                };
+
+                mainWindow.webContents.send('fromMain:Modal', _payload);
+            });
+        }
         else if(args.request === "CANCEL_PLAN") {
             newPlanDialogue.close();
             console.log("MODAL WINDOW LOG --> " + args.message);
@@ -756,7 +818,7 @@ function addModalWindows(){
 
                 let _payload = {
                     status: 'SUCCESS',
-                    message: "Plan created successfully!",
+                    message: "Schedule updated successfully!",
                 };
                 mainWindow.webContents.send('fromMain:Plan', _payload);
 
@@ -765,6 +827,31 @@ function addModalWindows(){
                 let _payload = {
                     status: 'FAIL',
                     message: "Error! Unable to create plan.",
+                    errorCode: error
+                };
+
+                mainWindow.webContents.send('fromMain:Plan', _payload);
+            });
+        }
+        else if(args.request === 'UPDATE_MULTIPLE'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request UPDATE MULTIPLE SECTIONS")
+            console.log(args.data);
+
+            DB.updateMultipleSections(args.planId, args.data).then((payload) => {
+                console.log("DATABASE LOG--> Successfully updated SECTIONS for planId: " +args.planId+ "\n");
+
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Schedule updated successfully!",
+                };
+                mainWindow.webContents.send('fromMain:Plan', _payload);
+
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR updating SECTIONS: ' + error + '\n');
+                let _payload = {
+                    status: 'FAIL',
+                    message: "Error! Unable to update plan.",
                     errorCode: error
                 };
 
@@ -807,13 +894,16 @@ function addUpdateAndViewPlanChannel(){
             console.log("DATABASE LOG --> " + "Making request RETRIEVING SAVED SECTIONS for plan id: " + args.planName)
 
             DB.getSavedSectionByPlanId(args.planId).then((payload) => {
-                console.log("DATABASE LOG--> Successfully created SECTIONS\n");
-                console.log(payload);
+                console.log("DATABASE LOG--> Successfully retrieved SECTIONS\n");
                 let _payload = {
                     status: 'SUCCESS',
                     message: "Plan retrieved successfully!",
                     data: payload.data,
-                    planName: args.planName
+                    planId: args.planId,
+                    planName: args.planName,
+                    planDescription: args.planDescription,
+                    planYear: args.planYear,
+                    planSemester: args.planSemester
                 };
                 mainWindow.webContents.send('fromMain:SecondaryPlan', _payload);
 

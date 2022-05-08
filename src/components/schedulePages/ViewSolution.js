@@ -276,42 +276,18 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [editSolutionEntries, setEditSolutionEntries] = useState([]);
-    const [scheduleName, setScheduleName] = useState('');
+    
+
+    const [planId, setPlanId] = useState('');
+    const [planName, setPlanName] = useState('');
+    const [planDescription, setPlanDescription] = useState('');
+    const [planYear, setPlanYear] = useState('');
+    const [planSemester, setPlanSemester] = useState('');
+
 
     const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
     const [editMode, setEditMode] = useState(false);
 
-
-    function getNewSolution() {
-        setIsAlgoCalculating(true);
-        AlgoService.createJsonOfSelectedStates(selectedCourses, selectedRooms, selectedProfessors, selectedLabs, 300, 2);
-    }
-
-    // times = 
-    // [
-    //     {
-    //         "id": 1,
-    //         "time": "MWF 8:15am",
-    //         "partOfDay": "morning"
-    //     },
-
-    //     {
-    //         "id": 2,
-    //         "time": "TR 1:30pm",
-    //         "partOfDay": "afternoon"
-    //     }
-    //     ,
-    //     {
-    //         "id": 3,
-    //         "time": "MWF 10:55am",
-    //         "partOfDay": "morning"
-    //     },
-    //     {
-    //         "id": 4,
-    //         "time": "TR 12:00pm",
-    //         "partOfDay": "afternoon"
-    //     }
-    // ];
     
     const solutionEntries = [];
     window.DB.receive('fromMain:SecondaryPlan', (payload) => {
@@ -323,7 +299,12 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
         let mainArray = JSON.parse(JSON.stringify(solutionEntries));
         let editArray = JSON.parse(JSON.stringify(solutionEntries));
 
-        setScheduleName(payload.planName);
+        setPlanId(payload.planId);
+        setPlanName(payload.planName);
+        setPlanDescription(payload.planDescription);
+        setPlanYear(payload.planYear);
+        setPlanSemester(payload.planSemester);
+
         setTempSolutionEntries(mainArray);
         setEditSolutionEntries(editArray);
 
@@ -468,11 +449,19 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
     const EditButtons = () => {
         if(!editMode) {
             return (
+                <>
                 <Button variant="contained"
                     onClick={editSolution}
                     sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                    <Typography variant="text" color="secondary">Edit Solution</Typography>
+                    <Typography variant="text" color="secondary">Edit Schedule</Typography>
                 </Button>
+
+                <Button variant="contained"
+                    onClick={editSolution}
+                    sx={{position:'absolute', bottom:'12vh', left:'14.6vw'}}>
+                    <Typography variant="text" color="#f72d2d">Delete</Typography>
+                </Button>
+                </>
             )
         }
         else {
@@ -498,6 +487,16 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
+            //SolutionService.saveScheduleToPlan()
+            //console.log(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const updateSchedule = (solution) => () => {
+        SolutionService.updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
         })
@@ -635,9 +634,16 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
         if(valueChanging === 'COURSE'){
             let entryArray = tempSolutions[solutionNumber].entry;
             
+            let sectionNumber = 0;
+            for(let i=0; i<entryArray.length; i++){
+                if(entryArray[i].course === newValue){
+                    sectionNumber++;
+                }
+            }
+            
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room}
+                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: sectionNumber}
                     return ret;
                 }
                 else{
@@ -653,7 +659,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
             
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue}
+                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue, sectionNum: temp.sectionNum}
                     return ret;
                 }
                 else{
@@ -670,7 +676,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
             
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room}
+                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
                     return ret;
                 }
                 else{
@@ -720,9 +726,15 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
                             <EditButtons></EditButtons>
 
                             <Button variant="contained" 
+                                onClick={updateSchedule(solution)}
+                                sx={{position:'absolute', bottom:'12vh', right:'18vw'}}>
+                                <Typography variant="text" color="secondary">Update This Schedule</Typography>
+                            </Button>
+                            
+                            <Button variant="contained" 
                                 onClick={saveSchedule(solution)}
                                 sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                                <Typography variant="text" color="secondary">Save Solution</Typography>
+                                <Typography variant="text" color="secondary">Save New Schedule</Typography>
                             </Button>
                         </TabPanel>;
             })
@@ -773,7 +785,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
         return (
             <div className="solutions-container">
                 <Box sx={{ width: '100%'}}>
-                    <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>{scheduleName}</Typography>
+                    <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>{planName}</Typography>
                     <hr/>
                 </Box>
 
