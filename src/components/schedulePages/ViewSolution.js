@@ -6,11 +6,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import DataViewer from '../DataViewer.js';
+import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
 import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
-import * as AlgoService from '../../services/algorithmServices/mainAlgorithmService';
+import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
 
 //const payload.data = require("../../utils/solution.json");
 
@@ -265,7 +265,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * @param rooms rooms state
  * @returns the solutions page
  */
-export function CreateSolutionPage ({professors, courses, rooms, times, programs})
+export function ViewSolution ({professors, courses, rooms, times, programs})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
@@ -276,6 +276,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [editSolutionEntries, setEditSolutionEntries] = useState([]);
+    const [scheduleName, setScheduleName] = useState('');
 
     const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
     const [editMode, setEditMode] = useState(false);
@@ -311,20 +312,47 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     //         "partOfDay": "afternoon"
     //     }
     // ];
-    console.log(times);
-
-    if(isAlgoCalculating) {
+    
+    const solutionEntries = [];
+    window.DB.receive('fromMain:SecondaryPlan', (payload) => {
         const solutionEntries = [];
-        solutionEntries.push({"solutionNum": 0, "entry": []});
+        const formattedData = formatPayloadData(payload.data);
+
+        solutionEntries.push({"solutionNum": 0, "entry": formattedData});
 
         let mainArray = JSON.parse(JSON.stringify(solutionEntries));
         let editArray = JSON.parse(JSON.stringify(solutionEntries));
 
+        setScheduleName(payload.planName);
         setTempSolutionEntries(mainArray);
         setEditSolutionEntries(editArray);
 
         setIsAlgoCalculating(false);
+    });
+
+    function getCantorPairing(a, b){
+        return (a + b) * (a + b + 1) / 2 + a;
     }
+
+    function formatPayloadData(data){
+        let retArray = [];
+        //{id: 3814, professor: 68, course: 7723, time: 10, room: 4, sectionNum: 1}
+        for(let i=0; i<data.length; i++){
+            let obj = {};
+            const id = Math.floor(Math.random() * 10000) + 1;
+
+            obj.id = id;
+            obj.professor = data[i].professor_id;
+            obj.course = getCantorPairing(data[i].dept_id, data[i].class_num);
+            obj.time = data[i].section_time_slot_id;
+            obj.room = data[i].room_id;
+            obj.sectionNum = data[i].section_num;
+
+            retArray.push(obj);
+        }
+        return retArray;
+    }
+
 
 
     //get solutions items sorted by time so we can display them chronologically in the table
@@ -469,7 +497,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
 
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution) => () => {
-        SolutionService.createPlan(solution, professors, courses, rooms, programs).then((data) => {
+        SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
         })
@@ -562,7 +590,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         let tempSolutions = editSolutionEntries;
         console.log(tempSolutions);
         
-        setEditSolutionEntries([...helperDeleteEditSection(0, tempSolutions, entryId)]);
+        setEditSolutionEntries([...helperDeleteEditSection(solutionNumber, tempSolutions, entryId)]);
         //console.log('Temp', tempSolutions);
     }
 
@@ -607,16 +635,9 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         if(valueChanging === 'COURSE'){
             let entryArray = tempSolutions[solutionNumber].entry;
             
-            let sectionNumber = 0;
-            for(let i=0; i<entryArray.length; i++){
-                if(entryArray[i].course === newValue){
-                    sectionNumber++;
-                }
-            }
-            
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: sectionNumber}
+                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room}
                     return ret;
                 }
                 else{
@@ -632,7 +653,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
             
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue, sectionNum: temp.sectionNum}
+                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue}
                     return ret;
                 }
                 else{
@@ -647,17 +668,9 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         else if(valueChanging === 'PROF'){
             let entryArray = tempSolutions[solutionNumber].entry;
             
-            // Add basic constraints for professors.
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    // for(let i=0; i<entryArray.length; i++){
-                    //     if(entryArray[i].time === temp.time && temp.professor == entryArray[i].professor ){
-                    //         window.alert('Error! There may be a conflict with this Professor.')
-                    //         // let ret = {id: entryId, professor: 0, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
-                    //         // return ret;
-                    //     }
-                    // }
-                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room}
                     return ret;
                 }
                 else{
@@ -760,7 +773,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         return (
             <div className="solutions-container">
                 <Box sx={{ width: '100%'}}>
-                    <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
+                    <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>{scheduleName}</Typography>
                     <hr/>
                 </Box>
 
@@ -822,4 +835,4 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     }
 }
 
-export default CreateSolutionPage;
+export default ViewSolution;

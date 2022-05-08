@@ -311,6 +311,21 @@ class DatabaseService {
         });
     }
 
+    // ======== Time methods ==============
+    /**
+     * Gets the latest times.
+     */
+    getTimes() {
+        return axios({
+            method: 'GET',
+            url: API_BASE + 'section_time_slot-management/section_time_slots/formatted',
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
     // ======== Plan methods ===========
     /**
      * Gets the latest rooms.

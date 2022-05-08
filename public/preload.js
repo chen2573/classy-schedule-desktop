@@ -26,7 +26,8 @@ contextBridge.exposeInMainWorld(
                 'toMain:SecondaryPlan',
                 'toMain:Modal', 
                 'toMain:Algo',
-                'toMain:Json'
+                'toMain:Json',
+                'toMain:Time'
             ];
 
             if (validChannels.includes(channel)) {
@@ -45,7 +46,8 @@ contextBridge.exposeInMainWorld(
                 'fromMain:SecondaryPlan',
                 'fromMain:Modal', 
                 'fromMain:Algo', 
-                'fromMain:Json'
+                'fromMain:Json',
+                'fromMain:Time'
             ];
             
             if (validChannels.includes(channel)) {

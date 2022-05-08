@@ -49,7 +49,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
         {
             return(
             <table ><tbody><tr  ><td>
-                <div className="tooltip checkbox-div" onClick={() => onDeleteEditSection(time, solutionNumber, entry.id)}>
+                <div className="tooltip checkbox-div" onClick={() => onDeleteEditSection(solutionNumber, entry.id)}>
                 <DeleteIcon size="large" inputProps={{ 'aria-label': 'controlled' }}/>
                     <span className="tooltiptext">Delete Section</span> 
                 </div>    

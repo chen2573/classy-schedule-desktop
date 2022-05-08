@@ -121,70 +121,70 @@ export function UpdateSolution ({professors, courses, rooms, times})
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
     
-    const dummyData = [
-        {
-            "section_id": 36,
-            "section_num": 0,
-            "class_num": 124,
-            "dept_id": 1,
-            "room_id": 49,
-            "professor_id": 51,
-            'time_slot_id': 1,
-            "plan_id": 41
-          },
-          {
-            "section_id": 37,
-            "section_num": 0,
-            "class_num": 101,
-            "dept_id": 1,
-            "room_id": 47,
-            "professor_id": 57,
-            'time_slot_id': 2,
-            "plan_id": 41
-          },
-          {
-            "section_id": 38,
-            "section_num": 0,
-            "class_num": 123,
-            "dept_id": 1,
-            "room_id": 33,
-            "professor_id": 59,
-            'time_slot_id': 4,
-            "plan_id": 41
-          }
-    ]
+    // const dummyData = [
+    //     {
+    //         "section_id": 36,
+    //         "section_num": 0,
+    //         "class_num": 124,
+    //         "dept_id": 1,
+    //         "room_id": 49,
+    //         "professor_id": 51,
+    //         'time_slot_id': 1,
+    //         "plan_id": 41
+    //       },
+    //       {
+    //         "section_id": 37,
+    //         "section_num": 0,
+    //         "class_num": 101,
+    //         "dept_id": 1,
+    //         "room_id": 47,
+    //         "professor_id": 57,
+    //         'time_slot_id': 2,
+    //         "plan_id": 41
+    //       },
+    //       {
+    //         "section_id": 38,
+    //         "section_num": 0,
+    //         "class_num": 123,
+    //         "dept_id": 1,
+    //         "room_id": 33,
+    //         "professor_id": 59,
+    //         'time_slot_id': 4,
+    //         "plan_id": 41
+    //       }
+    // ]
 
-    times = 
-    [
-        {
-            "id": 1,
-            "time": "MWF 8:15am",
-            "partOfDay": "morning"
-        },
+    // times = 
+    // [
+    //     {
+    //         "id": 1,
+    //         "time": "MWF 8:15am",
+    //         "partOfDay": "morning"
+    //     },
 
-        {
-            "id": 2,
-            "time": "TR 1:30pm",
-            "partOfDay": "afternoon"
-        }
-        ,
-        {
-            "id": 3,
-            "time": "MWF 10:55am",
-            "partOfDay": "morning"
-        },
-        {
-            "id": 4,
-            "time": "TR 12:00pm",
-            "partOfDay": "afternoon"
-        }
-    ];
+    //     {
+    //         "id": 2,
+    //         "time": "TR 1:30pm",
+    //         "partOfDay": "afternoon"
+    //     }
+    //     ,
+    //     {
+    //         "id": 3,
+    //         "time": "MWF 10:55am",
+    //         "partOfDay": "morning"
+    //     },
+    //     {
+    //         "id": 4,
+    //         "time": "TR 12:00pm",
+    //         "partOfDay": "afternoon"
+    //     }
+    // ];
     
     const solutionEntries = [];
     window.DB.receive('fromMain:SecondaryPlan', (payload) => {
         console.log(payload);
         //solutionEntries.push({"solutionName": payload.planName, "entry": payload.data});
-        solutionEntries.push({"solutionName": payload.planName, "entry": dummyData});
+        solutionEntries.push({"solutionName": payload.planName, "entry": payload.data});
 
         setTempSolutionEntries(solutionEntries);
     });
