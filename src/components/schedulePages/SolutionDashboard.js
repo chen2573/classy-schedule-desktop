@@ -1,6 +1,6 @@
 import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Button,Typography } from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import './../../assets/styles/HomePage.css';
 import './../../assets/styles/SideNav.css';
@@ -75,7 +75,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
             </div>
         );
     }
-const SolutionDashboard = ({plans, setCurrentPage}) => {
+const SolutionDashboard = ({plans, setCurrentPage, getLatestPlans}) => {
+    
+    //This makes sure when we reload this page, we get the latest plans.
+    useEffect(getLatestPlans, []);
+    
     return (
         <div>
             <SideNavigation></SideNavigation>
