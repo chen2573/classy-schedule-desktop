@@ -1,4 +1,4 @@
-import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField  } from '@mui/material'
+import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Grid} from '@mui/material'
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState, useEffect } from 'react'
 import {FaTimes, FaPencilAlt} from 'react-icons/fa'
@@ -17,7 +17,7 @@ const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     sx: {
         "&& .Mui-selected": {
-            backgroundColor: "#90A4AE"
+            backgroundColor: "#D0D9DD"
         }
     },
     PaperProps: {
@@ -142,64 +142,71 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
             
         }
         return (
-        <div className = 'container'>
+        <div className = 'body-container'>
             <h1> {roomEditedId !== null ? "Edit" : "Add"} Room </h1>
             <form onSubmit={onSubmit}>
 
 
 
                 <br></br>
-                <Box>
-                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_building" label="Building" variant="outlined" value={building} onChange={validateRBuilidng}/>
-                </Box>
 
-                <br></br>
+                <Grid container spacing = {2}>
+    
+                    <Grid item xs = {6}>
+                        <Box>
+                            <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_building" label="Building" variant="outlined" value={building} onChange={validateRBuilidng}/>
+                        </Box>
+                    </Grid>
 
-                <Box>
-                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={number} onChange={validateRNumber}/>
-                </Box>
+                    <Grid item xs = {6}>
+                        <Box>
+                            <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_number" label="Room Number" variant="outlined" value={number} onChange={validateRNumber}/>
+                        </Box>
+                    </Grid>
 
-                <br></br>
+                    <Grid item xs = {6}>
+                        <Box>
+                            <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={capacity} onChange={validateRCapacity}/>
+                        </Box>
+                    </Grid>
 
-                <Box>
-                    <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={capacity} onChange={validateRCapacity}/>
-                </Box>
+                    <Grid item xs = {6}>
+                        <Box sx={{ minWidth: 120 }}>
+                            <FormControl fullWidth>
+                                <InputLabel shrink id="label">Required Technology</InputLabel>
+                                <Select
+                                labelId="label"
+                                id='technology_dropdown'
+                                multiple
+                                notched
+                                onChange={handleTechChange}
+                                value={tech}
+                                label="Required Technology"
+                                input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
+                                renderValue={(selected) => (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                    </Box>
+                                )}
+                                MenuProps={MenuProps}
+                                >
+                                    <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
+                                    <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
+                                    <MenuItem value="Projector" >Projector</MenuItem>
+                                    <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
+                                    <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
+                                    <MenuItem value="Robots" >Robots</MenuItem>
+                                    <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
+                                    <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
+                                    <MenuItem value="Net Controls" >Net Controls</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </Grid>
+                </Grid>
 
-                <br></br>
-
-                <Box sx={{ minWidth: 120 }}>
-                    <FormControl fullWidth>
-                        <InputLabel shrink id="label">Required Technology</InputLabel>
-                        <Select
-                        labelId="label"
-                        id='technology_dropdown'
-                        multiple
-                        notched
-                        onChange={handleTechChange}
-                        value={tech}
-                        label="Required Technology"
-                        input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {selected.map((value) => (
-                                <Chip key={value} label={value} />
-                            ))}
-                            </Box>
-                        )}
-                        MenuProps={MenuProps}
-                        >
-                            <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
-                            <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
-                            <MenuItem value="Projector" >Projector</MenuItem>
-                            <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
-                            <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
-                            <MenuItem value="Robots" >Robots</MenuItem>
-                            <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
-                            <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
-                            <MenuItem value="Net Controls" >Net Controls</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
 
                 <br></br>
                 

@@ -12,7 +12,7 @@
  * @author Joseph Heimel
  */
 
- import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField } from '@mui/material';
+ import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Grid } from '@mui/material';
  import { React, useState, memo, useReducer, useEffect } from 'react';
  import {FaTimes, FaPencilAlt} from 'react-icons/fa';
  
@@ -57,7 +57,7 @@
     const MenuProps = {
       sx: {
         "&& .Mui-selected": {
-          backgroundColor: "#90A4AE"
+          backgroundColor: "#D0D9DD"
         }
       },
       PaperProps: {
@@ -222,139 +222,144 @@
       
       
       return (
-        <div className='container'>
+        <div className='body-container'>
           <h2>{profEditedId !== null ? "Edit" : "Add"} A Professor</h2>
           <form onSubmit={onSubmit}>
-    
-    
-            <br></br>
-                
-            <Box>
-              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_first_name" label="First Name" variant="outlined" value={firstName} onChange={validateFirstName}/>
-            </Box>
-            
-            <br></br>
-    
-            <Box>
-              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_last_name" label="Last Name" variant="outlined" value={lastName} onChange={validateLastName}/>
-            </Box>
-    
-            <br></br>
 
-            <Box>
-              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_email" label="Email" variant="outlined" value={email} onChange={validateEmail}/>
-            </Box>
+          <br></br>
+
+          <Grid container spacing = {2}>
     
-            <br></br>
-    
-            <Box>
-              <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_teach_load" label="Teach Load" variant="outlined" value={teach_load} onChange={validateTeachLoad}/>
-            </Box>
-    
-            <br></br>
-    
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel shrink id="label">Preferred Time Block</InputLabel>
-                <Select
-                  labelId="label"
-                  id='time_block_dropdown'
-                  notched
-                  MenuProps={{sx: {
-                    "&& .Mui-selected": {
-                      backgroundColor: '#90A4AE'
-                    }
-                  }}}
-                  value={time_block}
-                  label="Preferred Time Block"
-                  onChange={(e) => setTimeBlock(e.target.value)}
-                >
-                  <MenuItem value="mwf_morning">MWF Morning</MenuItem>
-                  <MenuItem value="mwf_afternoon">MWF Afternoon</MenuItem>
-                  <MenuItem value="mwf_night">MWF Night</MenuItem>
-                  <MenuItem value="tr_morning">TR Morning</MenuItem>
-                  <MenuItem value="tr_afternoon">TR Afternoon</MenuItem>
-                  <MenuItem value="tr_night">TR Night</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+            <Grid item xs = {6}>
+              <Box>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_first_name" label="First Name" variant="outlined" value={firstName} onChange={validateFirstName}/>
+              </Box>
+            </Grid>
             
-            <br></br>
+            <Grid item xs = {6}>
+              <Box float = "right" clear = "right">
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_last_name" label="Last Name" variant="outlined" value={lastName} onChange={validateLastName}/>
+              </Box>
+            </Grid>
     
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel shrink id="label">Courses Professor Can Teach</InputLabel>
-                <Select
-                  labelId="label"
-                  id='can_teach_dropdown'
-                  multiple
-                  notched
-                  value={can_teach.map(e => e.name)}
-                  label="Courses Professor Can Teach"
-                  input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Can Teach" />}
-                  
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  {courses.map(p => (
-                    <MenuItem 
-                      onClick={handleClick(p, setCanTeach)}
-                      key={p.id} 
-                      value={p.name}
-                    >
-                      {p.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
+            <Grid item xs = {6}>
+              <Box>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_email" label="Email" variant="outlined" value={email} onChange={validateEmail}/>
+              </Box>
+            </Grid>
+        
+            <Grid item xs = {6}>
+              <Box>
+                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_teach_load" label="Teach Load" variant="outlined" value={teach_load} onChange={validateTeachLoad}/>
+              </Box>
+            </Grid>
     
-            <br></br>
-                
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel shrink id="label">Courses Professor Want to Teach</InputLabel>
-                <Select
-                  labelId="label"
-                  id='want_teach_dropdown'
-                  multiple
-                  notched
-                  value={want_teach.map(e => e.name)}
-                  label="Courses Professor Want to Teach"
-                  input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Want to Teach" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  {can_teach.map(p => (
-                    <MenuItem 
-                      onClick={handleClick(p, setWantTeach)}
-                      key={p.id} 
-                      value={p.name}
-                    >
-                      {p.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
+            <Grid item xs = {6}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel shrink id="label">Courses Professor Can Teach</InputLabel>
+                  <Select
+                    labelId="label"
+                    id='can_teach_dropdown'
+                    multiple
+                    notched
+                    value={can_teach.map(e => e.name)}
+                    label="Courses Professor Can Teach"
+                    input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Can Teach" />}
+                    
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {courses.map(p => (
+                      <MenuItem 
+                        onClick={handleClick(p, setCanTeach)}
+                        key={p.id} 
+                        value={p.name}
+                      >
+                        {p.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+                    
+            <Grid item xs = {6}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel shrink id="label">Courses Professor Want to Teach</InputLabel>
+                  <Select
+                    labelId="label"
+                    id='want_teach_dropdown'
+                    multiple
+                    notched
+                    value={want_teach.map(e => e.name)}
+                    label="Courses Professor Want to Teach"
+                    input={<OutlinedInput id="select-multiple-chip" label="Courses Professor Want to Teach" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {can_teach.map(p => (
+                      <MenuItem 
+                        onClick={handleClick(p, setWantTeach)}
+                        key={p.id} 
+                        value={p.name}
+                      >
+                        {p.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+
+            <Grid item xs = {6}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel shrink id="label">Preferred Time Block</InputLabel>
+                  <Select
+                    labelId="label"
+                    id='time_block_dropdown'
+                    notched
+                    MenuProps={{sx: {
+                      "&& .Mui-selected": {
+                        backgroundColor: '#D0D9DD'
+                      }
+                    }}}
+                    value={time_block}
+                    label="Preferred Time Block"
+                    onChange={(e) => setTimeBlock(e.target.value)}
+                  >
+                    <MenuItem value="mwf_morning">MWF Morning</MenuItem>
+                    <MenuItem value="mwf_afternoon">MWF Afternoon</MenuItem>
+                    <MenuItem value="mwf_night">MWF Night</MenuItem>
+                    <MenuItem value="tr_morning">TR Morning</MenuItem>
+                    <MenuItem value="tr_afternoon">TR Afternoon</MenuItem>
+                    <MenuItem value="tr_night">TR Night</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+          </Grid>
     
-            <br></br>
+          <br></br>
     
-            {profEditedId === null ? <input type="submit" value='Save Professor' className='btn btn-block'/> 
-            : <><input type="submit" value='Save Edits' className='btn btn-block'/><br /> 
-                <input type="button" value="Cancel Edits" className='btn btn-block' onClick={resetState}/></> }
+          {profEditedId === null ? <input type="submit" value='Save Professor' className='btn btn-block'/> 
+          : <><input type="submit" value='Save Edits' className='btn btn-block'/><br /> 
+              <input type="button" value="Cancel Edits" className='btn btn-block' onClick={resetState}/></> }
+
           </form>
         </div>
       );

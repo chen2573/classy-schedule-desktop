@@ -1,4 +1,4 @@
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Checkbox, FormControlLabel} from '@mui/material';
+import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Checkbox, FormControlLabel, Grid} from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useState, useEffect } from 'react';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
@@ -17,7 +17,7 @@ const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     sx: {
         "&& .Mui-selected": {
-            backgroundColor: "#90A4AE"
+            backgroundColor: "#D0D9DD"
         }
     },
     PaperProps: {
@@ -204,146 +204,122 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
         }
 
         return (
-            <div className='container'>
+            <div className='body-container'>
                 <h2>{courseEditedId !== null ? "Edit" : "Add"} A Class</h2>
                 <form onSubmit={onSubmit}>
 
                     <br></br>
 
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <InputLabel shrink id="label">Program</InputLabel>
-                            <Select
-                            labelId="label"
-                            id='program_dropdown'
-                            notched
-                            MenuProps={{sx: {
-                                "&& .Mui-selected": {
-                                backgroundColor: "#90A4AE"
-                                }
-                            }}}
-                            value={program}
-                            label="Program"
-                            onChange={(e) => setProgram(e.target.value)}
-                            >
-                            {programs.map(p => (
-                                <MenuItem 
-                                key={p.id} 
-                                value={p.programName}
-                                >
-                                {p.programName}
-                                </MenuItem>
-                            ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-
-                    <br></br>
-
-                    <br></br>
-
-                    <Box>
-                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_number" label="Course Number" variant="outlined" value={number} onChange={validateNumber}/>
-                    </Box>
-
-                    <br></br>
-
-                    <Box>
-                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_name" label="Course Name" variant="outlined" value={name} onChange={validateName}/>
-                    </Box>
-
-                    <br></br>
-
-                    <Box>
-                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_number_of_credits" label="Credits" variant="outlined" value={credits} onChange={validateCredits}/>
-                    </Box>
-
-                    <br></br>
-
-                    <Box>
-                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={validateCapacity}/>
-                    </Box>
-
-                    <br></br>
-
-                    <Box>
-                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
-                    </Box>
-
-                    <br></br>
-
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <InputLabel shrink id="label">Required Technology</InputLabel>
-                            <Select
-                            labelId="label"
-                            id='technology_dropdown'
-                            multiple
-                            notched
-                            onChange={handleTechChange}
-                            value={tech}
-                            label="Required Technology"
-                            input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
-                            renderValue={(selected) => (
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((value) => (
-                                    <Chip key={value} label={value} />
-                                ))}
-                                </Box>
-                            )}
-                            MenuProps={MenuProps}
-                            >
-                                <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
-                                <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
-                                <MenuItem value="Projector" >Projector</MenuItem>
-                                <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
-                                <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
-                                <MenuItem value="Robots" >Robots</MenuItem>
-                                <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
-                                <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
-                                <MenuItem value="Net Controls" >Net Controls</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
-                    
-                    <br></br>
-
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <FormControlLabel control={<Checkbox />} label = "Lab" labelPlacement='end' onChange={(e) => setLab(!lab.value)}/>
-                        </FormControl>
-                    </Box>
-                    <br></br>
-                {/* Associated Class
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <InputLabel shrink id="label">Associated Course</InputLabel>
-                            <Select
-                            labelId="label"
-                            id='associated_course_dropdown'
-                            notched
-                            MenuProps={{sx: {
-                                "&& .Mui-selected": {
-                                backgroundColor: "#90A4AE"
-                                }
-                            }}}
-                            value={lcourse.map(e => e.name)}
-                            label="Associated Course"
-                            >
-                                {courses.map(p => (
-                                    <MenuItem 
-                                        onClick={handleAssociatedCourseClick(p)}
-                                        key={p.id} 
-                                        value={p.name}
+                    <Grid container spacing = {2}>
+    
+                        <Grid item xs = {6}>
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel shrink id="label">Program</InputLabel>
+                                    <Select
+                                    labelId="label"
+                                    id='program_dropdown'
+                                    notched
+                                    MenuProps={{sx: {
+                                        "&& .Mui-selected": {
+                                        backgroundColor: "#D0D9DD"
+                                        }
+                                    }}}
+                                    value={program}
+                                    label="Program"
+                                    onChange={(e) => setProgram(e.target.value)}
                                     >
-                                        {p.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
+                                    {programs.map(p => (
+                                        <MenuItem 
+                                        key={p.id} 
+                                        value={p.programName}
+                                        >
+                                        {p.programName}
+                                        </MenuItem>
+                                    ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </Grid>
 
-            <br></br>*/}
+                        <Grid item xs = {6}>
+                            <Box>
+                                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_number" label="Course Number" variant="outlined" value={number} onChange={validateNumber}/>
+                            </Box>
+                        </Grid>
+
+                        <Grid item xs = {6}>
+                            <Box>
+                                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_course_name" label="Course Name" variant="outlined" value={name} onChange={validateName}/>
+                            </Box>
+                        </Grid>
+
+                        <Grid item xs = {6}>
+                            <Box>
+                                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_number_of_credits" label="Credits" variant="outlined" value={credits} onChange={validateCredits}/>
+                            </Box>
+                        </Grid>
+
+                        <Grid item xs = {6}>
+                            <Box>
+                                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={validateCapacity}/>
+                            </Box>
+                        </Grid>
+
+                        <Grid item xs = {6}>
+                            <Box>
+                                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
+                            </Box>
+                        </Grid>
+
+                        <Grid item xs = {6}>
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel shrink id="label">Required Technology</InputLabel>
+                                    <Select
+                                    labelId="label"
+                                    id='technology_dropdown'
+                                    multiple
+                                    notched
+                                    onChange={handleTechChange}
+                                    value={tech}
+                                    label="Required Technology"
+                                    input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
+                                    renderValue={(selected) => (
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} />
+                                        ))}
+                                        </Box>
+                                    )}
+                                    MenuProps={MenuProps}
+                                    >
+                                        <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
+                                        <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
+                                        <MenuItem value="Projector" >Projector</MenuItem>
+                                        <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
+                                        <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
+                                        <MenuItem value="Robots" >Robots</MenuItem>
+                                        <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
+                                        <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
+                                        <MenuItem value="Net Controls" >Net Controls</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </Grid>
+
+                    
+                        <Grid item xs = {6}>
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <FormControlLabel control={<Checkbox />} label = "Lab" labelPlacement='end' onChange={(e) => setLab(!lab.value)}/>
+                                </FormControl>
+                            </Box>
+                        </Grid>
+
+                    </Grid>
+
+                    <br></br>
 
                     {courseEditedId === null ? <input type="submit" value='Save Course' className='btn btn-block'/> 
                     : <><input type="submit" value='Save Edits' className='btn btn-block'/><br /> 
