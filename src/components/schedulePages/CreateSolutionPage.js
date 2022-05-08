@@ -709,7 +709,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
                             <Button variant="contained" 
                                 onClick={saveSchedule(solution)}
                                 sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                                <Typography variant="text" color="secondary">Save Solution</Typography>
+                                <Typography variant="text" color="secondary">Save Schedule</Typography>
                             </Button>
                         </TabPanel>;
             })

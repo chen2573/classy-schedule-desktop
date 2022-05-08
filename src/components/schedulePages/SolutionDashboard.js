@@ -26,12 +26,15 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
         );
     }
     
-    const navigateToUpdateSolution = (setCurrentPage, id, name) => () => {
+    const navigateToUpdateSolution = (setCurrentPage, id, name, description, year, semester) => () => {
         let _payload = {
             request: 'SAVED_PLAN',
             message: 'Renderer request SAVED PLANS',
             planId: id,
-            planName: name
+            planName: name,
+            planDescription: description,
+            planYear: year,
+            planSemester: semester
         }
 
         window.DB.send('toMain:SecondaryPlan', _payload);
@@ -50,7 +53,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
                 <DataViewer id={plan.id} dataState={plans} sx={{position:'absolute'}}>
                     <MoreHorizIcon style= {{float:"right"}}/>
                 </DataViewer>
-                <div onClick={navigateToUpdateSolution(setCurrentPage, plan.id, plan.name)}>
+                <div onClick={navigateToUpdateSolution(setCurrentPage, plan.id, plan.name, plan.description, plan.year, plan.semester)}>
                     <h3>{plan.name}</h3>
                     <p>{plan.description}</p>
                 </div>

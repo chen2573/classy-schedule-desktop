@@ -366,6 +366,32 @@ class DatabaseService {
         });
     }
 
+    /**
+     * Updates an Existing plan.
+     * @param name - the name of the plan.
+     * @param description - a description of the plan.
+     * @param year - the year the plan is being created for.
+     * @param semester - the semester the plan is being created for.
+     * @returns 
+     */
+    updatePlan(id, name, description, year, semester) {
+        return axios({
+            method: 'PUT',
+            url: API_BASE + 'plan-management/plans/update/' + id,
+            data: {
+                plan_id: id,
+                plan_name: name,
+                plan_description: description,
+                semester_year: year,
+                semester_num: semester
+            },
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
     // ======== Section methods ===========
     /**
      * Creates multiple sections to add to a created plan.
@@ -375,6 +401,22 @@ class DatabaseService {
         return axios({
             method: 'POST',
             url: API_BASE + 'sections-management/sections/create/multiple',
+            data: sections,
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
+    /**
+     * Updates multiple sections to add to a saved plan.
+     * @param sections - an array of json objects created in solutionDBService.js
+     */
+     updateMultipleSections(planId, sections) {
+        return axios({
+            method: 'POST',
+            url: API_BASE + 'sections-management/sections/delete/create/multiple/' + planId,
             data: sections,
             headers: {
                 'accept': 'application/json',

@@ -27,7 +27,8 @@ contextBridge.exposeInMainWorld(
                 'toMain:Modal', 
                 'toMain:Algo',
                 'toMain:Json',
-                'toMain:Time'
+                'toMain:Time',
+                'toMain:ModalElectron'
             ];
 
             if (validChannels.includes(channel)) {
@@ -47,7 +48,8 @@ contextBridge.exposeInMainWorld(
                 'fromMain:Modal', 
                 'fromMain:Algo', 
                 'fromMain:Json',
-                'fromMain:Time'
+                'fromMain:Time',
+                'fromMain:ModalElectron'
             ];
             
             if (validChannels.includes(channel)) {
