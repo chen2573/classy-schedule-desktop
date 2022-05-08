@@ -444,7 +444,18 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
     }
     //===========================================
 
-
+    /**
+     * Deletes this plan based on the planId
+     */
+    function deleteSolution() {
+        SolutionService.deletePlan(planId).then((data) => {
+            //SolutionService.saveScheduleToPlan()
+            //console.log(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
 
     const EditButtons = () => {
         if(!editMode) {
@@ -457,7 +468,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
                 </Button>
 
                 <Button variant="contained"
-                    onClick={editSolution}
+                    onClick={deleteSolution}
                     sx={{position:'absolute', bottom:'12vh', left:'14.6vw'}}>
                     <Typography variant="text" color="#f72d2d">Delete</Typography>
                 </Button>

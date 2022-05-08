@@ -392,6 +392,21 @@ class DatabaseService {
         });
     }
 
+    /**
+     * Deletes the plan based on id.
+     * @param planId - the plan id to be deleted
+     */
+    deletePlan(planId) {
+        return axios({
+            method: 'DELETE',
+            url: API_BASE + 'plan-management/plans/delete/' + planId,
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
     // ======== Section methods ===========
     /**
      * Creates multiple sections to add to a created plan.
@@ -418,6 +433,21 @@ class DatabaseService {
             method: 'POST',
             url: API_BASE + 'sections-management/sections/delete/create/multiple/' + planId,
             data: sections,
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
+    /**
+     * Deletes multiple sections based on a plan.
+     * @param planId - the plan that is being deleted.
+     */
+     deleteMultipleSections(planId) {
+        return axios({
+            method: 'DELETE',
+            url: API_BASE + 'sections-management/sections/delete/plan/' + planId,
             headers: {
                 'accept': 'application/json',
                 Authorization: this.authenticationToken
