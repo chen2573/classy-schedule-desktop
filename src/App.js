@@ -816,7 +816,7 @@ function App() {
     }
     else if(currentPage === 'SolutionDashboard')
     {
-      return <SolutionDashboard plans = {plans} setCurrentPage={setCurrentPage}/>;
+      return <SolutionDashboard plans = {plans} setCurrentPage={setCurrentPage} getLatestPlans={getLatestPlans}/>;
     }
     else if(currentPage === 'a')
     {
