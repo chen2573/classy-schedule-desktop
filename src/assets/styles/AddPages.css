@@ -7,6 +7,16 @@
     padding: 30px;
     border-radius: 5px;
   }
+
+  .body-container {
+    max-width: 600px;
+    margin: 30px auto;
+    overflow: auto;
+    height: 550px;
+    border: none;
+    padding: 30px;
+    border-radius: 5px;
+  }
   
   .header {
     display: flex;

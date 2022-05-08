@@ -717,10 +717,23 @@ function addModalWindows(){
                 title: 'Course Sections',
                 label: 'Enter number of Courses for ' + args.program + ' ' + args.number ,
                 value: 0,
-                type: 'input'
+                type: 'select',
+                selectOptions: {
+                    '0': 0,
+                    '1': 1,
+                    '2': 2,
+                    '3': 3,
+                    '4': 4,
+                    '5': 5,
+                    '6': 6,
+                    '7': 7,
+                    '8': 8,
+                    '9': 9,
+                    '10': 10
+                }
             }, mainWindow)
             .then((response) => {
-                if(response === null) {
+                if(response === null || response == 0) {
                     mainWindow.webContents.send('fromMain:Modal', "CANCEL");
                 } else {
                     console.log("MODAL WINDOW LOG --> User entered: " + response)
