@@ -150,11 +150,77 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
 
     /**
      * This function is called when the Add Schedule button is clicked.
+     * This function first checks to make sure it is possible to create an optimized
+     * schedule given the data entered by the user
      * This function will reset all the cards to unselected style.
      */
-    function createAndRefresh(){   
-        createNewSchedule();
-        resetStyles(); 
+    function createAndRefresh(){ 
+        // To run this rn you need to uncomment the second to last line in checkInput()
+        const inputCodes = checkInput();
+        var alertString = 'You need to adjust your input in the following ways to ' +
+                            'be able to produce an optimized schedule.\n'
+        if(inputCodes[0]){
+            createNewSchedule();
+            resetStyles(); 
+        }
+        else{
+            // This block is finding which of the conditions were not satisfied
+            // in checkInput() and adding to the alert string to tell the user
+            // what they need to change in order to produce an optimized schedule
+            if(inputCodes[1] > 0){
+                alertString = alertString + 'Increase the teach load, ' +
+                'or decrease the sections of courses and labs, by ' + inputCodes[1] + '. ' + 
+                'A course section is equivalent to 1 teach load and a lab is 0.5. ' +
+                'You can increase the teach load by increasing existing professors ' +
+                'teach load or creating more professors.\n'
+            }
+            
+            alert(alertString);
+            return;
+        }
+    }
+
+    /**
+     * A zero for an integer in inputCodes means there is no issue with the varible
+     * it represents.
+     * The codes it represents are as follows
+     * inputCodes[1] checks Number of Sections - Total Teach Load
+     * If a value is negative it means there needs to be that much more of the item
+     * @returns inputCodes, an array of numbers with a boolean in the first position
+     */
+    function checkInput(){       
+        /**
+         * This section checks if all the course sections can be taught
+         * WORK IN PROGRESS
+         */
+        const inputCodes = [true, 0];
+        var sectionSum = 0;
+        var teachLoadSum = 0;
+        // This section determines the total number of sections, total teach load
+        for(let i  = 0; i < courseSections.length; i++){
+            sectionSum = sectionSum + parseInt(courseSections[i].sections);
+        }
+        sectionSum = sectionSum + selectedLabs.length*0.5
+
+        for(let i  = 0; i < selectedProfessors.length; i++){
+            teachLoadSum = teachLoadSum + selectedProfessors[i].teach_load;
+        }
+        
+        inputCodes[1] = sectionSum -  teachLoadSum;
+        
+        // for loop that determines the boolean value of the flag
+        // based on && of all the boolean values in the array
+        for(let i = 1; i < inputCodes.length; i++){
+            var codeValue = false
+            if(inputCodes[i] == 0){
+                codeValue = true
+            }
+            inputCodes[0] = inputCodes[0] && codeValue;
+        }
+
+
+        // inputCodes[0] = true;
+        return inputCodes;
     }
     
     /**
