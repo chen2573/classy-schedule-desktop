@@ -7,12 +7,24 @@ event.preventDefault()
 const email = document.getElementById("username")
 const password = document.getElementById("password")
 
-var _payload = {
-    email: email.value,
-    password: password.value
-};
 
-window.DB.send('toMain:AuthLogIn', _payload);
+
+if(email.value.length <= 0) {
+    window.alert('Please enter a username!');
+    return;
+}
+else if(password.value.length <= 0) {
+    window.alert('Please enter a password!');
+    return;
+}
+else{
+    var _payload = {
+        request: 'SIGNIN',
+        email: email.value,
+        password: password.value
+    };
+    window.DB.send('toMain:AuthLogIn', _payload);
+}
 
 window.DB.receive("fromMain:AuthLogIn", (error) => {
     window.alert("Incorrect Username or Password. Try Again!")

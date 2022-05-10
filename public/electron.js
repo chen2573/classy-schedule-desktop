@@ -336,26 +336,50 @@ function createIPCChannels() {
 function addAuthenticationChannels(){
     // LogIn logic.
     ipcMain.on("toMain:AuthLogIn", (event, args) => {
-        DB.authenticateAdmin(args.email, args.password).then((payload) => {
-            console.log("USER AUTH LOG--> Token:" + payload.data.token);
-            if(payload.data.token === 'tokenInvalid'){
-                window.alert("Invalid Username or Password");
-                console.log("USER AUTH LOG--> User entered incorrect password \n");
-            }
-            else {
-                DB.setAuthenticationToken(payload.data.token);
-                console.log("USER AUTH LOG--> User Successfully loggin in:" + DB.getAuthenticationToken() + '\n');
-                logInWindow.close();
+        if(args.request === 'SIGNIN'){
+            DB.authenticateAdmin(args.email, args.password).then((payload) => {
+                console.log("USER AUTH LOG--> Token:" + payload.data.token);
+                if(payload.data.token === 'tokenInvalid'){
+                    window.alert("Invalid Username or Password");
+                    console.log("USER AUTH LOG--> User entered incorrect password \n");
+                }
+                else {
+                    DB.setAuthenticationToken(payload.data.token);
+                    console.log("USER AUTH LOG--> User Successfully loggin in:" + DB.getAuthenticationToken() + '\n');
+                    logInWindow.close();
 
-                userLoggedIn = true;
-                displayMainWindow();
-            }
-        }).catch((error) => {
-            //dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
-            logInWindow.webContents.send('fromMain:AuthLogIn', error);
+                    userLoggedIn = true;
+                    displayMainWindow();
+                }
+            }).catch((error) => {
+                //dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
+                logInWindow.webContents.send('fromMain:AuthLogIn', error);
 
-            console.log('USER AUTH LOG--> Error authenticating user: ' + error + '\n');
-        });
+                console.log('USER AUTH LOG--> Error authenticating user: ' + error + '\n');
+            });
+        }
+        else if(args.request === 'NEW_ACCOUNT'){
+            console.log("USER AUTH LOG--> Creating account for: " + args.firstName + ' ' + args.lastName);
+            console.log(args);
+            DB.createAdminAccount(args.firstName, args.lastName, args.email, args.password).then((payload) => {
+                console.log("USER AUTH LOG--> Successfully created account.\n");
+                console.log(payload.data);
+
+                let _payload = {
+                    result: 'SUCCESS',
+                    message: 'Account created successfully!\nYou may now login.'
+                }
+                logInWindow.webContents.send('fromMain:AuthLogIn', _payload);
+            }).catch((error) => {
+                let _payload = {
+                    result: 'FAIL',
+                    message: 'Error! Unable to create account. Please try again.'
+                }
+                logInWindow.webContents.send('fromMain:AuthLogIn', _payload);
+
+                console.log('USER AUTH LOG--> Error creating user: ' + error + '\n');
+            });
+        }
     });
 
     // Logout Logic and flow.
