@@ -265,7 +265,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * @param rooms rooms state
  * @returns the solutions page
  */
-export function CreateSolutionPage ({professors, courses, rooms, times, programs})
+export function CreateSolutionPage ({professors, courses, rooms, times, programs, setCurrentPage})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
@@ -468,10 +468,11 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
 
     //================ Saving Schedule Functions ==============================
-    const saveSchedule = (solution) => () => {
+    const saveSchedule = (solution,setCurrentPage) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms, programs).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
+            setCurrentPage('SolutionDashboard');
         })
         .catch((error) => {
             console.log(error);
@@ -650,15 +651,19 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
             // Add basic constraints for professors.
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    // for(let i=0; i<entryArray.length; i++){
-                    //     if(entryArray[i].time === temp.time && temp.professor == entryArray[i].professor ){
-                    //         window.alert('Error! There may be a conflict with this Professor.')
-                    //         // let ret = {id: entryId, professor: 0, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
-                    //         // return ret;
-                    //     }
-                    // }
-                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
-                    return ret;
+                    for(let i=0; i<entryArray.length; i++){
+                        console.log('time',temp.id,'entrytime',entryArray[i].id);
+                        if(entryArray[i].time === temp.time && temp.professor == entryArray[i].professor && entryArray[i].id != temp.id){
+                            window.alert('Error! There may be a conflict with this Professor.');
+                            //let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                            //return ret;
+                        }else{
+                            let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                            return ret;
+                        }
+                    }
+                    //let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    //return ret;
                 }
                 else{
                     return temp;
@@ -707,7 +712,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
                             <EditButtons></EditButtons>
 
                             <Button variant="contained" 
-                                onClick={saveSchedule(solution)}
+                                onClick={saveSchedule(solution,setCurrentPage)}
                                 sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
                                 <Typography variant="text" color="secondary">Save Schedule</Typography>
                             </Button>
