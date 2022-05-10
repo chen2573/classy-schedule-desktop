@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DataViewer from '../DataViewer';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
     /**
- * This component is a view that lists out individual LabListItems.
+ * This component is a view that lists out individual PlanListItems.
  * @param plans - The state of plans that are passed down from App.js
  */
      const SolutionList = ({plans, setCurrentPage}) => {
@@ -43,7 +43,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
     }
     
     /**
-     * The component that will display an individual lab. These components will populate the LabList component.
+     * The component that will display an individual plan. These components will populate the PlanList component.
      * @param plans - an individual solution
      */
     const SolutionItem = ({plan, plans, setCurrentPage}) => {
@@ -62,8 +62,8 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
     }
     
     /**
-     * This page will have a list of Labs that have been added and
-     * the labs that are in the database.
+     * This page will have a list of plans that have been added and
+     * the plans that are in the database.
      * @param plans - the state of plans passed from App.js
      */
      const SolutionContent = ({ plans, setCurrentPage}) => {
