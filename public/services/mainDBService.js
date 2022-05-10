@@ -29,6 +29,27 @@ class DatabaseService {
         this.authenticationToken = 'tokenInvalid';
     }
 
+    /**
+     * Creates a new user to access the application in the DB.
+     * 
+     * @param firstName - the user first name.
+     * @param lastName - the user last name.
+     * @param username - the user username.
+     * @param password - the user password.
+     */
+    createAdminAccount(firstName, lastName, username, password) {
+        return axios({
+            method: 'POST',
+            url: API_BASE + 'user-management/admin/create',
+            data: {
+                'username': username,
+                'first_name': firstName,
+                'last_name': lastName,
+                'password': password
+            }
+        });
+    }
+
     // ====== Program Methods ==============
     /**
      * Gets the lates programs
