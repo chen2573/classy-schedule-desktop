@@ -808,11 +808,11 @@ function App() {
     }
     else if(currentPage === 'CreateSchedule')
     {
-      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
+      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
     }
     else if (currentPage === 'UpdateSolution')
     {
-      return <ViewSolution professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
+      return <ViewSolution professors={professors} courses={courses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
     }
     else if(currentPage === 'SolutionDashboard')
     {
@@ -824,7 +824,7 @@ function App() {
     }
     else
     {
-      return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms}/>;
+      return <HomePage courses={courses} labs= {labs} professors={professors} rooms={rooms} setCurrentPage={setCurrentPage} plans={plans} getLatestPlans={getLatestPlans}/>;
     }
   }
 

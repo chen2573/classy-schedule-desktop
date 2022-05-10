@@ -4,11 +4,30 @@
 }
 
 .container-top-text {
-    margin: 20px;
+    margin: -15px;
     padding: 10px;
 }
-
-
+.container-home-plan {
+    max-width: 500px;
+    margin: 30px auto;
+    overflow: auto;
+    height: 450px;
+    border: 1px solid steelblue;
+    padding: 30px;
+    border-radius: 5px;
+  }
+.home-plan-style {
+    max-width:100%;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+.plan-element{
+    width: 50%;
+}
+.addPage-element{
+    width: 50%; 
+}
 /*Styles for Top Bar*/
 .topbar {
     width: 100%;
@@ -82,13 +101,14 @@
 
 .featuredItem {
     flex: 1;
-    margin: 0px 20px;
+    margin: 60px 20px;
     padding: 30px;
     border-radius: 10px;
     cursor: pointer;
     text-align: center;
     -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    height: 65%;
 }
 
 .featuredTitle {
