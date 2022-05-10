@@ -265,7 +265,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * @param rooms rooms state
  * @returns the solutions page
  */
-export function ViewSolution ({professors, courses, rooms, times, programs})
+export function ViewSolution ({professors, courses, rooms, times, programs, setCurrentPage})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
@@ -447,7 +447,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
     /**
      * Deletes this plan based on the planId
      */
-    function deleteSolution() {
+    function deleteSolution(setCurrentPage) {
         SolutionService.deletePlan(planId).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
@@ -455,6 +455,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
         .catch((error) => {
             console.log(error);
         });
+        setCurrentPage('SolutionDashboard');
     }
 
     const EditButtons = () => {
@@ -496,7 +497,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
     TabPanel.propTypes = {children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired};
 
     //================ Saving Schedule Functions ==============================
-    const saveSchedule = (solution) => () => {
+    const saveSchedule = (solution, setCurrentPage) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
@@ -504,9 +505,10 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
         .catch((error) => {
             console.log(error);
         });
+        setCurrentPage('SolutionDashboard');
     }
 
-    const updateSchedule = (solution) => () => {
+    const updateSchedule = (solution, setCurrentPage) => () => {
         SolutionService.updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs).then((data) => {
             //SolutionService.saveScheduleToPlan()
             //console.log(data);
@@ -514,6 +516,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
         .catch((error) => {
             console.log(error);
         });
+        setCurrentPage('SolutionDashboard');
     }
 
     const TableHeaders = () => {
@@ -737,13 +740,13 @@ export function ViewSolution ({professors, courses, rooms, times, programs})
                             <EditButtons></EditButtons>
 
                             <Button variant="contained" 
-                                onClick={updateSchedule(solution)}
+                                onClick={updateSchedule(solution, setCurrentPage)}
                                 sx={{position:'absolute', bottom:'12vh', right:'18vw'}}>
                                 <Typography variant="text" color="secondary">Update This Schedule</Typography>
                             </Button>
                             
                             <Button variant="contained" 
-                                onClick={saveSchedule(solution)}
+                                onClick={saveSchedule(solution, setCurrentPage)}
                                 sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
                                 <Typography variant="text" color="secondary">Save New Schedule</Typography>
                             </Button>
