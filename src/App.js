@@ -171,8 +171,7 @@ function App() {
           let program = data.dept_name;
           let capacity = data.capacity;
           let credits = data.credits;
-          let tech = []; // Implement checking for length and tech from database
-          let length = 0;
+
           let name = data.class_name;
 
           let elementClassName = "item";
@@ -182,7 +181,7 @@ function App() {
 
           //const id = Math.floor(Math.random() * 10000) + 1;
 
-          let newCourse = { id, program, number, name, credits, capacity, tech, length, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          let newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
           if(!lab){
             stateCourses.push(newCourse);
