@@ -665,6 +665,13 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
             let entriesFromSameTime = getEntriesByTime(entryArray, time);
             let conflictExists = doesConflictExist(entriesFromSameTime, 'course', newValue);
 
+            let sectionNumber = 0;
+            for(let i=0; i<entryArray.length; i++){
+                if(entryArray[i].course === newValue){
+                    sectionNumber++;
+                }
+            }
+
             let ret;
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
@@ -672,7 +679,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
                         ret = {id: entryId, professor: temp.professor, course: -1, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
                     }
                     else {
-                        ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                        ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: sectionNumber}
                     }
                     return ret;
                 }
