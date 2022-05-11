@@ -171,20 +171,20 @@ function App() {
         dataRows.map((data) => {
           console.log(data);
 
+          let id = data.class_id;
+          let number = data.class_num;
           let program = data.dept_name;
           let capacity = data.capacity;
-          let number = data.class_num;
           let credits = data.credits;
           let tech = []; // Implement checking for length and tech from database
           let length = 0;
           let name = data.class_name;
-          
+
           let elementClassName = "item";
-          let sections = 0;
+          let sections = 0; //data.num_sections
           let lab = data.is_lab;
           let deptId = data.dept_id;
 
-          const id = cantorPairing(deptId, number);
           //const id = Math.floor(Math.random() * 10000) + 1;
 
           let newCourse = { id, program, number, name, credits, capacity, tech, length, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
@@ -239,8 +239,8 @@ function App() {
       console.log(parseInt(course.number));
       id = cantorPairing(programId, parseInt(course.number));
 
-      DBFunction.createCourse(course, programId).then((response) => {
-        if(response === "SUCCESS"){
+      DBFunction.createCourse(course, programId).then((id) => {
+        if(id != -1){
           newCourse = { id, ...course }
           setCourses([...courses, newCourse]);
         }
@@ -262,15 +262,8 @@ function App() {
     let deletedResponse = window.confirm("Are you sure you want to remove this Course?\n This will be permanent.");
 
     if(deletedResponse){
-      let tempCourse = courses;
-      let tempPrograms = programs;
-
-      let courseNum = getCourseNumber(tempCourse, id);
-      let programName = getDepartmentName(tempCourse, id);
-      let programId = getDepartmentId(tempPrograms, programName);
-
       //delete from database
-      DBFunction.deleteCourse(courseNum, programId).then((shouldDeleteFromUI) => {
+      DBFunction.deleteCourse(id).then((shouldDeleteFromUI) => {
         if(shouldDeleteFromUI){
           //delete from UI
           setCourses(courses.filter((course) => course.id !== id));
@@ -281,6 +274,10 @@ function App() {
     }
   };
 
+  /**
+   * Edits a course based on new information.
+   * @param course - the new state course. 
+   */
   const editCourse = (course) => {
     let tempCourse = courses;
     let tempPrograms = programs;
@@ -305,7 +302,7 @@ function App() {
     });   
   }
 
-  /**
+/**
  * This is a helper function to get the Course name given a course id.
  * @param courseList - a list of temp course objects to iterate over
  * @param targetID - the id of the the course to search for.

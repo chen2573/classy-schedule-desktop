@@ -102,7 +102,9 @@ export function createCourse(course, programId){
         deptId: programId,
         courseName: course.name,
         capacity: course.capacity,
-        credits: course.credits
+        credits: course.credits,
+        isLab: course.lab,
+        numSections: course.sections
     }; 
     
     // Send a query to main
@@ -113,23 +115,22 @@ export function createCourse(course, programId){
         window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (payload) => {
             if(payload.status === 'SUCCESS'){
                 window.alert(payload.message);
-                resolve(payload.status);
+                resolve(payload.id);
             }
             else{
                 window.alert(payload.message + '\n' + payload.errorCode);
-                resolve(payload.status);
+                resolve(-1);
             }
         });
     });
 
 }
 
-export function deleteCourse(courseNum, departmentId) {
+export function deleteCourse(courseId) {
     let _payload = {
         request: 'DELETE',
         message: 'Renderer DELETE Course',
-        classNum: courseNum,
-        deptId: departmentId
+        id: courseId
     };
     console.log(_payload)
 
@@ -159,7 +160,9 @@ export function updateCourse(course, programId) {
         deptId: programId,
         name: course.name,
         capacity: course.capacity,
-        credits: course.capacity
+        credits: course.capacity,
+        isLab: course.lab,
+        numSections: course.sections
     };
     
     // Send a query to main

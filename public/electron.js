@@ -537,12 +537,13 @@ function addCourseChannel(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request CREATE a COURSE")
 
-            DB.createCourse(args.courseNum, args.deptId, args.courseName, args.capacity, args.credits).then((payload) => {
+            DB.createCourse(args.courseNum, args.deptId, args.courseName, args.capacity, args.credits, args.isLab, args.numSections).then((payload) => {
                 console.log("DATABASE LOG--> Successfully created COURSE\n");
 
                 let _payload = {
                     status: 'SUCCESS',
                     message: "Course added successfully!",
+                    id: payload.data.class_id
                 };
                 mainWindow.webContents.send('fromMain:Course', _payload);
 
@@ -561,8 +562,8 @@ function addCourseChannel(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request DELETE a COURSE")
     
-            DB.deleteCourse(args.classNum, args.deptId).then((payload) => {
-                console.log("DATABASE LOG--> Successfully deleted COURSE with course number: " + args.classNum + "\n");
+            DB.deleteCourse(args.id).then((payload) => {
+                console.log("DATABASE LOG--> Successfully deleted COURSE with course id: " + args.id + "\n");
 
                 let _payload = {
                     status: 'SUCCESS',
