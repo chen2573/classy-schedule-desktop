@@ -41,7 +41,7 @@ export function createPlan(solution, professors, courses, rooms, programs) {
     return new Promise((resolve, reject) => {
         window.DB.receive('fromMain:Plan', (data) => {
             if(data.status === 'SUCCESS') {
-                window.alert(data.message);
+                //window.alert(data.message);
                 resolve(1);
             }
             else {
@@ -127,11 +127,11 @@ export function deletePlan(planId) {
         return new Promise((resolve, reject) => {
             window.DB.receive('fromMain:Plan', (data) => {
                 if(data.status === 'SUCCESS') {
-                    window.alert(data.message);
+                    //window.alert(data.message);
                     resolve(1);
                 }
                 else {
-                    window.alert(data.message);
+                    //window.alert(data.message);
                     resolve(-1);
                 }
             });

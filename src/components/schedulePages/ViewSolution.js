@@ -449,13 +449,18 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
      */
     function deleteSolution(setCurrentPage) {
         SolutionService.deletePlan(planId).then((data) => {
-            //SolutionService.saveScheduleToPlan()
-            //console.log(data);
+            if(data === 1){
+                window.alert('Schedule deleted successfully!');
+                setCurrentPage('SolutionDashboard');
+            }
+            else {
+                window.alert('Error! Unable to delete schedule.')
+            }
         })
         .catch((error) => {
             console.log(error);
         });
-        setCurrentPage('SolutionDashboard');
+        
     }
 
     const EditButtons = () => {
@@ -499,18 +504,8 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution, setCurrentPage) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
-            window.alert('Schedule created successfully!')
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-        setCurrentPage('SolutionDashboard');
-    }
-
-    const updateSchedule = (solution, setCurrentPage) => () => {
-        SolutionService.updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs).then((data) => {
             if(data === 1){
-                window.alert('Schedule updated successfully!');
+                window.alert('Schedule created successfully!');
                 setCurrentPage('SolutionDashboard');
             }
             else {
@@ -520,7 +515,21 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
         .catch((error) => {
             console.log(error);
         });
-        
+    }
+
+    const updateSchedule = (solution, setCurrentPage) => () => {
+        SolutionService.updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs).then((data) => {
+            if(data === 1){
+                window.alert('Schedule updated successfully!');
+                setCurrentPage('SolutionDashboard');
+            }
+            else {
+                window.alert('Error! Unable to update schedule.')
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     const TableHeaders = () => {
@@ -636,8 +645,8 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
      * @param valueChanging - specifies which type of dropdown is changing (COURSE, ROOM, PROF)
      */
     function setNewDropValue(solutionNumber, entryId, newValue, valueChanging) {
-            let tempSolutions = editSolutionEntries;
-            setEditSolutionEntries([...helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging)])
+        let tempSolutions = editSolutionEntries;
+        setEditSolutionEntries([...helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging)])
     }
 
     /**
@@ -651,17 +660,20 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     function helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging) {
         if(valueChanging === 'COURSE'){
             let entryArray = tempSolutions[solutionNumber].entry;
-            
-            let sectionNumber = 0;
-            for(let i=0; i<entryArray.length; i++){
-                if(entryArray[i].course === newValue){
-                    sectionNumber++;
-                }
-            }
-            
+            let time = getTimeOfSection(entryArray, entryId);
+
+            let entriesFromSameTime = getEntriesByTime(entryArray, time);
+            let conflictExists = doesConflictExist(entriesFromSameTime, 'course', newValue);
+
+            let ret;
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: sectionNumber}
+                    if(conflictExists){
+                        ret = {id: entryId, professor: temp.professor, course: -1, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    }
+                    else {
+                        ret = {id: entryId, professor: temp.professor, course: newValue, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    }
                     return ret;
                 }
                 else{
@@ -674,27 +686,20 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
         }
         else if(valueChanging === 'ROOM'){
             let entryArray = tempSolutions[solutionNumber].entry;
-            
+            let time = getTimeOfSection(entryArray, entryId);
+
+            let entriesFromSameTime = getEntriesByTime(entryArray, time);
+            let conflictExists = doesConflictExist(entriesFromSameTime, 'room', newValue);
+
+            let ret;
             let newArray = entryArray.map((temp) => {
                 if(temp.id === entryId){
-                    let ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue, sectionNum: temp.sectionNum}
-                    return ret;
-                }
-                else{
-                    return temp;
-                }
-            });
-            
-            tempSolutions[solutionNumber].entry = newArray;
-            return tempSolutions;
-            
-        }
-        else if(valueChanging === 'PROF'){
-            let entryArray = tempSolutions[solutionNumber].entry;
-            
-            let newArray = entryArray.map((temp) => {
-                if(temp.id === entryId){
-                    let ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    if(conflictExists){
+                        ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: -1, sectionNum: temp.sectionNum}
+                    }
+                    else {
+                        ret = {id: entryId, professor: temp.professor, course: temp.course, time: temp.time, room: newValue, sectionNum: temp.sectionNum}
+                    }
                     return ret;
                 }
                 else{
@@ -705,6 +710,95 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
             tempSolutions[solutionNumber].entry = newArray;
             return tempSolutions;
         }
+        else if(valueChanging === 'PROF'){
+            let entryArray = tempSolutions[solutionNumber].entry;
+            let time = getTimeOfSection(entryArray, entryId);
+
+            let entriesFromSameTime = getEntriesByTime(entryArray, time);
+            let conflictExists = doesConflictExist(entriesFromSameTime, 'professor', newValue);
+
+            let ret;
+            let newArray = entryArray.map((temp) => {
+                if(temp.id === entryId){
+                    if(conflictExists){
+                        ret = {id: entryId, professor: -1, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    }
+                    else {
+                        ret = {id: entryId, professor: newValue, course: temp.course, time: temp.time, room: temp.room, sectionNum: temp.sectionNum}
+                    }
+                    return ret;
+                }
+                else{
+                    return temp;
+                }
+            });
+            
+            tempSolutions[solutionNumber].entry = newArray;
+            return tempSolutions;
+        }
+    }
+    
+    /**
+     * This function returns the time id of the entryId.
+     * 
+     * @param entryArray - The entry array of this solution number.
+     * @param entryId - the entryId we are looking for
+     * @returns the time id for this entryId
+     */
+    function getTimeOfSection(entryArray, entryId){
+        let time;
+        
+        for(let i=0; i<entryArray.length; i++){
+            if(entryArray[i].id == entryId){
+                time = entryArray[i].time;
+                return time;
+            }
+        }
+    }
+        
+    /**
+     * Gets all the entries by a given time.
+     * 
+     * @param entryArray - all the entries in this solution.
+     * @param time - the time we are searching for.
+     * @returns an array of all the entries for a given time.
+     */
+    function getEntriesByTime(entryArray, time) {
+        let listOfEntriesSameTime = [];
+
+        for(let i=0; i<entryArray.length; i++){
+            if(entryArray[i].time === time){
+                listOfEntriesSameTime.push(entryArray[i]);
+            }
+        }
+        return listOfEntriesSameTime;
+    }
+    
+    /**
+     * Checks to see if the new drop down value has a conflict with existing values.
+     * 
+     * @param entriesFromSameTime - an array of entries from the same time.
+     * @param element - a string value of the element we are checking.
+     * @param newValue - the new value that is being changed by the dropdown.
+     * @returns true if a conflict exists and false otherwise.     */
+    function doesConflictExist(entriesFromSameTime, element, newValue) {
+        for(let i=0; i<entriesFromSameTime.length; i++){
+            if(entriesFromSameTime[i][element] === newValue) {
+                if(element === 'professor'){
+                    window.alert('Error! There may be a conflict with this Professor.');
+                    return true;
+                }
+                else if(element === 'room'){
+                    window.alert('Error! There may be a conflict with this Room.');
+                    return true;
+                }
+                else if(element === 'course'){
+                    window.alert('Error! There may be a conflict with this course.');
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     const SolutionItemDisplay = ({solutionTimes, solutionNumber}) => {
