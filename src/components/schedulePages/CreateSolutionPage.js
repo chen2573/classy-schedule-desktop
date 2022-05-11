@@ -470,9 +470,13 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution,setCurrentPage) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms, programs).then((data) => {
-            //SolutionService.saveScheduleToPlan()
-            //console.log(data);
-            setCurrentPage('SolutionDashboard');
+            if(data === -1){
+                window.alert('Error! Unable to create Schedule');
+            }
+            else {
+                window.alert('Successfully created Schedule!');
+                setCurrentPage('SolutionDashboard');
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -685,6 +689,13 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         }
     }
 
+    /**
+     * This function returns the time id of the entryId.
+     * 
+     * @param entryArray - The entry array of this solution number.
+     * @param entryId - the entryId we are looking for
+     * @returns the time id for this entryId
+     */
     function getTimeOfSection(entryArray, entryId){
         let time;
         
@@ -696,6 +707,13 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         }
     }
     
+    /**
+     * Gets all the entries by a given time.
+     * 
+     * @param entryArray - all the entries in this solution.
+     * @param time - the time we are searching for.
+     * @returns an array of all the entries for a given time.
+     */
     function getEntriesByTime(entryArray, time) {
         let listOfEntriesSameTime = [];
 
@@ -707,6 +725,13 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         return listOfEntriesSameTime;
     }
 
+    /**
+     * Checks to see if the new drop down value has a conflict with existing values.
+     * 
+     * @param entriesFromSameTime - an array of entries from the same time.
+     * @param element - a string value of the element we are checking.
+     * @param newValue - the new value that is being changed by the dropdown.
+     * @returns true if a conflict exists and false otherwise.     */
     function doesConflictExist(entriesFromSameTime, element, newValue) {
         for(let i=0; i<entriesFromSameTime.length; i++){
             if(entriesFromSameTime[i][element] === newValue) {
