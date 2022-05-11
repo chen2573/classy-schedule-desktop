@@ -505,14 +505,13 @@ function App() {
 
       window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
+          let id = data.room_id;
           let building = data.building_name;
           let number = data.room_num;
-          let capacity = data.capacity;
-          let tech = [];                               // Implement checking for tech from database
-          let id = data.room_id;
+          let capacity = data.capacity;                              // Implement checking for tech from database
           let elementClassName = "item";
 
-          let newRoom = { id, building, number, capacity, tech, elementClassName};
+          let newRoom = { id, building, number, capacity, elementClassName};
 
           stateRooms.push(newRoom);
         });
