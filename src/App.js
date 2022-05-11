@@ -171,8 +171,7 @@ function App() {
           let program = data.dept_name;
           let capacity = data.capacity;
           let credits = data.credits;
-          let tech = []; // Implement checking for length and tech from database
-          let length = 0;
+
           let name = data.class_name;
 
           let elementClassName = "item";
@@ -182,7 +181,7 @@ function App() {
 
           //const id = Math.floor(Math.random() * 10000) + 1;
 
-          let newCourse = { id, program, number, name, credits, capacity, tech, length, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          let newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
           if(!lab){
             stateCourses.push(newCourse);
@@ -505,14 +504,13 @@ function App() {
 
       window.DB.receive(CHANNEL_ROOM_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
+          let id = data.room_id;
           let building = data.building_name;
           let number = data.room_num;
-          let capacity = data.capacity;
-          let tech = [];                               // Implement checking for tech from database
-          let id = data.room_id;
+          let capacity = data.capacity;                              // Implement checking for tech from database
           let elementClassName = "item";
 
-          let newRoom = { id, building, number, capacity, tech, elementClassName};
+          let newRoom = { id, building, number, capacity, elementClassName};
 
           stateRooms.push(newRoom);
         });

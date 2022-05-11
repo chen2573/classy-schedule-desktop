@@ -80,10 +80,10 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
         const [name, setName] = useState(courseEditedId === null ? '' : editedCourse.name);
         const [credits, setCredits] = useState(courseEditedId === null ? '' : editedCourse.credits);
         const [capacity, setCapacity] = useState(courseEditedId === null ? '' : editedCourse.capacity);
-        const [length, setLength] = useState(courseEditedId === null ? '' : editedCourse.length);
-        const [tech, setTech] = useState(courseEditedId === null ? [] : editedCourse.tech);
+        //const [length, setLength] = useState(courseEditedId === null ? '' : editedCourse.length);
+        // const [tech, setTech] = useState(courseEditedId === null ? [] : editedCourse.tech);
         const [lab, setLab] = useState(courseEditedId === null ? false : editedCourse.lab);
-        const [lcourse, setLCourse] = useState(courseEditedId === null ? [] : editedCourse.lcourse);
+        //const [lcourse, setLCourse] = useState(courseEditedId === null ? [] : editedCourse.lcourse);
 
         // Course Name must be less than 50 characters and have no numbers
         const validNameLength = name => name.length < 51;
@@ -111,39 +111,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
         // Meeting Length (I'm not sure what constraints are for this)
         const validLength = val => [...val.matchAll(/(200|1[0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
-        const validateLength = validate(validLength, setLength);
-
-        /**
-         * This function handles changes on the Technology dropdown
-         * 
-         * @param e - onChange event
-         */
-        const handleTechChange = (e) => {
-            const {
-                target: { value },
-            } = e;
-            setTech(
-                // On autofill we get a stringified value.
-                typeof value === 'string' ? value.split(',') : value,
-            );
-        };
-
-        /**
-     * This function handles unique list items and removal of list items
-     * 
-     * @param courseInfo - Object containing all relevant course information
-     * @returns - newValue with old state and specified course added, or oldValue with specified course removed
-     */
-    const handleAssociatedCourseClick = courseInfo => e => {
-        setLCourse(oldValue => {
-            if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
-                console.log({oldValue});
-                return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
-            }
-            const newValue = [courseInfo]
-            return newValue;
-        })
-    }
+        //const validateLength = validate(validLength, setLength);
 
         const onSubmit = (e) => {
             e.preventDefault();
@@ -169,26 +137,14 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                 alert('Please enter the course capacity');
                 return;
             }
-            if (!tech) {
-                alert('Please enter the technology the course will need');
-                return;
-            }
-            if (!length) {
-                alert('Please enter the meeting length for the course');
-                return;
-            }
-            if (lab && !lcourse){
-                //alert('Please pick a course that is associated with this lab');
-                //return;
-            }
 
             let elementClassName = 'item';
             let sections = 0;
             if(courseEditedId === null){
-                onAddCourse({program, number, name, credits, capacity, tech, length, lab, elementClassName, sections}); // Implement checking for length and tech from database
+                onAddCourse({program, number, name, credits, capacity, lab, elementClassName, sections}); // Implement checking for length and tech from database
             } else {
                 let id = courseEditedId;
-                onEditCourse({id, program, number, name, credits, capacity, tech, length, lab, elementClassName, sections});
+                onEditCourse({id, program, number, name, credits, capacity, lab, elementClassName, sections});
                 resetState();
             }
 
@@ -197,8 +153,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
             setNumber('');
             setName('');
             setCredits('');
-            setLength('');
-            setTech([]);
+            // setLength('');
             setLab(false);
             //setLCourse('');
         }

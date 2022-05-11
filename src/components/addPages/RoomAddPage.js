@@ -65,9 +65,6 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         const [building, setRBuilding] = useState(roomEditedId === null ? '' : editedRoom.building)
         const [number, setRNumber] = useState(roomEditedId === null ? '' : editedRoom.number)
         const [capacity, setRCapacity] = useState(roomEditedId === null ? '' : editedRoom.capacity)
-        const [tech, setRTech] = useState(roomEditedId === null ? [] : editedRoom.tech)
-        const [rtime, setRTime] = useState(roomEditedId === null ? '' : editedRoom.time)
-        const [rclasstime, setRClassTime] = useState(roomEditedId === null ? '' : editedRoom.classtime)
 
         // Building Code must be all uppercase 3 letter code
         const validRBuilding = val => [...val.matchAll(/([A-Z][A-Z][A-Z]|[A-Z][A-Z]|[A-Z])?/g)].some(x => x[0] == val) || val === '';
@@ -86,20 +83,6 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         // This function calls passes other functions to validate
         const validateRCapacity = validate(validRCapacity, setRCapacity);
 
-        /**
-         * This function handles changes on the Technology dropdown
-         * 
-         * @param e - onChange event
-         */
-        const handleTechChange = (e) => {
-            const {
-                target: { value },
-            } = e;
-            setRTech(
-                // On autofill we get a stringified value.
-                typeof value === 'string' ? value.split(',') : value,
-            );
-        };
         const onSubmit = (e) => {
             e.preventDefault()
             e.target.reset()
@@ -125,21 +108,16 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
 
             let elementClassName = 'item';
             if(roomEditedId === null){
-                onAddRoom({building, number, capacity, tech, elementClassName});   // Implement checking for tech from database
+                onAddRoom({building, number, capacity, elementClassName});   // Implement checking for tech from database
             } else {
                 let id = roomEditedId;
-                onEditRoom({id, building, number, capacity, tech, elementClassName});
+                onEditRoom({id, building, number, capacity, elementClassName});
                 resetState();
             }
-
 
             setRBuilding('');
             setRNumber('');
             setRCapacity('');
-            setRTech([]);
-            
-
-            
         }
         return (
         <div className = 'body-container'>
@@ -170,7 +148,7 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs = {6}>
+                    {/*<Grid item xs = {6}>
                         <Box sx={{ minWidth: 120 }}>
                             <FormControl fullWidth>
                                 <InputLabel shrink id="label">Required Technology</InputLabel>
@@ -204,7 +182,7 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
                                 </Select>
                             </FormControl>
                         </Box>
-                    </Grid>
+                        </Grid>*/}
                 </Grid>
 
 
