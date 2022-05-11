@@ -82,7 +82,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
         const [capacity, setCapacity] = useState(courseEditedId === null ? '' : editedCourse.capacity);
         const [length, setLength] = useState(courseEditedId === null ? '' : editedCourse.length);
         const [tech, setTech] = useState(courseEditedId === null ? [] : editedCourse.tech);
-        const [lab, setLab] = useState(courseEditedId === null ? [] : editedCourse.lab);
+        const [lab, setLab] = useState(courseEditedId === null ? false : editedCourse.lab);
         const [lcourse, setLCourse] = useState(courseEditedId === null ? [] : editedCourse.lcourse);
 
         // Course Name must be less than 50 characters and have no numbers
@@ -200,7 +200,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
             setLength('');
             setTech([]);
             setLab(false);
-            setLCourse('');
+            //setLCourse('');
         }
 
         return (
@@ -266,7 +266,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                             </Box>
                         </Grid>
 
-                        <Grid item xs = {6}>
+                        {/*<Grid item xs = {6}>
                             <Box>
                                 <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
                             </Box>
@@ -306,7 +306,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                                     </Select>
                                 </FormControl>
                             </Box>
-                        </Grid>
+                                        </Grid>*/}
 
                     
                         <Grid item xs = {6}>
