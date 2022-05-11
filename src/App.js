@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/styles/App.css';
 import HomePage from './components/HomePage.js';
 import CoursePage from './components/addPages/CourseAddPage.js';
-import LabPage from './components/addPages/LabAddPage.js';
 import ProfessorPage from './components/addPages/ProfessorAddPage.js';
 import RoomPage from './components/addPages/RoomAddPage.js'
 import SolutionPage from './components/schedulePages/SolutionPage.js';
-import UpdateSolution from './components/schedulePages/UpdateSolution.js';
 import MenuBar from './components/Menubar.js';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { sampleCourses, samplePrograms, sampleLabs, sampleProfessors, sampleRooms, samplePlans } from './utils/sampleData';
 import * as DBFunction from './services/databaseServices/appDBService';
 
-import varValueConvert from 'cross-env/src/variable';
-import SolutionGenerate from './components/schedulePages/AddSolution';
 import AddSolution from './components/schedulePages/AddSolution.js';
 import SolutionDashboard from './components/schedulePages/SolutionDashboard';
 import CreateSolutionPage from './components/schedulePages/CreateSolutionPage';
@@ -783,10 +778,6 @@ function App() {
     {
       return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} onEditCourse={editCourse} courses={courses} programs={programs}/>
     }
-    else if (currentPage === 'lab')
-    {
-      return <LabPage onDelete={deleteLab} onAddLab={addLab} labs={labs} courses={courses}/>;
-    }
     else if (currentPage === 'professor')
     {
       return <ProfessorPage onDelete={deleteProfessor} onAddProfessor={addProfessor} onEditProfessor={editProfessor} professors={professors} courses={courses} programs={programs}/>;
@@ -814,10 +805,6 @@ function App() {
     else if(currentPage === 'SolutionDashboard')
     {
       return <SolutionDashboard plans = {plans} setCurrentPage={setCurrentPage} getLatestPlans={getLatestPlans}/>;
-    }
-    else if(currentPage === 'a')
-    {
-      return <UpdateSolution courses={courses} rooms={rooms} professors={professors} labs={labs} times={times}/>;
     }
     else
     {
