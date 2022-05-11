@@ -98,7 +98,7 @@ export function createPlan(solution, professors, courses, rooms, programs) {
     return new Promise((resolve, reject) => {
         window.DB.receive('fromMain:Plan', (data) => {
             if(data.status === 'SUCCESS') {
-                window.alert(data.message);
+                //window.alert(data.message);
                 resolve(1);
             }
             else {
@@ -160,11 +160,10 @@ function createSectionsJson(planId, solution, professors, courses, rooms, progra
     solution.forEach(section => {
         let temp = {};
         temp.section_num = parseInt(section.sectionNum);
-        temp.class_num = mapCourses(section.course, courses);
-        temp.dept_id = mapPrograms(section.course, courses, programs)
-        temp.room_id = mapRooms(section.room, rooms);
-        temp.professor_id = mapProfessors(section.professor, professors);
-        temp.plan_id = planId;
+        temp.class_id = parseInt(section.course);
+        temp.room_id = parseInt(section.room);
+        temp.professor_id = parseInt(section.professor);
+        temp.plan_id = parseInt(planId);
         temp.section_time_slot_id = parseInt(section.time);
         data.push(temp);
     });

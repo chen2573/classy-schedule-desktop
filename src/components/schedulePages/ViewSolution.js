@@ -324,7 +324,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
 
             obj.id = id;
             obj.professor = data[i].professor_id;
-            obj.course = getCantorPairing(data[i].dept_id, data[i].class_num);
+            obj.course = data[i].class_id;;
             obj.time = data[i].section_time_slot_id;
             obj.room = data[i].room_id;
             obj.sectionNum = data[i].section_num;
@@ -499,8 +499,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution, setCurrentPage) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms).then((data) => {
-            //SolutionService.saveScheduleToPlan()
-            //console.log(data);
+            window.alert('Schedule created successfully!')
         })
         .catch((error) => {
             console.log(error);
@@ -510,13 +509,18 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
 
     const updateSchedule = (solution, setCurrentPage) => () => {
         SolutionService.updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs).then((data) => {
-            //SolutionService.saveScheduleToPlan()
-            //console.log(data);
+            if(data === 1){
+                window.alert('Schedule updated successfully!');
+                setCurrentPage('SolutionDashboard');
+            }
+            else {
+                window.alert('Error! Unable to create schedule.')
+            }
         })
         .catch((error) => {
             console.log(error);
         });
-        setCurrentPage('SolutionDashboard');
+        
     }
 
     const TableHeaders = () => {
