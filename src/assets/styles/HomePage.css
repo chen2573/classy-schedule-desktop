@@ -1,21 +1,29 @@
 .container-home {
     display: flex;
-    margin-top: 10px;
+    justify-content: space-around;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    overflow: hidden;
 }
 
 .container-top-text {
-    margin: -15px;
-    padding: 10px;
+    /* margin: -15px;
+    padding: 10px; */
+    width: 100%;
+    font-size: 1.5em;
+    text-align: center;
 }
+
 .container-home-plan {
-    max-width: 500px;
+    max-width: 50vw;
     margin: 30px auto;
     overflow: auto;
-    height: 450px;
+    height: 60vh;
     border: 1px solid steelblue;
     padding: 30px;
     border-radius: 5px;
   }
+
 .home-plan-style {
     max-width:100%;
     display: flex;
@@ -26,7 +34,7 @@
     width: 50%;
 }
 .addPage-element{
-    width: 50%; 
+    width: 50%;
 }
 /*Styles for Top Bar*/
 .topbar {

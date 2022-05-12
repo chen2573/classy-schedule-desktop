@@ -1,18 +1,18 @@
 .container {
-    max-width: 500px;
+    max-width: 40vw;
     margin: 30px auto;
     overflow: auto;
-    height: 550px;
+    height: 65vh;
     border: 1px solid steelblue;
     padding: 30px;
     border-radius: 5px;
   }
 
   .body-container {
-    max-width: 600px;
-    margin: 30px auto;
+    max-width: 40vw;
+    margin: 2.5em auto;
     overflow: auto;
-    height: 550px;
+    height: 65vh;
     border: none;
     padding: 30px;
     border-radius: 5px;
