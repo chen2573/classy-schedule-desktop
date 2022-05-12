@@ -854,12 +854,10 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
 
     if(isAlgoCalculating){
         return(
-            <Box sx={{ 
-                alignItems: 'center',
-                justifyContent: 'center',}}>
+            <div className="calculating">
                 <h4>Calculating your Schedule</h4> <br />
-                <CircularProgress />
-            </Box>
+                <CircularProgress size="5vw" thickness="2"/>
+            </div>
         );
     }
     else {

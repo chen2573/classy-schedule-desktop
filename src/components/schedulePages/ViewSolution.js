@@ -889,12 +889,10 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
 
     if(isAlgoCalculating){
         return(
-            <Box sx={{ 
-                alignItems: 'center',
-                justifyContent: 'center',}}>
-                <h4>Calculating your Schedule</h4> <br />
+            <div className="calculating">
+                <h4 >Calculating your Schedule</h4> <br />
                 <CircularProgress />
-            </Box>
+            </div>
         );
     }
     else {

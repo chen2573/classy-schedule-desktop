@@ -4,6 +4,10 @@ hr
     margin-left: 2.5vw;
     margin-top: 0.5vh;
 }
+.container
+{
+  height: 60vh;
+}
 .schedule-container
 {
     width: 97vw;
@@ -115,3 +119,15 @@ td
     margin: auto;
     text-align: center;
   }
+
+.calculating
+{
+  width: 100%;
+  margin-top: 37.5vh;
+  text-align: center;
+}
+
+.calculating h4
+{
+  font-size: 2em;
+}
