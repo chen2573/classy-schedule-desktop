@@ -28,7 +28,7 @@ const {
  * @param setCurrentPage - the function passed to redirect to the solution page
  * @returns - The exported component
  */
-const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
+const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times}) => {
     /**
     * State variables to send to the algorithm
     */
@@ -41,6 +41,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
     const [courseScrollState, setCourseScrollState] = useState(0);
     const [professorScrollState, setProfessorScrollState] = useState(0);
     const [labsScrollState, setLabsScrollState] = useState(0);
+    const [selectedTimes, setTimes] = useState(times);
 
     const [stateCurrentPage, setStateCurrentPage] = useState('');
     const colorIsRed = true;
@@ -252,8 +253,8 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * a json from the variables and run the scheduling algorithm. The current page will then move to the solution viewer page.
      */
     function createNewSchedule(){
-        setStateCurrentPage('schedule');
-        AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs, 300, 3);
+        //setStateCurrentPage('schedule');
+        AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs, selectedTimes, 300, 3);
         setCurrentPage('schedule');
     }
 

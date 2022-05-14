@@ -1028,7 +1028,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
 
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/csp-ortools.exe'), [totalSolutions,topSolutions,data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions,data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
         let solution = JSON.parse(stdout);
 
@@ -1037,6 +1037,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
         mainWindow.webContents.send('fromMain:Algo', _payload);
     }
     else {
+        console.log('SOLUTION LOG --> Running Algorithm...');
         const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
 

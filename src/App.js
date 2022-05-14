@@ -790,7 +790,7 @@ function App() {
     }
     else if(currentPage === 'AddSolution')
     {
-      return <AddSolution courses={courses} rooms={rooms} professors={professors} labs={labs} setCurrentPage={setCurrentPage}/>;
+      return <AddSolution courses={courses} rooms={rooms} professors={professors} labs={labs} setCurrentPage={setCurrentPage} times={times}/>;
     }
     else if(currentPage === 'CreateSchedule')
     {
