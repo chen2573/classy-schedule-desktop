@@ -325,7 +325,7 @@
               </Box>
             </Grid>
 
-            <Grid item xs = {6}>
+            {/*<Grid item xs = {6}>
               <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
                   <InputLabel shrink id="label">Preferred Time Block</InputLabel>
@@ -351,7 +351,7 @@
                   </Select>
                 </FormControl>
               </Box>
-            </Grid>
+            </Grid>*/}
           </Grid>
     
           <br></br>
