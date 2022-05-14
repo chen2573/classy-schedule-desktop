@@ -286,31 +286,31 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         AlgoService.createJsonOfSelectedStates(selectedCourses, selectedRooms, selectedProfessors, selectedLabs, 300, 2);
     }
 
-    times = 
-    [
-        {
-            "id": 1,
-            "time": "MWF 8:15am",
-            "partOfDay": "morning"
-        },
+    // times = 
+    // [
+    //     {
+    //         "id": 1,
+    //         "time": "MWF 8:15am",
+    //         "partOfDay": "morning"
+    //     },
 
-        {
-            "id": 2,
-            "time": "TR 1:30pm",
-            "partOfDay": "afternoon"
-        }
-        ,
-        {
-            "id": 3,
-            "time": "MWF 10:55am",
-            "partOfDay": "morning"
-        },
-        {
-            "id": 4,
-            "time": "TR 12:00pm",
-            "partOfDay": "afternoon"
-        }
-    ];
+    //     {
+    //         "id": 2,
+    //         "time": "TR 1:30pm",
+    //         "partOfDay": "afternoon"
+    //     }
+    //     ,
+    //     {
+    //         "id": 3,
+    //         "time": "MWF 10:55am",
+    //         "partOfDay": "morning"
+    //     },
+    //     {
+    //         "id": 4,
+    //         "time": "TR 12:00pm",
+    //         "partOfDay": "afternoon"
+    //     }
+    // ];
     
     const solutionEntries = [];
     window.DB.receive('fromMain:Algo', (payload) => {

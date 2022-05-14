@@ -7,7 +7,7 @@
  * @param professors - professors that have been selected for the algorithm. 
  * @param labs - labs that have been selected for the algorithm.  
  */
-export function createJsonOfSelectedStates(courses, rooms, professors, labs, totalSolutions, topSolutions){
+export function createJsonOfSelectedStates(courses, rooms, professors, labs, times, totalSolutions, topSolutions){
     //console.log(courses);
     //The main object that will be returned back;
     let jsonObject = {};
@@ -16,7 +16,7 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs, tot
     jsonObject.courses = [];
     jsonObject.labs = [];
     jsonObject.professors = [];
-    jsonObject.times = [];
+    jsonObject.times = times;
 
     //Add all rooms
     for(const key in rooms) {
@@ -74,29 +74,30 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs, tot
     }
 
     //Add temp times for now.
-    let temp1 = {};
-    temp1.id = 1;
-    temp1.time = "MWF 8:15am";
-    temp1.timeBlock = "morning";
-    jsonObject.times.push(temp1);
+    // let temp1 = {};
+    // temp1.id = 1;
+    // temp1.time = "MWF 8:15am";
+    // temp1.timeBlock = "morning";
+    // jsonObject.times.push(temp1);
 
-    let temp2 = {};
-    temp2.id = 2;
-    temp2.time = "TR 1:30pm";
-    temp2.timeBlock = "afternoon";
-    jsonObject.times.push(temp2);
+    // let temp2 = {};
+    // temp2.id = 2;
+    // temp2.time = "TR 1:30pm";
+    // temp2.timeBlock = "afternoon";
+    // jsonObject.times.push(temp2);
 
-    let temp3 = {};
-    temp3.id = 3;
-    temp3.time = "MWF 10:55am";
-    temp3.timeBlock = "morning";
-    jsonObject.times.push(temp3);
+    // let temp3 = {};
+    // temp3.id = 3;
+    // temp3.time = "MWF 10:55am";
+    // temp3.timeBlock = "morning";
+    // jsonObject.times.push(temp3);
 
-    let temp4 = {};
-    temp4.id = 4;
-    temp4.time = "TR 12:00pm";
-    temp4.timeBlock = "afternoon";
-    jsonObject.times.push(temp4);
+    // let temp4 = {};
+    // temp4.id = 4;
+    // temp4.time = "TR 12:00pm";
+    // temp4.timeBlock = "afternoon";
+    // jsonObject.times.push(temp4);
+    //jsonObject.times.push(times);
 
     let _payload = {
         courses: courses,
