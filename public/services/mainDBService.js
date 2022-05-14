@@ -262,6 +262,21 @@ class DatabaseService {
         });
     } 
 
+    // ======= Prof Prefeneces =========
+    /**
+     * Gets the latest can teach preferences.
+     */
+    getTeachPrefs() {
+        return axios({
+            method: 'GET',
+            url: API_BASE + 'preference-management/class-preferences',
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
     // ======== Room methods ===========
     /**
      * Gets the latest rooms.
