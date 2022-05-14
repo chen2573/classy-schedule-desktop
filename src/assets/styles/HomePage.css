@@ -56,7 +56,7 @@
 
 .logo {
     font-weight: bold;
-    font-size: 40px;
+    font-size: 2em;
     color: #546e7a;
     cursor: pointer;
 }
@@ -89,8 +89,8 @@
 }
 
 .topAvatar {
-    width: 65px;
-    height: 65px;
+    width: 4em;
+    height: 4em;
     border-radius: 50%;
 }
 

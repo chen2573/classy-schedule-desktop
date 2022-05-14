@@ -155,29 +155,31 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage}) => {
      * This function will reset all the cards to unselected style.
      */
     function createAndRefresh(){ 
-        // To run this rn you need to uncomment the second to last line in checkInput()
-        const inputCodes = checkInput();
-        var alertString = 'You need to adjust your input in the following ways to ' +
-                            'be able to produce an optimized schedule.\n'
-        if(inputCodes[0]){
             createNewSchedule();
             resetStyles(); 
-        }
-        else{
-            // This block is finding which of the conditions were not satisfied
-            // in checkInput() and adding to the alert string to tell the user
-            // what they need to change in order to produce an optimized schedule
-            if(inputCodes[1] > 0){
-                alertString = alertString + 'Increase the teach load, ' +
-                'or decrease the sections of courses and labs, by ' + inputCodes[1] + '. ' + 
-                'A course section is equivalent to 1 teach load and a lab is 0.5. ' +
-                'You can increase the teach load by increasing existing professors ' +
-                'teach load or creating more professors.\n'
-            }
+        // To run this rn you need to uncomment the second to last line in checkInput()
+        // const inputCodes = checkInput();
+        // var alertString = 'You need to adjust your input in the following ways to ' +
+        //                     'be able to produce an optimized schedule.\n'
+        // if(inputCodes[0]){
+        //     createNewSchedule();
+        //     resetStyles(); 
+        // }
+        // else{
+        //     // This block is finding which of the conditions were not satisfied
+        //     // in checkInput() and adding to the alert string to tell the user
+        //     // what they need to change in order to produce an optimized schedule
+        //     if(inputCodes[1] > 0){
+        //         alertString = alertString + 'Increase the teach load, ' +
+        //         'or decrease the sections of courses and labs, by ' + inputCodes[1] + '. ' + 
+        //         'A course section is equivalent to 1 teach load and a lab is 0.5. ' +
+        //         'You can increase the teach load by increasing existing professors ' +
+        //         'teach load or creating more professors.\n'
+        //     }
             
-            alert(alertString);
-            return;
-        }
+        //     alert(alertString);
+        //     return;
+        // }
     }
 
     /**

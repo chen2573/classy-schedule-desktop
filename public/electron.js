@@ -5,6 +5,7 @@ const shell = require('electron').shell;
 const mysql = require('mysql');
 const fs = require('fs');
 const isDev = require('electron-is-dev');
+const testData = require('./services/data2.json');
 
 // Objects coming from electron
 const {
@@ -1002,6 +1003,7 @@ function addUpdateAndViewPlanChannel(){
         console.log(payload.data);
 
         let tempData = JSON.stringify(payload.data);
+        // let tempData = JSON.stringify(testData);
         executeAlgorithm(tempData, payload.courses, payload.rooms, payload.professors, payload.labs, payload.totalSolutions, payload.topSolutions);
 
         // let fs = require('fs');
@@ -1026,7 +1028,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
 
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/CSP-selective2.exe'), [totalSolutions,topSolutions,data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/scheduleAlgorithm/mac/csp-ortools.exe'), [totalSolutions,topSolutions,data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
         let solution = JSON.parse(stdout);
 
@@ -1035,7 +1037,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
         mainWindow.webContents.send('fromMain:Algo', _payload);
     }
     else {
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/CSP-selective2.exe'), [totalSolutions,topSolutions, data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
 
         let solution = JSON.parse(stdout);

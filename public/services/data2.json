@@ -1,0 +1,240 @@
+{
+    "courses":
+    [
+        {
+            "id": 1,
+            "name": "data",
+            "credits": 4,
+            "capacity": 23,
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        },
+
+        {
+            "id": 2,
+            "name": "capstone",
+            "credits": 4,
+            "capacity": 20,
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        },
+
+        {
+            "id": 3,
+            "name": "AI",
+            "credits": 4,
+            "capacity": 25,
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        },
+
+        {
+            "id": 4,
+            "name": "Architecture",
+            "credits": 4,
+            "capacity": 25,
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        },
+
+        {
+            "id": 5,
+            "name": "OOP",
+            "credits": 4,
+            "capacity": 25,
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        },
+
+        {
+            "id": 6,
+            "name": "Algo",
+            "credits": 4,
+            "capacity": 25,
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        },
+
+        {
+            "id": 7,
+            "name": "Stats",
+            "credits": 4,
+            "capacity": "25",
+            "sections": 1,
+            "techs": [],
+            "isLab": false
+        }
+    ],
+    "professors":
+    [
+        {
+            "id": 1,
+            "name": "A",
+            "canTeach": [1, 3, 5],
+            "courseLoad": 16,
+            "preferredCourses": [1, 5],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 2,
+            "name": "B",
+            "canTeach": [2, 4, 6],
+            "courseLoad": 8,
+            "preferredCourses": [6],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 3,
+            "name": "C",
+            "canTeach": [1, 2, 5, 7],
+            "courseLoad": 16,
+            "preferredCourses": [2, 7],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 4,
+            "name": "D",
+            "canTeach": [3, 7],
+            "courseLoad": 12,
+            "preferredCourses": [3],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 5,
+            "name": "E",
+            "canTeach": [4, 6],
+            "courseLoad": 4,
+            "preferredCourses": [6],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 6,
+            "name": "F",
+            "canTeach": [1, 7],
+            "courseLoad": 8,
+            "preferredCourses": [1, 7],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 7,
+            "name": "G",
+            "canTeach": [5],
+            "courseLoad": 4,
+            "preferredCourses": [],
+            "preferredTimeSlot": []
+        },
+
+        {
+            "id": 8,
+            "name": "H",
+            "canTeach": [3, 4],
+            "courseLoad": 8,
+            "preferredCourses": [4],
+            "preferredTimeSlot": []
+        }
+    ],
+    "times":
+    [
+        {
+            "id": 1,
+            "time": "MWF 8:15am",
+            "timeBlock": "morning"
+        },
+
+        {
+            "id": 2,
+            "time": "MWF 9:35am",
+            "timeBlock": "morning"
+        },
+
+        {
+            "id": 3,
+            "time": "MWF 10:55am",
+            "timeBlock": "morning"
+        },
+
+        {
+            "id": 4,
+            "time": "MWF 12:15pm",
+            "timeBlock": "afternoon"
+        },
+
+        {
+            "id": 5,
+            "time": "MWF 1:35pm",
+            "timeBlock": "afternoon"
+        },
+
+        {
+            "id": 6,
+            "time": "MWF 3:25pm",
+            "timeBlock": "afternoon"
+        },
+
+        {
+            "id": 7,
+            "time": "MWF 7:00pm",
+            "timeBlock": "night"
+        }
+    ],
+    "rooms":
+    [
+        {
+            "id": 1,
+            "name": "room 1",
+            "capacity": "22",
+            "techs": []
+        },
+
+        {
+            "id": 2,
+            "name": "room 2",
+            "capacity": "25",
+            "techs": []
+        },
+
+        {
+            "id": 3,
+            "name": "room 3",
+            "capacity": "20",
+            "techs": []
+        },
+
+        {
+            "id": 4,
+            "name": "room 4",
+            "capacity": "20",
+            "techs": []
+        },
+
+        {
+            "id": 5,
+            "name": "room 5",
+            "capacity": "25",
+            "techs": []
+        },
+
+        {
+            "id": 6,
+            "name": "room 6",
+            "capacity": "20",
+            "techs": []
+        }
+    ],
+    "labs":
+    [
+
+    ]
+}

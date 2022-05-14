@@ -53,7 +53,7 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs, tot
         
         tempProfessor.id = professors[key].id;
         tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
-        tempProfessor.canTeach = [5152, 5254, 7751, 7876];
+        tempProfessor.canTeach = [75, 78, 84];
         tempProfessor.courseLoad = parseInt(professors[key].teach_load);
         tempProfessor.preferredCourses = [];
         tempProfessor.preferredTimeSlot = [];
