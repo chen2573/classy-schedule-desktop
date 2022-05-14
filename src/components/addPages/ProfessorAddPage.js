@@ -280,7 +280,7 @@
                       <MenuItem 
                         onClick={handleClick(p, setCanTeach)}
                         key={p.id} 
-                        value={p.name}
+                        value={p.id}
                       >
                         {p.name}
                       </MenuItem>

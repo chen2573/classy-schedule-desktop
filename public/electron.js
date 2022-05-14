@@ -321,6 +321,7 @@ function createIPCChannels() {
     addAuthenticationChannels();
     addProgramChannel();
     addProfessorChannel();
+    addProfPrefChannel();
     addCourseChannel();
     addRoomChannel();
     addTimeChannel();
@@ -608,6 +609,23 @@ function addCourseChannel(){
             });
         }
 
+    });
+}
+
+function addProfPrefChannel(){
+    ipcMain.on("toMain:Prefs", (event, args) => {
+
+        if(args.request === 'REFRESH_TEACH_PREFS'){
+            console.log("DATABASE LOG --> " + args.message)
+            console.log("DATABASE LOG --> " + "Making request REFRESH all PROF TEACH PREFS")
+    
+            DB.getTeachPrefs().then((payload) => {
+                console.log("DATABASE LOG--> Successfully returned the following CAN TEACH PREFS rows\n" + payload.data + "\n\n");
+                mainWindow.webContents.send('fromMain:Prefs', payload.data);
+            }).catch((error) => {
+                console.error('!!!DATABASE LOG--> ERROR returning CAN TEACH PREFS: ' + error + + '\n');
+            });
+        }
     });
 }
 

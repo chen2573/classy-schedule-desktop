@@ -71,6 +71,7 @@ function App() {
     getLatestTimes();
     //getLatestLabs();
     getLatestPlans();
+    //getLatestProfessorTeachPreferences()
   };
 
 //================= PROGRAM/DEPARTMENT Functions ====================== 
@@ -164,7 +165,7 @@ function App() {
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
-          console.log(data);
+          //console.log(data);
 
           let id = data.class_id;
           let number = data.class_num;
@@ -396,9 +397,95 @@ function App() {
           });
 
           setProfessors(stateProfessors);
+
+          getLatestProfessorTeachPreferences();
       });
     }
     
+  }
+
+  /**
+ * Gets the latest data for professors.
+ */
+  const getLatestProfessorTeachPreferences = () => {
+
+      let stateTeachPreferences = [];
+  
+      
+      let _payload = {
+        request: 'REFRESH_TEACH_PREFS',
+        message: 'Renderer REFRESH for Professors Teach Preferences',
+      }
+
+      // Send a query to main
+      window.DB.send('toMain:Prefs', _payload);
+
+      // Recieve the results
+      window.DB.receive('fromMain:Prefs', (dataRows) => {
+          let tempProfessorsWithPreferences = [];
+          let profsIdsWithPrefs = [];
+          
+          dataRows.map((data) => {
+            //console.log(data);
+            tempProfessorsWithPreferences.push(mapTeachPrefsToProfessor(data.prof_id, data.class_preferences));
+            profsIdsWithPrefs.push(data.prof_id);
+          });
+
+          //console.log(tempProfessorsWithPreferences);
+
+          tempProfessorsWithPreferences.push.apply(tempProfessorsWithPreferences, getProfessorWithNoPreferences(profsIdsWithPrefs));
+          setProfessors(tempProfessorsWithPreferences);
+          //console.log(tempProfessorsWithPreferences);
+      });
+  }
+
+  /**
+   * This function maps teacher preferences to the professor id that is provided.
+   * @param profId - the id of the professor we are mapping.
+   * @param preferences - all the preferences that come from the db.
+   */
+  function mapTeachPrefsToProfessor(profId, preferences){
+    let tempProfessors = professors;
+    let canTeach = [];
+    let wantTeach = [];
+
+    for(let i=0; i<preferences.length; i++){
+      if(preferences[i].can_teach){
+        canTeach.push(preferences[i].class_id);
+      }
+      if(preferences[i].prefer_to_teach){
+        wantTeach.push(preferences[i].class_id);
+      }
+    }
+
+    for(const key in tempProfessors) {
+      if(tempProfessors[key].id === profId){
+        tempProfessors[key].can_teach = canTeach;
+        tempProfessors[key].want_teach = wantTeach;
+
+        return tempProfessors[key];
+      }
+    }
+  }
+
+  /**
+   * This function returns an array of all the teachers that do not have any preferences saved to the DB.
+   * @param professorIdWithPrefs - a list of the professor ids that already have preferences added.
+   * @returns 
+   */
+  function getProfessorWithNoPreferences(professorIdWithPrefs) {
+    let tempProfessors = professors;
+    let retProfs = [];
+
+    for(const key in tempProfessors) {
+      let index = professorIdWithPrefs.indexOf(tempProfessors[key].id);
+
+      if(index === -1){
+        retProfs.push(tempProfessors[key]);
+      }
+    }
+
+    return retProfs;
   }
 
   /**
