@@ -425,6 +425,7 @@ function App() {
           let tempProfessorsWithPreferences = [];
           let profsIdsWithPrefs = [];
           
+          console.log(dataRows);
           dataRows.map((data) => {
             //console.log(data);
             tempProfessorsWithPreferences.push(mapTeachPrefsToProfessor(data.prof_id, data.class_preferences));
@@ -450,11 +451,13 @@ function App() {
     let wantTeach = [];
 
     for(let i=0; i<preferences.length; i++){
-      if(preferences[i].can_teach){
-        canTeach.push(preferences[i].class_id);
+      if(preferences[i].can_teach && classExistsInState(preferences[i].class_id)){
+        let temp = {'id': preferences[i].class_id, 'name': getClassNameFromId(preferences[i].class_id)}
+        canTeach.push(temp);
       }
-      if(preferences[i].prefer_to_teach){
-        wantTeach.push(preferences[i].class_id);
+      if(preferences[i].prefer_to_teach && classExistsInState(preferences[i].class_id)){
+        let temp = {'id': preferences[i].class_id, 'name': getClassNameFromId(preferences[i].class_id)}
+        wantTeach.push(temp);
       }
     }
 
@@ -486,6 +489,31 @@ function App() {
     }
 
     return retProfs;
+  }
+
+  /**
+   * This function is an extra precaution to make sure we are not including preferences for classes that do not exist.
+   * @param classId - the class we are checking for.
+   */
+  function classExistsInState(classId) {
+    let tempCourses = courses;
+
+    for(let i=0; i<tempCourses.length; i++) {
+      if(tempCourses[i].id === classId){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getClassNameFromId(classId) {
+    let tempCourses = courses;
+
+    for(let i=0; i<tempCourses.length; i++) {
+      if(tempCourses[i].id === classId){
+        return tempCourses[i].name;
+      }
+    }
   }
 
   /**
