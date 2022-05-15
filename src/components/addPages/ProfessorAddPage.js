@@ -91,7 +91,6 @@
       const [lastName, setLastName] = useState(profEditedId === null ? '' : editedProfessor.lastName);
       const [email, setEmail] = useState(profEditedId === null ? '' : editedProfessor.email);
       const [teach_load, setTeachLoad] = useState(profEditedId === null ? '6' : editedProfessor.teach_load);
-      const [time_block, setTimeBlock] = useState(profEditedId === null ? '' : editedProfessor.time_block);
       const [can_teach, setCanTeach] = useState(profEditedId === null ? [] : editedProfessor.can_teach);
       const [want_teach, setWantTeach] = useState(profEditedId === null ? [] : editedProfessor.want_teach);
     
@@ -195,19 +194,15 @@
           alert('Please enter desired teach load');
           return;
         }
-        if (!time_block) {
-          alert('Please enter a meeting time');
-          return;
-        }
       
             
         let elementClassName = 'item';
 
         if(profEditedId === null){
-          onAddProfessor({firstName, lastName, email, teach_load, time_block, can_teach, want_teach, elementClassName});
+          onAddProfessor({firstName, lastName, email, teach_load, can_teach, want_teach, elementClassName});
         } else {
           let id = profEditedId;
-          onEditProfessor({id, firstName, lastName, email, teach_load, time_block, can_teach, want_teach, elementClassName});
+          onEditProfessor({id, firstName, lastName, email, teach_load, can_teach, want_teach, elementClassName});
           resetState();
         }
       
@@ -217,7 +212,6 @@
         setTeachLoad('6');
         setCanTeach([]);
         setWantTeach([]);
-        setTimeBlock('');
       }
       
       
@@ -324,34 +318,6 @@
                 </FormControl>
               </Box>
             </Grid>
-
-            {/*<Grid item xs = {6}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                  <InputLabel shrink id="label">Preferred Time Block</InputLabel>
-                  <Select
-                    labelId="label"
-                    id='time_block_dropdown'
-                    notched
-                    MenuProps={{sx: {
-                      "&& .Mui-selected": {
-                        backgroundColor: '#D0D9DD'
-                      }
-                    }}}
-                    value={time_block}
-                    label="Preferred Time Block"
-                    onChange={(e) => setTimeBlock(e.target.value)}
-                  >
-                    <MenuItem value="mwf_morning">MWF Morning</MenuItem>
-                    <MenuItem value="mwf_afternoon">MWF Afternoon</MenuItem>
-                    <MenuItem value="mwf_night">MWF Night</MenuItem>
-                    <MenuItem value="tr_morning">TR Morning</MenuItem>
-                    <MenuItem value="tr_afternoon">TR Afternoon</MenuItem>
-                    <MenuItem value="tr_night">TR Night</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-            </Grid>*/}
           </Grid>
     
           <br></br>
