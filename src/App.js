@@ -382,7 +382,7 @@ function App() {
 
           dataRows.map((data) => {
             //console.log(data);
-              let id = data.prof_id;
+              let id = data.professor_id;
               let firstName = data.first_name;
               let lastName = data.last_name;
               let teach_load = data.teach_load;
