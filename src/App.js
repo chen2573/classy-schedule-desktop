@@ -356,14 +356,13 @@ function App() {
         let firstName = prof.firstName;
         let lastName = prof.lastName;
         let teach_load = prof.teach_load;
-        let time_block = prof.time_block;
         let can_teach = prof.can_teach;
         let want_teach = prof.want_teach;
         let elementClassName = 'item';
         
         const id = Math.floor(Math.random() * 10000) + 1;
 
-        let newProfessor = { id, program, firstName, lastName, teach_load, time_block, can_teach, want_teach, elementClassName};
+        let newProfessor = { id, program, firstName, lastName, teach_load, can_teach, want_teach, elementClassName};
         stateProfessors.push(newProfessor);
       });
       setProfessors(stateProfessors);
@@ -381,18 +380,16 @@ function App() {
       window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (dataRows) => {
 
           dataRows.map((data) => {
-            //console.log(data);
-              let id = data.professor_id
+              let id = data.prof_id;
               let firstName = data.first_name;
               let lastName = data.last_name;
               let teach_load = data.teach_load;
               let email = data.user_email;
-              let time_block = '';
               let can_teach = []; 
               let want_teach = [];
               let elementClassName = 'item';
 
-              let newProf = { id, firstName, lastName, email, teach_load, time_block, can_teach, want_teach, elementClassName };
+              let newProf = { id, firstName, lastName, email, teach_load, can_teach, want_teach, elementClassName };
               stateProfessors.push(newProf);
           });
 
@@ -600,11 +597,10 @@ function App() {
         let building = room.rbuilding;
         let number = room.rnumber;
         let capacity = room.rcapacity;
-        let tech = room.rtech; 
         let id = Math.floor(Math.random() * 10000) + 1;
         let elementClassName = "item";
 
-        let newRoom = { id, building, number, capacity, tech, elementClassName};
+        let newRoom = { id, building, number, capacity, elementClassName};
         stateRooms.push(newRoom);
       })
       setRooms(stateRooms);
