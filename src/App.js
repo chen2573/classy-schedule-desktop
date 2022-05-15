@@ -157,8 +157,15 @@ function App() {
 
         var newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections };
         stateCourses.push(newCourse);
+        if(lab){
+          stateLabs.push(newCourse);
+        }
       });
       setCourses(stateCourses);
+      setLabs(stateLabs);
+
+      
+      
     }
     else {
       let _payload = {
