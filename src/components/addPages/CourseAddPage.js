@@ -267,7 +267,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                         <Grid item xs = {6}>
                             <Box sx={{ minWidth: 120 }}>
                                 <FormControl fullWidth>
-                                    <FormControlLabel control={<Checkbox />} label = "Lab" labelPlacement='end' onChange={(e) => setLab(!lab.value)}/>
+                                    <FormControlLabel control={<Checkbox />} label = "Lab" labelPlacement='end' onChange={(e) => setLab(e.target.value)}/>
                                 </FormControl>
                             </Box>
                         </Grid>

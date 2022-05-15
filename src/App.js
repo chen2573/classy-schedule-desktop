@@ -141,6 +141,7 @@ function App() {
         let courseID = course.courseID;
         let program = course.program;
         let capacity = course.capacity;
+        let lab = course.lab;
         let number = course.number;
         let name = course.name;
         let credits = course.credits;
@@ -148,7 +149,7 @@ function App() {
         let elementClassName = "item";
         let sections = 0;
 
-        var newCourse = { id, program, number, name, credits, capacity, elementClassName, sections };
+        var newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections };
         stateCourses.push(newCourse);
       });
       setCourses(stateCourses);
@@ -165,7 +166,7 @@ function App() {
       // Recieve the results
       window.DB.receive(CHANNEL_COURSE_FROM_MAIN, (dataRows) => {
         dataRows.map((data) => {
-          //console.log(data);
+          console.log(data);
 
           let id = data.class_id;
           let number = data.class_num;
@@ -380,6 +381,7 @@ function App() {
       window.DB.receive(CHANNEL_PROFESSOR_FROM_MAIN, (dataRows) => {
 
           dataRows.map((data) => {
+            //console.log(data);
               let id = data.prof_id;
               let firstName = data.first_name;
               let lastName = data.last_name;
