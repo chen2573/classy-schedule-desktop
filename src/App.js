@@ -42,6 +42,8 @@ const {
   CHANNEL_PLAN_TO_MAIN,
   CHANNEL_PLAN_FROM_MAIN
 } = require('./utils/ipcChannels')
+
+const PreferencesService = require('./utils/appPreferencesService');
 //#endregion
 
 /**
@@ -58,6 +60,10 @@ function App() {
   const [labs, setLabs] = useState([]);
   const [times, setTimes] = useState([]);
   const [plans, setPlans] = useState([]);
+
+  let tempStateProfessors;
+  let tempStateCourses;
+  let PrefService = new PreferencesService();
 
   /**
    * Gets the latest data for all the states and refreshes the cooresponding states.
@@ -184,15 +190,22 @@ function App() {
 
           let newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
 
-          if(!lab){
-            stateCourses.push(newCourse);
-          }
-          else{
+          stateCourses.push(newCourse);
+          if(lab){
             stateLabs.push(newCourse);
           }
         });
+
+        PrefService.setCourses(stateCourses);
+
         setCourses(stateCourses);
         setLabs(stateLabs);
+
+        if(PrefService.getCourses().length > 0 && PrefService.getProfessors().length > 0){
+          PrefService.getLatestProfessorTeachPreferences().then(data => {
+            setProfessors(data);
+          });
+        } 
       });
     }
   }
@@ -396,124 +409,22 @@ function App() {
               stateProfessors.push(newProf);
           });
 
-          setProfessors(stateProfessors);
+          
+          //console.log(courses);
+          PrefService.setProfessors(stateProfessors);
 
-          getLatestProfessorTeachPreferences();
+          if(PrefService.getCourses().length > 0 && PrefService.getProfessors().length > 0){
+            PrefService.getLatestProfessorTeachPreferences().then(data => {
+              setProfessors(data);
+            });
+          } 
+          else {
+            setProfessors(stateProfessors);
+          }
+          //getLatestProfessorTeachPreferences();
       });
     }
     
-  }
-
-  /**
- * Gets the latest data for professors.
- */
-  const getLatestProfessorTeachPreferences = () => {
-
-      let stateTeachPreferences = [];
-  
-      
-      let _payload = {
-        request: 'REFRESH_TEACH_PREFS',
-        message: 'Renderer REFRESH for Professors Teach Preferences',
-      }
-
-      // Send a query to main
-      window.DB.send('toMain:Prefs', _payload);
-
-      // Recieve the results
-      window.DB.receive('fromMain:Prefs', (dataRows) => {
-          let tempProfessorsWithPreferences = [];
-          let profsIdsWithPrefs = [];
-          
-          console.log(dataRows);
-          dataRows.map((data) => {
-            //console.log(data);
-            tempProfessorsWithPreferences.push(mapTeachPrefsToProfessor(data.prof_id, data.class_preferences));
-            profsIdsWithPrefs.push(data.prof_id);
-          });
-
-          //console.log(tempProfessorsWithPreferences);
-
-          tempProfessorsWithPreferences.push.apply(tempProfessorsWithPreferences, getProfessorWithNoPreferences(profsIdsWithPrefs));
-          setProfessors(tempProfessorsWithPreferences);
-          //console.log(tempProfessorsWithPreferences);
-      });
-  }
-
-  /**
-   * This function maps teacher preferences to the professor id that is provided.
-   * @param profId - the id of the professor we are mapping.
-   * @param preferences - all the preferences that come from the db.
-   */
-  function mapTeachPrefsToProfessor(profId, preferences){
-    let tempProfessors = professors;
-    let canTeach = [];
-    let wantTeach = [];
-
-    for(let i=0; i<preferences.length; i++){
-      if(preferences[i].can_teach && classExistsInState(preferences[i].class_id)){
-        let temp = {'id': preferences[i].class_id, 'name': getClassNameFromId(preferences[i].class_id)}
-        canTeach.push(temp);
-      }
-      if(preferences[i].prefer_to_teach && classExistsInState(preferences[i].class_id)){
-        let temp = {'id': preferences[i].class_id, 'name': getClassNameFromId(preferences[i].class_id)}
-        wantTeach.push(temp);
-      }
-    }
-
-    for(const key in tempProfessors) {
-      if(tempProfessors[key].id === profId){
-        tempProfessors[key].can_teach = canTeach;
-        tempProfessors[key].want_teach = wantTeach;
-
-        return tempProfessors[key];
-      }
-    }
-  }
-
-  /**
-   * This function returns an array of all the teachers that do not have any preferences saved to the DB.
-   * @param professorIdWithPrefs - a list of the professor ids that already have preferences added.
-   * @returns 
-   */
-  function getProfessorWithNoPreferences(professorIdWithPrefs) {
-    let tempProfessors = professors;
-    let retProfs = [];
-
-    for(const key in tempProfessors) {
-      let index = professorIdWithPrefs.indexOf(tempProfessors[key].id);
-
-      if(index === -1){
-        retProfs.push(tempProfessors[key]);
-      }
-    }
-
-    return retProfs;
-  }
-
-  /**
-   * This function is an extra precaution to make sure we are not including preferences for classes that do not exist.
-   * @param classId - the class we are checking for.
-   */
-  function classExistsInState(classId) {
-    let tempCourses = courses;
-
-    for(let i=0; i<tempCourses.length; i++) {
-      if(tempCourses[i].id === classId){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function getClassNameFromId(classId) {
-    let tempCourses = courses;
-
-    for(let i=0; i<tempCourses.length; i++) {
-      if(tempCourses[i].id === classId){
-        return tempCourses[i].name;
-      }
-    }
   }
 
   /**
@@ -869,6 +780,8 @@ function App() {
   * The useEffect method runs the updateAllStates method once a page is refreshed.
   */
   useEffect(updateAllStates, []); 
+
+  //useEffect(getLatestProfessorTeachPreferences, [])
   
   //================= THEME and PAGE NAVIGATION =================================
   /**
