@@ -122,7 +122,7 @@
         * @param email - Input value
         * @returns    - True if the input is valid, otherwise false
         */
-      const validEmailChars = email => email.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').concat('@').includes(c));
+      const validEmailChars = email => email.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').concat('@').concat('0').concat('1').concat('2').concat('3').concat('4').concat('5').concat('6').concat('7').concat('8').concat('9').includes(c));
     
       /**
         *  This function enforces that the input is less than 30 characters
