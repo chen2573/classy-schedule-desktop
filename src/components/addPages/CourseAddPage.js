@@ -154,7 +154,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
             setName('');
             setCredits('');
             // setLength('');
-            setLab(false);
+            //setLab(false);
             //setLCourse('');
         }
 
@@ -267,7 +267,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
                         <Grid item xs = {6}>
                             <Box sx={{ minWidth: 120 }}>
                                 <FormControl fullWidth>
-                                    <FormControlLabel control={<Checkbox />} label = "Lab" labelPlacement='end' onChange={(e) => setLab(e.target.value)}/>
+                                    <FormControlLabel control={<Checkbox />} checked={lab} label = "Lab" labelPlacement='end' onChange={(e) => setLab(e.target.checked)}/>
                                 </FormControl>
                             </Box>
                         </Grid>
