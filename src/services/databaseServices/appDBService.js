@@ -44,7 +44,8 @@ export function updateProfessor(professor){
         id: professor.id,
         firstName: professor.firstName,
         lastName: professor.lastName,
-        teachLoad: professor.teach_load
+        teachLoad: professor.teach_load,
+        email: professor.email
     };
     
     // Send a query to main
