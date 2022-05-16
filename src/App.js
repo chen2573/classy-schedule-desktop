@@ -54,6 +54,7 @@ const PreferencesService = require('./utils/appPreferencesService');
  */
 function App() {
   const [programs, setPrograms] = useState([]); //This has to be an Array for some reason.
+  const [allCourses, setAllCourses] = useState([]);
   const [courses, setCourses] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -73,9 +74,7 @@ function App() {
     getLatestProfessors();
     getLatestRooms();
     getLatestTimes();
-    //getLatestLabs();
     getLatestPlans();
-    //getLatestProfessorTeachPreferences()
   };
 
 //================= PROGRAM/DEPARTMENT Functions ====================== 
@@ -135,8 +134,9 @@ function App() {
     // Clears up the currently stored data and gets new data in the following code.
     // There was a bug where with every refresh, we would get duplicate state.
     //setCourses('')
-    let stateCourses = [];
+    let stateAllCourses = [];
     let stateLabs = [];
+    let stateCourses = []
 
     if (window.DB === undefined || !USE_DATABASE) {
       console.log('Using sample data');
@@ -154,16 +154,19 @@ function App() {
         let sections = 0;
 
         var newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections };
-        stateCourses.push(newCourse);
+        stateAllCourses.push(newCourse);
+
         if(lab){
           stateLabs.push(newCourse);
         }
+        else{
+          stateCourses.push(newCourse);
+        }
       });
+
+      setAllCourses(stateAllCourses);
       setCourses(stateCourses);
       setLabs(stateLabs);
-
-      
-      
     }
     else {
       let _payload = {
@@ -195,15 +198,19 @@ function App() {
           //const id = Math.floor(Math.random() * 10000) + 1;
 
           let newCourse = { id, program, number, name, credits, capacity, lab, elementClassName, sections }; //This needs to be the same as onAddCourse() in CourseAddPage.js
+          stateAllCourses.push(newCourse);
 
-          stateCourses.push(newCourse);
           if(lab){
             stateLabs.push(newCourse);
           }
+          else{
+            stateCourses.push(newCourse);
+          }
         });
 
-        PrefService.setCourses(stateCourses);
+        PrefService.setCourses(stateAllCourses);
 
+        setAllCourses(stateAllCourses);
         setCourses(stateCourses);
         setLabs(stateLabs);
 
@@ -249,14 +256,18 @@ function App() {
       else {
         programId = programIdArray[0].programId;
       }
-      console.log(programId);
-      console.log(parseInt(course.number));
-      id = cantorPairing(programId, parseInt(course.number));
 
       DBFunction.createCourse(course, programId).then((id) => {
         if(id != -1){
           newCourse = { id, ...course }
-          setCourses([...courses, newCourse]);
+          setAllCourses([...allCourses, newCourse]);
+
+          if(newCourse.lab){
+            setLabs([...labs, newCourse]);
+          }
+          else{
+            setCourses([...courses, newCourse]);
+          }
         }
       }); 
     }
@@ -280,7 +291,9 @@ function App() {
       DBFunction.deleteCourse(id).then((shouldDeleteFromUI) => {
         if(shouldDeleteFromUI){
           //delete from UI
+          setAllCourses(allCourses.filter((course) => course.id !== id));
           setCourses(courses.filter((course) => course.id !== id));
+          setLabs(labs.filter((course) => course.id !== id));
         }
       }).catch((error) => {
         window.alert(error);
@@ -293,7 +306,7 @@ function App() {
    * @param course - the new state course. 
    */
   const editCourse = (course) => {
-    let tempCourse = courses;
+    let tempCourse = allCourses;
     let tempPrograms = programs;
 
     let programName = getDepartmentName(tempCourse, course.id);
@@ -301,17 +314,34 @@ function App() {
 
     DBFunction.updateCourse(course, programId).then(result => {
       let id = course.id;
+      let stateAllCourses = [];
       let stateCourses = [];
+      let stateLabs = [];
 
       if (result) {
-        courses.map(curCourse => {
+        allCourses.map(curCourse => {
           if (curCourse.id === id) {
-            stateCourses.push(course);
+            stateAllCourses.push(course);
+            if(course.lab){
+              stateLabs.push(course)
+            }
+            else{
+              stateCourses.push(course);
+            }
           } else {
-            stateCourses.push(curCourse);
+            stateAllCourses.push(curCourse);
+            if(curCourse.lab){
+              stateLabs.push(curCourse)
+            }
+            else{
+              stateCourses.push(curCourse);
+            }
           }
-        })
+        });
+
+        setAllCourses(stateAllCourses);
         setCourses(stateCourses);
+        setLabs(stateLabs);
       }
     });   
   }
@@ -805,7 +835,7 @@ function App() {
   {
     if (currentPage === 'course')
     {
-      return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} onEditCourse={editCourse} courses={courses} programs={programs}/>
+      return <CoursePage onDelete={deleteCourse} onAddCourse={addCourse} onEditCourse={editCourse} courses={allCourses} programs={programs}/>
     }
     else if (currentPage === 'professor')
     {
@@ -817,7 +847,7 @@ function App() {
     }
     else if (currentPage === 'schedule')
     {
-      return <SolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs}/>;
+      return <SolutionPage professors={professors} courses={allCourses} rooms={rooms} times={times} programs={programs}/>;
     }
     else if(currentPage === 'AddSolution')
     {
@@ -825,11 +855,11 @@ function App() {
     }
     else if(currentPage === 'CreateSchedule')
     {
-      return <CreateSolutionPage professors={professors} courses={courses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
+      return <CreateSolutionPage professors={professors} courses={allCourses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
     }
     else if (currentPage === 'UpdateSolution')
     {
-      return <ViewSolution professors={professors} courses={courses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
+      return <ViewSolution professors={professors} courses={allCourses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
     }
     else if(currentPage === 'SolutionDashboard')
     {
