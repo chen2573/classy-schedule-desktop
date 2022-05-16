@@ -126,7 +126,7 @@ function displayMainWindow() {
             }
             
             newPlanDialogue.loadURL(`file://${path.join(__dirname, '/views/updatePlan/plan.html')}`);
-            setTimeout(sendContents, 300*1000);
+            setTimeout(sendContents, 500);
             
             function sendContents() {
                 newPlanDialogue.webContents.send('fromMain:ModalElectron', payload);

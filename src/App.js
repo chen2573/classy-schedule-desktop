@@ -61,8 +61,6 @@ function App() {
   const [times, setTimes] = useState([]);
   const [plans, setPlans] = useState([]);
 
-  let tempStateProfessors;
-  let tempStateCourses;
   let PrefService = new PreferencesService();
 
   /**
