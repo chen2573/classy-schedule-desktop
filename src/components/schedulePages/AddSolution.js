@@ -225,7 +225,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
             window.alert('Caution! You may have a professor that cannot teach a selected course.');
         }
 
-        let confirmation = window.confirm('If you recieved caution messages, we may not be able to generate a schedule\nWould you like to coninue?');
+        let confirmation = window.confirm('If you recieved caution messages, we may not be able to generate a schedule\nWould you like to continue?');
         if(confirmation){
             return true;
         }
