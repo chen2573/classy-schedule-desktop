@@ -508,7 +508,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
                 window.alert('Schedule created successfully!');
                 setCurrentPage('SolutionDashboard');
             }
-            else {
+            else if(data === -1) {
                 window.alert('Error! Unable to create schedule.')
             }
         })
@@ -523,7 +523,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
                 window.alert('Schedule updated successfully!');
                 setCurrentPage('SolutionDashboard');
             }
-            else {
+            else if(data === -1) {
                 window.alert('Error! Unable to update schedule.')
             }
         })
