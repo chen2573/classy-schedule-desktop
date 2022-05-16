@@ -1022,7 +1022,7 @@ function addUpdateAndViewPlanChannel(){
 
         let tempData = JSON.stringify(payload.data);
         // let tempData = JSON.stringify(testData);
-        executeAlgorithm(tempData, payload.courses, payload.rooms, payload.professors, payload.labs, payload.totalSolutions, payload.topSolutions);
+        executeAlgorithm(tempData, payload.courses, payload.rooms, payload.professors, payload.labs, payload.totalSolutions, payload.topSolutions, payload.strict);
 
         // let fs = require('fs');
         // fs.writeFile(path.join(__dirname, '/services/tempData.json'), tempData, (err, result) => {
@@ -1034,19 +1034,20 @@ function addUpdateAndViewPlanChannel(){
 //const exec = require('child_process').execFile;
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
-async function executeAlgorithm(data, courses, rooms, professors, labs, totalSolutions, topSolutions) {
+async function executeAlgorithm(data, courses, rooms, professors, labs, totalSolutions, topSolutions, strict) {
     let _payload = {
         setCourses: courses,
         setRooms: rooms,
         setProfessors: professors,
         setLabs: labs,
         totalSolutions: totalSolutions,
-        topSolutions: topSolutions
+        topSolutions: topSolutions,
+        strict: strict
     }
 
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions,data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
         let solution = JSON.parse(stdout);
 
@@ -1056,7 +1057,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
     }
     else {
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, data]);
+        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
         console.log('SOLUTION LOG --> Solution:' + stdout);
 
         let solution = JSON.parse(stdout);
