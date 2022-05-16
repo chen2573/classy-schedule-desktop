@@ -90,6 +90,39 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
         }
     }
 
+    const addSectionsForLabs = (course) => () => {
+        let _payload = {
+            request: 'COURSE_SECTIONS',
+            program: course.program,
+            number: course.number,
+            message: 'Renderer PROMPT for Course Sections'
+        }
+
+        if(course.elementClassName === "item"){
+            
+            window.DB.send(CHANNEL_MODAL_TO_MAIN, _payload);
+            window.DB.receive(CHANNEL_MODAL_FROM_MAIN, (response) => {
+                if(response === "CANCEL"){
+                    console.log('User cancelled')
+                }
+                else {
+                    course.elementClassName = "item-selected"; 
+                    console.log(response);
+                    course.sections = response;
+                    setLabsScrollState(document.querySelector('#labsScroll').scrollTop);
+                    setSelectedLabs([...selectedLabs, course]);
+                }
+            });
+        }else{
+            course.elementClassName = "item";
+            course.sections = 0;
+
+            let id = course.id;
+            setLabsScrollState(document.querySelector('#labsScroll').scrollTop);
+            setSelectedLabs(selectedLabs.filter((remaingCourses) => remaingCourses.id !== id));
+        }
+    }
+
     /**
      * Selects a room to add for creating schedule. This function changes the background color
      * and adds it to the state variable holding rooms.
@@ -155,75 +188,134 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
      * schedule given the data entered by the user
      * This function will reset all the cards to unselected style.
      */
-    function createAndRefresh(){ 
+    function createAndRefresh(){
+        let haveValidInputs = validateInput();
+
+        if(haveValidInputs){
             createNewSchedule();
-            resetStyles(); 
-        // To run this rn you need to uncomment the second to last line in checkInput()
-        // const inputCodes = checkInput();
-        // var alertString = 'You need to adjust your input in the following ways to ' +
-        //                     'be able to produce an optimized schedule.\n'
-        // if(inputCodes[0]){
-        //     createNewSchedule();
-        //     resetStyles(); 
-        // }
-        // else{
-        //     // This block is finding which of the conditions were not satisfied
-        //     // in checkInput() and adding to the alert string to tell the user
-        //     // what they need to change in order to produce an optimized schedule
-        //     if(inputCodes[1] > 0){
-        //         alertString = alertString + 'Increase the teach load, ' +
-        //         'or decrease the sections of courses and labs, by ' + inputCodes[1] + '. ' + 
-        //         'A course section is equivalent to 1 teach load and a lab is 0.5. ' +
-        //         'You can increase the teach load by increasing existing professors ' +
-        //         'teach load or creating more professors.\n'
-        //     }
-            
-        //     alert(alertString);
-        //     return;
-        // }
+            resetStyles();
+        }
+    }
+
+    function validateInput(){
+        if(courseSections.length <= 0){
+            window.alert('Error! No courses have been selected.');
+            return false;
+        }
+
+        if(selectedRooms.length <= 0){
+            window.alert('Error! No rooms have been selected.');
+            return false;
+        }
+
+        if(selectedProfessors.length <= 0){
+            window.alert('Error! No professors have been selected.');
+            return false;
+        }
+
+        if(selectedLabs.length <= 0){
+            window.alert('Caution! No labs have been selected.');
+        }
+
+        if(!checkCourseLoadWithProfessors()){
+            window.alert('Caution! You may have more course load than teacher load.');
+        }
+
+        if(!checkProfsCanTeach()){
+            window.alert('Caution! You may have a professor that cannot teach a selected course.');
+        }
+
+        let confirmation = window.confirm('If you recieved caution messages, we may not be able to generate a schedule\nWould you like to continue?');
+        if(confirmation){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
-     * A zero for an integer in inputCodes means there is no issue with the varible
-     * it represents.
-     * The codes it represents are as follows
-     * inputCodes[1] checks Number of Sections - Total Teach Load
-     * If a value is negative it means there needs to be that much more of the item
-     * @returns inputCodes, an array of numbers with a boolean in the first position
+     * This function makes sure that the courses selected have a teach load less than the
+     * professors selected.
+     * @returns true if the the courses load is less or equal to the professors.
      */
-    function checkInput(){       
-        /**
-         * This section checks if all the course sections can be taught
-         * WORK IN PROGRESS
-         */
-        const inputCodes = [true, 0];
-        var sectionSum = 0;
-        var teachLoadSum = 0;
-        // This section determines the total number of sections, total teach load
-        for(let i  = 0; i < courseSections.length; i++){
-            sectionSum = sectionSum + parseInt(courseSections[i].sections);
-        }
-        sectionSum = sectionSum + selectedLabs.length*0.5
+    function checkCourseLoadWithProfessors(){
+        let totalLoad = getCourseAndLabLoad();
+        let totalProfLoad = getTotalProfLoad();
 
-        for(let i  = 0; i < selectedProfessors.length; i++){
-            teachLoadSum = teachLoadSum + selectedProfessors[i].teach_load;
+        if(totalLoad > totalProfLoad){
+            return false;
         }
-        
-        inputCodes[1] = sectionSum -  teachLoadSum;
-        
-        // for loop that determines the boolean value of the flag
-        // based on && of all the boolean values in the array
-        for(let i = 1; i < inputCodes.length; i++){
-            var codeValue = false
-            if(inputCodes[i] == 0){
-                codeValue = true
+        else{
+            return true;
+        }
+    }
+
+    /**
+     * This function returns the total load of credits for courses and labs.
+     * @returns total load of courses and labs.
+     */
+    function getCourseAndLabLoad(){
+        let coursesLoad = 0;
+        let labsLoad = 0;
+
+        for(let i=0; i<courseSections.length; i++){
+            coursesLoad += parseInt(courseSections[i].credits);
+        }
+
+        for(let i=0; i<selectedLabs.length; i++){
+            coursesLoad += parseInt(selectedLabs[i].credits);
+        }
+
+        return coursesLoad + labsLoad;
+    }
+
+    /**
+     * This function returns the total of all professors teach load.
+     * @returns total professors load.
+     */
+    function getTotalProfLoad(){
+        let totalLoad = 0;
+
+        for(let i=0; i<selectedProfessors.length; i++){
+            totalLoad += parseInt(selectedProfessors[i].teach_load);
+        }
+        return totalLoad;
+    }
+
+    /**
+     * Checks to see if the professors each have at least one of the courses selected.
+     * @returns true if validated, false otherwise.
+     */
+    function checkProfsCanTeach(){
+        let validate = false;
+
+        for(let i=0; i<courseSections.length; i++){
+            for(let j=0; j<selectedProfessors.length; j++){
+                if(checkIndividualProfPrefs(courseSections[i].id, [...selectedProfessors[j].can_teach])){
+                    validate = true;
+                }
             }
-            inputCodes[0] = inputCodes[0] && codeValue;
         }
+        return validate;
+    }
 
+    /**
+     * This function checks to see that the professors can_teach array has at least one of the courses.
+     * @param id - the id we are checking for
+     * @param canTeachArray - an array of course objects.
+     * @returns true if the prof satisfies the can teach requirement.
+     */
+    function checkIndividualProfPrefs(id, canTeachArray){
+        let result = false;
 
-        // inputCodes[0] = true;
-        return inputCodes;
+        for(let i=0; i<canTeachArray.length; i++){
+            if(canTeachArray[i].id === id){
+                result = true;
+            }
+        }
+        
+        return result;
     }
     
     /**
@@ -520,7 +612,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
                         <CourseAddPageContent courses={courses} onClickCourse={addSectionsForClass} ></CourseAddPageContent>
                         <RoomAddPageContent  rooms={rooms} onClickRoom={selectRooms}></RoomAddPageContent>
                         <ProfessorAddPageContent professors={professors} onClickProfessor={selectProfessors}></ProfessorAddPageContent>
-                        <LabAddPageContent labs={labs} onClickLab={selectLabs}></LabAddPageContent>
+                        <LabAddPageContent labs={labs} onClickLab={addSectionsForLabs}></LabAddPageContent>
                     </div>
                     
                     {/* generate schedule button */}
