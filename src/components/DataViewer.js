@@ -47,7 +47,7 @@ export function DataViewer ({id, dataState, sx, children})
                         {
                             {/*need to remove comment here to get rid of id*/}
                             {/*attribute[0] != 'id' &&*/}
-                        if(attribute[0] != 'elementClassName'){
+                        if(attribute[0] != 'elementClassName' && attribute[0] != 'can_teach' && attribute[0] != 'want_teach'){
                             //map each attribute of displayData to strings
                             return <Box sx={{display: 'flex', justifyContent:'space-between'}}>
                                         <Typography sx={{fontWeight: 'bold', textTransform: 'uppercase', marginLeft:'1em', marginRight:'1.5em'}}>{attribute[0]}</Typography>

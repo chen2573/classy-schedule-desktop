@@ -53,9 +53,9 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs, tim
         
         tempProfessor.id = professors[key].id;
         tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
-        tempProfessor.canTeach = [75, 78, 84];
+        tempProfessor.canTeach = [...getProfessorCanTeachArray(professors[key].can_teach, courses, labs)];
         tempProfessor.courseLoad = parseInt(professors[key].teach_load);
-        tempProfessor.preferredCourses = [];
+        tempProfessor.preferredCourses = [...getProfessorWantTeachArray(professors[key].want_teach)];
         tempProfessor.preferredTimeSlot = [];
 
 
@@ -113,4 +113,57 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs, tim
     window.DB.send('toMain:Json', _payload);
 
     return jsonObject;
+}
+
+/**
+ * This function pulls out the class ids from an array of course objects.
+ * @param canTeachArray - array of course objects.
+ */
+function getProfessorCanTeachArray(canTeachArray, courses, labs){
+    let retArray = [];
+
+    for(const key in canTeachArray){
+        retArray.push(parseInt(canTeachArray[key].id));
+    }
+
+    if(retArray.length > 0){
+        return [...retArray];
+    }
+    else{
+        return [...getAllCourseIds(courses, labs)];
+    }
+    
+}
+
+/**
+ * This function pulls out the class ids from an array of course objects.
+ * @param wantTeachArray - array of course objects.
+ */
+ function getProfessorWantTeachArray(wantTeachArray) {
+    let retArray = [];
+
+    for(const key in wantTeachArray) {
+        retArray.push(parseInt(wantTeachArray[key].id));
+    }
+    return [...retArray];
+}
+
+/**
+ * This function gets all the course ids, so that if a professor does not have a can teach preference, all the courses are added
+ * to their preference.
+ * @param courses - a list of course objects.
+ * @param labs - a list of lab objects.
+ */
+function getAllCourseIds(courses, labs) {
+    let retArray = [];
+
+    for(const key in courses) {
+        retArray.push(parseInt(courses[key].id));
+    }
+
+    for(const key in labs) {
+        retArray.push(parseInt(labs[key].id));
+    }
+
+    return [...retArray];
 }

@@ -26,3 +26,4 @@ yarn-debug.log*
 yarn-error.log*
 
 public/services/scheduleAlgorithm/mac
+public/services/testPythonScript/mac/*
