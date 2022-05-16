@@ -63,25 +63,27 @@ class PreferenceService {
         window.DB.send('toMain:Prefs', _payload);
     
         // Recieve the results
-        window.DB.receive('fromMain:Prefs', (dataRows) => {
-            let tempProfessorsWithPreferences = [];
-            let profsIdsWithPrefs = [];
-            
-            console.log(dataRows);
-            dataRows.map((data) => {
-              //console.log(data);
-              tempProfessorsWithPreferences.push(mapTeachPrefsToProfessor(data.prof_id, data.class_preferences, this.professors, this.courses));
-              profsIdsWithPrefs.push(data.prof_id);
-            });
-    
-            //console.log(tempProfessorsWithPreferences);
-    
-            tempProfessorsWithPreferences.push.apply(tempProfessorsWithPreferences, [...getProfessorWithNoPreferences(profsIdsWithPrefs, this.professors)]);
-            
-            //if(tempProfessorsWithPreferences[0] != undefined || tempProfessorsWithPreferences[0] != null)
-            console.log(tempProfessorsWithPreferences);
-            return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
+            window.DB.receive('fromMain:Prefs', (dataRows) => {
+                let tempProfessorsWithPreferences = [];
+                let profsIdsWithPrefs = [];
+                
+                console.log(dataRows);
+                dataRows.map((data) => {
+                //console.log(data);
+                tempProfessorsWithPreferences.push(mapTeachPrefsToProfessor(data.prof_id, data.class_preferences, this.professors, this.courses));
+                profsIdsWithPrefs.push(data.prof_id);
+                });
+        
+                //console.log(tempProfessorsWithPreferences);
+        
+                tempProfessorsWithPreferences.push.apply(tempProfessorsWithPreferences, [...getProfessorWithNoPreferences(profsIdsWithPrefs, this.professors)]);
+                
+                //if(tempProfessorsWithPreferences[0] != undefined || tempProfessorsWithPreferences[0] != null)
+                console.log(tempProfessorsWithPreferences);
+                
                 resolve(tempProfessorsWithPreferences);
+                
             })
         });
     }
