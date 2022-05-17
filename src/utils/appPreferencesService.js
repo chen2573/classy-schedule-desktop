@@ -168,4 +168,4 @@ class PreferenceService {
 /**
  * Exports the entire DataBaseService class, having access to all its functions.
  */
-module.exports = PreferenceService;
+export default PreferenceService;

@@ -43,7 +43,7 @@ const {
   CHANNEL_PLAN_FROM_MAIN
 } = require('./utils/ipcChannels')
 
-const PreferencesService = require('./utils/appPreferencesService');
+const PreferencesService = require('./utils/appPreferencesService').default;
 //#endregion
 
 /**
