@@ -288,6 +288,8 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [editSolutionEntries, setEditSolutionEntries] = useState([]);
+    const [scrollState, setScrollState] = useState(0);
+    const [index, setIndex] = useState(0);
 
     const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
     const [editMode, setEditMode] = useState(false);
@@ -404,7 +406,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     function a11yProps(index) {return {id: `simple-tab-${index}`, 'aria-controls': `simple-tabpanel-${index}`,}}
 
     const [page, setPage] = useState(0);
-    const handleChange = (event, newPage) => {setPage(newPage);};
+    const handleChange = (event, newPage) => {setPage(newPage); setIndex(newPage);};
 
     /**
      * This is an individual tabpanel page
@@ -551,7 +553,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
      */
     function addEditSection(timeString, solutionNumber){
         let tempSolutions = editSolutionEntries;
-        
+        setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperAddEditSection(timeString, solutionNumber, tempSolutions)]);
         //console.log('Temp', tempSolutions);
     }
@@ -598,7 +600,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     function deleteEditSection(solutionNumber, entryId){
         let tempSolutions = editSolutionEntries;
         console.log(tempSolutions);
-        
+        setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperDeleteEditSection(solutionNumber, tempSolutions, entryId)]);
         //console.log('Temp', tempSolutions);
     }
@@ -629,6 +631,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
      */
     function setNewDropValue(solutionNumber, entryId, newValue, valueChanging) {
             let tempSolutions = editSolutionEntries;
+            setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
             setEditSolutionEntries([...helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging)])
     }
 
@@ -860,9 +863,12 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
 
 
     useEffect(() => {
+        if(document.querySelector('#simple-tabpanel-'+index) !== null){
+            document.querySelector('#simple-tabpanel-'+index).scrollTop = scrollState;
+        }
         console.log('USEEffect EDIT',editSolutionEntries);
         console.log('USEEffect MAIN', tempSolutionEntries);
-    }, [tempSolutionEntries, editSolutionEntries]);
+    }, [tempSolutionEntries, editSolutionEntries, scrollState]);
 
     if(isAlgoCalculating){
         return(

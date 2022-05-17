@@ -94,7 +94,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                             {
                                 //get course name
                                 var name;
-                                if (courses.filter((item) => item.id === entry.course)[0] != undefined)
+                                if (courses.filter((item) => item.id === entry.course)[0] !== undefined)
                                 {
                                     name = Object.entries(courses.filter((item) => item.id === entry.course)[0]);
                                     //console.log('Name', name);
@@ -151,7 +151,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                             {
                                 //get room name
                                 var name;
-                                if (rooms.filter((item) => item.id === entry.room)[0] != undefined)
+                                if (rooms.filter((item) => item.id === entry.room)[0] !== undefined)
                                 {
                                     name = Object.entries(rooms.filter((item) => item.id === entry.room)[0]);
                                     //console.log('Name', name);
@@ -206,7 +206,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                             {
                                 //get professor name
                                 var name;
-                                if (professors.filter((item) => item.id === entry.professor)[0] != undefined)
+                                if (professors.filter((item) => item.id === entry.professor)[0] !== undefined)
                                 {
                                     name = Object.entries(professors.filter((item) => item.id === entry.professor)[0]);
                                     name = name[1][1];
@@ -286,6 +286,8 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [editSolutionEntries, setEditSolutionEntries] = useState([]);
+    const [scrollState, setScrollState] = useState(0);
+    const [index, setIndex] = useState(0);
 
     const [isAlgoCalculating, setIsAlgoCalculating]= useState(true);
     const [editMode, setEditMode] = useState(false);
@@ -352,7 +354,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         {
             for (let entry of solution)
             {
-                if (entry.time == solutionTime.id)
+                if (entry.time === solutionTime.id)
                 {
                     solutionTime.entries.push(entry);
                 }
@@ -364,7 +366,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
 
     function mapTimeStringToId(timeString) {
         for(let i=0; i<times.length; i++){
-            if(times[i].time == timeString){
+            if(times[i].time === timeString){
                 return times[i].id;
             }
         }
@@ -377,7 +379,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     function a11yProps(index) {return {id: `simple-tab-${index}`, 'aria-controls': `simple-tabpanel-${index}`,}}
 
     const [page, setPage] = useState(0);
-    const handleChange = (event, newPage) => {setPage(newPage);};
+    const handleChange = (event, newPage) => {setPage(newPage); setIndex(newPage);};
 
     /**
      * This is an individual tabpanel page
@@ -529,7 +531,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
      */
     function addEditSection(timeString, solutionNumber){
         let tempSolutions = editSolutionEntries;
-        
+        setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperAddEditSection(timeString, solutionNumber, tempSolutions)]);
         //console.log('Temp', tempSolutions);
     }
@@ -591,7 +593,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
     function helperDeleteEditSection(solutionNumber, tempSolutions, entryId) {
 
         let entryArray = tempSolutions[solutionNumber].entry
-        let tempEntryArray = entryArray.filter((entry) => entry.id != entryId);
+        let tempEntryArray = entryArray.filter((entry) => entry.id !== entryId);
 
         tempSolutions[solutionNumber].entry = tempEntryArray;
 
@@ -717,7 +719,7 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
         let time;
         
         for(let i=0; i<entryArray.length; i++){
-            if(entryArray[i].id == entryId){
+            if(entryArray[i].id === entryId){
                 time = entryArray[i].time;
                 return time;
             }
@@ -838,9 +840,12 @@ export function CreateSolutionPage ({professors, courses, rooms, times, programs
 
 
     useEffect(() => {
+        if(document.querySelector('#simple-tabpanel-'+index) !== null){
+            document.querySelector('#simple-tabpanel-'+index).scrollTop = scrollState;
+        }
         console.log('USEEffect EDIT',editSolutionEntries);
         console.log('USEEffect MAIN', tempSolutionEntries);
-    }, [tempSolutionEntries, editSolutionEntries]);
+    }, [tempSolutionEntries, editSolutionEntries, scrollState]);
 
     if(isAlgoCalculating){
         return(
