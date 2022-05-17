@@ -46,6 +46,25 @@ class DatabaseService {
                 'first_name': firstName,
                 'last_name': lastName,
                 'password': password
+            },
+            headers: {
+                'accept': 'application/json',
+                Authorization: this.authenticationToken
+            }
+        });
+    }
+
+    /**
+     * Resets a user's password
+     * @param email - email to send reset password.
+     * @returns 
+     */
+    resetPassword(email) {
+        return axios({
+            method: 'POST',
+            url: API_BASE + 'user-management/forgot-password',
+            data: {
+                'user_email': email
             }
         });
     }
