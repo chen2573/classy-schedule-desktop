@@ -1,3 +1,12 @@
+/**
+ * DataViewer displays information about a created object when
+ * it is clicked
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
 import React, {useState} from 'react';
 import {Box, Popover, Typography} from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -12,11 +21,13 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
  * <DataViewer id={1} dataState={courses} sx={{}}>
         <Button></Button>
     </DataViewer>
-    will find the item in courses that has an id of 1 and display all attributes in it when Button is clicked.
+    will find the item in courses that has an id of 1 and display all attributes in 
+    it when Button is clicked.
  * @param id unique identifier/primary key to locate item in the state
  * @param state data state where the item is located
  * @param sx MUI styling prop to style the component where the child is wrapped in
  * @param children automatically passed prop when wrapping elements in this component
+ * @returns - a display of information about state of selected object
  */
 export function DataViewer ({id, dataState, sx, children})
 {

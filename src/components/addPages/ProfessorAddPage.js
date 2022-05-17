@@ -1,5 +1,6 @@
 /**
- * ProfessorAddPage is responsible for creating an html div that allows the user to create new professor objects.
+ * ProfessorAddPage is responsible for creating an html div that allows the user 
+ * to create new professor objects.
  * It will also store the entered information as state.
  * 
  * Style Guide Issues:
@@ -9,10 +10,11 @@
  * Bugs:
  *    - None :)
  * 
- * @author Joseph Heimel
+ * @authors Anshul Bharath, Joseph Heimel, Glennon Langan, Samuel Swanson
  */
 
- import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Grid } from '@mui/material';
+ import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput,
+   TextField, Grid } from '@mui/material';
  import { React, useState, memo, useReducer, useEffect } from 'react';
  import {FaTimes, FaPencilAlt} from 'react-icons/fa';
  
@@ -24,15 +26,20 @@
  import DataViewer from '../DataViewer';
  
   /**
-  * The component that will be exported. This page will have an Add form and list the Professors that have been added and
+  * The component that will be exported. This page will have an Add form 
+  * and list the Professors that have been added and
   * the professors that are in the database.
   * 
-  * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
+  * @param onAddProfessor - The function 'addProfessor' from App.js 
+  * that will fire when the ProfessorAddPage is submitted
+  * @param onEditProfessor - The function 'editProfessor' from App.js
+  * that will fire when the edit icon is clicked on a professor object
   * @param professors     - The state of professors passed from App.js
   * @param onDelete       - Handler function that deletes an individual item from the list
   * @param courses        - State variable containing course objects
   */
-   const ProfessorAddPage = ({onAddProfessor, onEditProfessor, professors, onDelete, courses}) => {
+   const ProfessorAddPage = ({onAddProfessor, onEditProfessor, professors, 
+    onDelete, courses}) => {
 
     // Edit functionality state management
     const [profEditedId, setProfEditedId] = useState(null);
@@ -41,7 +48,8 @@
 
     const onEdit = profId => e => {
       setProfEditedId(profId);
-      setEditedProfessor(profId === null ? null : professors.find(p => p.id === profId));
+      setEditedProfessor(profId === null ? null : 
+        professors.find(p => p.id === profId));
       console.log({profId})
     }
 
@@ -70,7 +78,8 @@
     
     /**
       * This function works in tandem to other validating functions
-      * This updates state with the passed state setter iff the passed validate function returns true
+      * This updates state with the passed state setter if 
+      * the passed validate function returns true
       * 
       * @param validateFN  - Validating function
       * @param stateSetter - State updating function
@@ -80,19 +89,28 @@
     }
       
     /**
-      * This component represents the form that will be used by the user to enter in new professor data.
+      * This component represents the form that will be used by 
+      * the user to enter in new professor data.
       * 
       * @param onAddProfessor - The addSubmit function that is passed down from App.js
+      * @param onEditProfessor - The function taht is passed down from App.js
       * @param courses        - State variable containing course objects
-      * @returns              - React component div used to enter and submit professor information
+      * @returns              - React component div used to enter 
+      *                         and submit professor information
       */
     const ProfessorAdd = ({onAddProfessor, onEditProfessor, courses}) => {
-      const [firstName, setFirstName] = useState(profEditedId === null ? '' : editedProfessor.firstName);
-      const [lastName, setLastName] = useState(profEditedId === null ? '' : editedProfessor.lastName);
-      const [email, setEmail] = useState(profEditedId === null ? '' : editedProfessor.email);
-      const [teach_load, setTeachLoad] = useState(profEditedId === null ? '6' : editedProfessor.teach_load);
-      const [can_teach, setCanTeach] = useState(profEditedId === null ? [] : editedProfessor.can_teach);
-      const [want_teach, setWantTeach] = useState(profEditedId === null ? [] : editedProfessor.want_teach);
+      const [firstName, setFirstName] = useState(profEditedId === 
+        null ? '' : editedProfessor.firstName);
+      const [lastName, setLastName] = useState(profEditedId === 
+        null ? '' : editedProfessor.lastName);
+      const [email, setEmail] = useState(profEditedId === 
+        null ? '' : editedProfessor.email);
+      const [teach_load, setTeachLoad] = useState(profEditedId === 
+        null ? '6' : editedProfessor.teach_load);
+      const [can_teach, setCanTeach] = useState(profEditedId === 
+        null ? [] : editedProfessor.can_teach);
+      const [want_teach, setWantTeach] = useState(profEditedId === 
+        null ? [] : editedProfessor.want_teach);
     
                             // Input Validation
       /**
@@ -105,7 +123,9 @@
         * @param val - Input value
         * @returns   - True if the input is valid, otherwise false
         */
-      const validTeachingLoad = val => [...val.matchAll(/(1[0-9]|20|[0-9])?(\.[5]{0,1})?/g)].some(x => x[0] == val) || val === '';
+      const validTeachingLoad = val => 
+      [...val.matchAll(/(1[0-9]|20|[0-9])?(\.[5]{0,1})?/g)].some
+      (x => x[0] == val) || val === '';
     
       // This function calls passes other functions to validate
       const validateTeachLoad = validate(validTeachingLoad, setTeachLoad);
@@ -115,14 +135,24 @@
         * @param name - Input value
         * @returns    - True if the input is valid, otherwise false
         */
-      const validNameChars = name => name.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').includes(c));
+      const validNameChars = name => 
+      name.split('').every(c => new Array(26).fill(true).map((e, i) => 
+      String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => 
+      String.fromCharCode(i  + 97)).map(x => 
+        x.toUpperCase())).concat(' ').includes(c));
       
       /**
         * This function enforces that the input is alphanumeric lower or upper case or ' '
         * @param email - Input value
         * @returns    - True if the input is valid, otherwise false
         */
-      const validEmailChars = email => email.split('').every(c => new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').concat('@').concat('0').concat('1').concat('2').concat('3').concat('4').concat('5').concat('6').concat('7').concat('8').concat('9').includes(c));
+      const validEmailChars = email => 
+      email.split('').every(c => new Array(26).fill(true).map((e, i) => 
+      String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => 
+      String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ')
+      .concat('.').concat('@').concat('0').concat('1').concat('2').concat('3').
+      concat('4').concat('5').concat('6').concat('7').concat('8').concat('9').
+      includes(c));
     
       /**
         *  This function enforces that the input is less than 30 characters
@@ -148,7 +178,8 @@
     
     
       /**
-        * This function handles addition of unique list items and removal of present list items
+        * This function handles addition of unique list items and 
+        * removal of present list items
         * The imbedded stateSetter updates the state object in one of these ways
         * 
         * @param courseInfo  - Object containing all relevant course information
@@ -199,10 +230,12 @@
         let elementClassName = 'item';
 
         if(profEditedId === null){
-          onAddProfessor({firstName, lastName, email, teach_load, can_teach, want_teach, elementClassName});
+          onAddProfessor({firstName, lastName, email, teach_load, can_teach, 
+            want_teach, elementClassName});
         } else {
           let id = profEditedId;
-          onEditProfessor({id, firstName, lastName, email, teach_load, can_teach, want_teach, elementClassName});
+          onEditProfessor({id, firstName, lastName, email, teach_load, can_teach, 
+            want_teach, elementClassName});
           resetState();
         }
       
@@ -336,6 +369,7 @@
       * 
       * @param professors - The state of professors that is passed down from App.js
       * @param onDelete   - Handler function that deletes an individual item from the list
+      * @param onEdit     - Handler function that edits an individual item from the list
       * @returns          - React component that lists viewable professor components
       */
     const ProfessorList = ({professors, onDelete, onEdit}) => {
@@ -355,6 +389,8 @@
       * 
       * @param professor - An individual professor
       * @param onDelete  - Handler function that deletes an individual item from the list
+      * @param onEdit    - Handler function that edits an individual item from the list
+      * @param professors - state of created professor objects
       * @returns         - React component that displays a single professor component
       */
     const ProfessorListItem = ({professor, onDelete, onEdit, professors}) => {
@@ -373,7 +409,10 @@
       * This page will have an Add form and list the Professors that have been added and
       * the professors that are in the database.
       * 
-      * @param onAddProfessor - The function 'addProfessor' from App.js that will fire when the ProfessorAddPage is submitted
+      * @param onAddProfessor - The function 'addProfessor' from App.js that will 
+      *                         fire when the ProfessorAddPage is submitted
+      * @param onEditProfessor - The function 'editProfessor' from App.js that will
+      *                          fire when the edit icon is clicked on a professor item
       * @param professors     - The state of professors passed from App.js
       * @param onDelete       - Handler function that deletes an individual item from the list
       * @param courses        - State variable containing course objects

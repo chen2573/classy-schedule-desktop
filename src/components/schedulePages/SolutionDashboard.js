@@ -1,4 +1,15 @@
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Button,Typography } from '@mui/material';
+/**
+ * SolutionDashboard displays the list of created schedule solutions 
+ * and gives the option to create a schedule with the algorithim for
+ * an optimized solution or manually
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
+import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, 
+    TextField, Button,Typography } from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
