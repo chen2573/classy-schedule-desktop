@@ -1,7 +1,7 @@
 {
   "name": "classy-schedule-desktop",
   "productName": "ClassySchedule",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "main": "public/electron.js",
   "private": true,
   "author": "CISC480 Desktop Team",
@@ -83,6 +83,10 @@
     ],
     "directories": {
       "buildResources": "src/assets/icons/png"
-    }
+    },
+    "extraFiles": [
+      "public/services/testPythonScript/mac/**/*",
+      "public/services/testPythonScript/windows/**/*"
+    ]
   }
 }
