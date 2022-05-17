@@ -8,16 +8,20 @@ const isDev = require('electron-is-dev');
 const testData = require('./services/data2.json');
 
 // Objects coming from electron
-const {
-    app,
-    BrowserWindow,
-    Menu,
-    ipcMain,
-    dialog
-} = electron;
+const { app, BrowserWindow, Menu, ipcMain, dialog } = electron;
 
 // Module that contains the database object
 const DatabaseService = require(path.join(__dirname, 'services/mainDBService.js'));
+
+/**
+ * This is the main script of our entire application. This class takes care and displays the main
+ * window. In electron terms this is the 'main' class and any other views are the 'renderer' classes.
+ * 
+ * The main functionality of this class comes from the many different channels that are set up below 
+ * that make calls to the database. This is done through a process called IPC or inter process communication.
+ * 
+ * @authors - Glen, Joe, Sam, Chen, Anshul
+ */
 
 // !!! SET process environment. Comment this out if packaging for development!!!
 //process.env.NODE_ENV = 'production';
@@ -181,6 +185,12 @@ function displayMainWindow() {
         center: true,
         icon: './../src/assets/icons/png/logo-desktop.png'
     });
+    buildMainMenuTemplate();
+    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+
+    // Insert menu
+    Menu.setApplicationMenu(mainMenu);
+
     if(!userLoggedIn){
         logInWindow.loadURL(`file://${path.join(__dirname, '/views/login/login.html')}`);
     }
@@ -268,31 +278,31 @@ function buildMainMenuTemplate() {
                     {
                         label: 'Glennon Langan',
                         click() {
-
+                            shell.openExternal('https://github.com/glennonl');
                         }
                     },
                     {
                         label: 'Joe Heimel',
                         click() {
-
+                            shell.openExternal('https://github.com/josephheimel');
                         }
                     },
                     {
                         label: 'Samuel Swanson',
                         click() {
-
+                            shell.openExternal('https://github.com/SamuelSwanson');
                         },
                     },
                     {
                         label: 'Tianzhi Chen',
                         click() {
-
+                            shell.openExternal('https://github.com/chen2573');
                         }
                     },
                     {
                         label: 'Anshul Bharath',
                         click() {
-
+                            shell.openExternal('https://github.com/anshulBharath');
                         },
                     }
                 ]
@@ -632,7 +642,7 @@ function addCourseChannel(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request UPDATE a COURSE")
 
-            DB.updateCourse(args.number, args.deptId, args.name, args.capacity, args.credits).then((payload) => {
+            DB.updateCourse(args.id, args.number, args.deptId, args.name, args.capacity, args.credits, args.isLab, args.numSections).then((payload) => {
                 console.log("DATABASE LOG--> Successfully updated COURSE with course number: " + args.number + "\n");
 
                 let _payload = {
@@ -656,6 +666,9 @@ function addCourseChannel(){
     });
 }
 
+/**
+ * Adds a channel for professor preferences.
+ */
 function addProfPrefChannel(){
     ipcMain.on("toMain:Prefs", (event, args) => {
 
@@ -1000,6 +1013,9 @@ function addModalWindows(){
     });
 }
 
+/**
+ * Add a channel specific for updating and creating plans.
+ */
 function addUpdateAndViewPlanChannel(){
     ipcMain.on("toMain:SecondaryPlan", (event, args) => {
         if(args.request === 'SAVED_PLAN'){
@@ -1082,6 +1098,20 @@ const getExtraFilesPath = () => {
 //const exec = require('child_process').execFile;
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
+
+/**
+ * This algorithm execute the python .exe. The path of the exe is different based
+ * on wether we have compiled or not. 
+ * 
+ * @param data - data the was sent from main-algorithm-service.js
+ * @param courses - state courses.
+ * @param rooms - state rooms.
+ * @param professors - state professors.
+ * @param labs - state labs.
+ * @param totalSolutions - a commanad line argument provided to the exe that defines how many solutions we are searching.
+ * @param topSolutions - a command line argument that defines the max solutions we want back.
+ * @param strict - a command line argument that defines if the algorithm is strict or not.
+ */
 async function executeAlgorithm(data, courses, rooms, professors, labs, totalSolutions, topSolutions, strict) {
     let _payload = {
         setCourses: courses,
