@@ -288,7 +288,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
         let totalLoad = 0;
 
         for(let i=0; i<selectedProfessors.length; i++){
-            totalLoad += parseInt(selectedProfessors[i].teach_load);
+            totalLoad += parseInt(selectedProfessors[i].teachLoad);
         }
         return totalLoad;
     }
@@ -302,7 +302,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
 
         for(let i=0; i<courseSections.length; i++){
             for(let j=0; j<selectedProfessors.length; j++){
-                if(checkIndividualProfPrefs(courseSections[i].id, [...selectedProfessors[j].can_teach])){
+                if(checkIndividualProfPrefs(courseSections[i].id, [...selectedProfessors[j].canTeach])){
                     validate = true;
                 }
             }
@@ -311,7 +311,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * This function checks to see that the professors can_teach array has at least one of the courses.
+     * This function checks to see that the professors canTeach array has at least one of the courses.
      * @param id - the id we are checking for
      * @param canTeachArray - an array of course objects.
      * @returns true if the prof satisfies the can teach requirement.

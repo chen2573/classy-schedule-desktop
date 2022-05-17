@@ -53,9 +53,9 @@ export function createJsonOfSelectedStates(courses, rooms, professors, labs, tim
         
         tempProfessor.id = professors[key].id;
         tempProfessor.name = professors[key].firstName + ' ' + professors[key].lastName;
-        tempProfessor.canTeach = [...getProfessorCanTeachArray(professors[key].can_teach, courses, labs)];
-        tempProfessor.courseLoad = parseInt(professors[key].teach_load);
-        tempProfessor.preferredCourses = [...getProfessorWantTeachArray(professors[key].want_teach)];
+        tempProfessor.canTeach = [...getProfessorCanTeachArray(professors[key].canTeach, courses, labs)];
+        tempProfessor.courseLoad = parseInt(professors[key].teachLoad);
+        tempProfessor.preferredCourses = [...getProfessorWantTeachArray(professors[key].wantTeach)];
         tempProfessor.preferredTimeSlot = [];
 
 

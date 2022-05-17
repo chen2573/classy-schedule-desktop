@@ -24,25 +24,6 @@ import TopBar from './../TopBar.js'
 import DataViewer from '../DataViewer';
 
 
-
-// Styling
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    sx: {
-        "&& .Mui-selected": {
-            backgroundColor: "#D0D9DD"
-        }
-    },
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    }
-};
-
-
 /**
  * The component that will be exported. This page will have an Add form and list
  * the Courses that have been added and the courses that are in the database.
@@ -64,6 +45,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse,
     const [editedCourse, setEditedCourse] = useState(null);
     const [refresh, setRefresh] = useState('');
 
+    // Handles state changes at the start of editing
     const onEdit = courseId => e => {
         setCourseEditedId(courseId);
         setEditedCourse(courseId === 
@@ -71,6 +53,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse,
         console.log({courseId})
     }
 
+    // Handles state changes at the end of editing
     const resetState = () => {
         setEditedCourse(null);
         setCourseEditedId(null);
@@ -125,6 +108,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse,
          * @returns boolean - true if the length of name is 50 characters or less
          */
         const validNameLength = name => name.length < 51;
+        
         /**
          * Makes sure there is no numbers in name
          * @param val - Input value
@@ -132,6 +116,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse,
          */
         const validNameChar = val => [...val.matchAll(/(^[^0-9]+$)?/g)].some
         (x => x[0] == val) || val === '';
+
         /**
          * Makes sure name satisfies both length and character constraints
          * @param name - Input value
@@ -305,49 +290,6 @@ const CourseAddPage = ({ onAddCourse, onEditCourse,
                                 <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_student_capacity" label="Student Capacity" variant="outlined" value={capacity} onChange={validateCapacity}/>
                             </Box>
                         </Grid>
-
-                        {/*<Grid item xs = {6}>
-                            <Box>
-                                <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_meeting_length" label="Meeting Length" variant="outlined" value={length} onChange={validateLength}/>
-                            </Box>
-                        </Grid>
-
-                        <Grid item xs = {6}>
-                            <Box sx={{ minWidth: 120 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink id="label">Required Technology</InputLabel>
-                                    <Select
-                                    labelId="label"
-                                    id='technology_dropdown'
-                                    multiple
-                                    notched
-                                    onChange={handleTechChange}
-                                    value={tech}
-                                    label="Required Technology"
-                                    input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
-                                    renderValue={(selected) => (
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                        {selected.map((value) => (
-                                            <Chip key={value} label={value} />
-                                        ))}
-                                        </Box>
-                                    )}
-                                    MenuProps={MenuProps}
-                                    >
-                                        <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
-                                        <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
-                                        <MenuItem value="Projector" >Projector</MenuItem>
-                                        <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
-                                        <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
-                                        <MenuItem value="Robots" >Robots</MenuItem>
-                                        <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
-                                        <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
-                                        <MenuItem value="Net Controls" >Net Controls</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                                        </Grid>*/}
-
                     
                         <Grid item xs = {6}>
                             <Box sx={{ minWidth: 120 }}>

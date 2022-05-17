@@ -404,14 +404,14 @@ function App() {
         let program = prof.program;
         let firstName = prof.firstName;
         let lastName = prof.lastName;
-        let teach_load = prof.teach_load;
-        let can_teach = prof.can_teach;
-        let want_teach = prof.want_teach;
+        let teachLoad = prof.teachLoad;
+        let canTeach = prof.canTeach;
+        let wantTeach = prof.wantTeach;
         let elementClassName = 'item';
         
         const id = Math.floor(Math.random() * 10000) + 1;
 
-        let newProfessor = { id, program, firstName, lastName, teach_load, can_teach, want_teach, elementClassName};
+        let newProfessor = { id, program, firstName, lastName, teachLoad, canTeach, wantTeach, elementClassName};
         stateProfessors.push(newProfessor);
       });
       setProfessors(stateProfessors);
@@ -433,13 +433,13 @@ function App() {
               let id = data.professor_id;
               let firstName = data.first_name;
               let lastName = data.last_name;
-              let teach_load = data.teach_load;
+              let teachLoad = data.teach_load;
               let email = data.user_email;
-              let can_teach = []; 
-              let want_teach = [];
+              let canTeach = []; 
+              let wantTeach = [];
               let elementClassName = 'item';
 
-              let newProf = { id, firstName, lastName, email, teach_load, can_teach, want_teach, elementClassName };
+              let newProf = { id, firstName, lastName, email, teachLoad, canTeach, wantTeach, elementClassName };
               stateProfessors.push(newProf);
           });
 
