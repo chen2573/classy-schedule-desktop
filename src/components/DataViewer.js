@@ -35,7 +35,7 @@ export function DataViewer ({id, dataState, sx, children})
     if (dataState.filter((item) => item.id === id)[0] != undefined)
     {
         displayData = Object.entries(dataState.filter((item) => item.id === id)[0]);
-        console.log(displayData)
+        //console.log(displayData)
 
     }  //get data entry by id
     
