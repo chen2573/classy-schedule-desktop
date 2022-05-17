@@ -1,3 +1,12 @@
+/**
+ * Menubar is responsible for the ClassySchedule's 
+ * main method of navigation between pages
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
 import {useState} from 'react';
 import './../assets/styles/Menubar.css';
 import {Link} from 'react-router-dom';
@@ -13,7 +22,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 /**
  * This is a menubar component for switching pages
- * @param setCurrentPage function to set the currentPage state in parent that controls the current page
+ * @param setCurrentPage function to set the currentPage state 
+ *                       in parent that controls the current page
  * @returns a menubar for page switching
  */
 export function MenuBar ({setCurrentPage})

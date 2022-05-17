@@ -1,6 +1,17 @@
+/**
+ * ViewSolution allows users to view already created plans
+ * and change them.
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
+import {Popover, Button, Tabs, Tab, Box, Typography, TextField, 
+    CircularProgress, FormControl, InputLabel, Select, MenuItem} 
+    from '@mui/material';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
@@ -9,8 +20,10 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
-import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
-import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
+import * as SolutionService from 
+'../../services/databaseServices/solutionDBService.js';
+import * as AlgoService from 
+'./../../services/algorithmServices/mainAlgorithmService';
 
 //const payload.data = require("../../utils/solution.json");
 
@@ -27,7 +40,11 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
 {
     //console.log("Entries", courseEntries);
     //console.log("Item", solutionNumber);
-
+    /**
+     * 
+     * @param  
+     * @returns 
+     */
     const TimeDisplay = ({time, editMode, solutionNumber, onAddEditSection}) => {
         if(!editMode) {
             return <th scope="row">{time}</th>
@@ -43,7 +60,11 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                     </th></>
         }
     }
-
+    /**
+     * This function deletes 
+     * @param {*} param0 
+     * @returns 
+     */
     const DeleteColumnElement = ({entries}) => {
         return (entries.map((entry) =>
         {
@@ -263,6 +284,9 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * @param professors professors state
  * @param courses courses state
  * @param rooms rooms state
+ * @param times times state
+ * @param programs programs state
+ * @param setCurrentPage function to change displayed page
  * @returns the solutions page
  */
 export function ViewSolution ({professors, courses, rooms, times, programs, setCurrentPage})
@@ -314,7 +338,11 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     function getCantorPairing(a, b){
         return (a + b) * (a + b + 1) / 2 + a;
     }
-
+    /**
+     * This function 
+     * @param data 
+     * @returns 
+     */
     function formatPayloadData(data){
         let retArray = [];
         //{id: 3814, professor: 68, course: 7723, time: 10, room: 4, sectionNum: 1}
@@ -335,7 +363,12 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     }
 
 
-
+    /**
+     * This function gets items from solution and sorts them by time so
+     * they can be displayed chronologically
+     * @param solution - selected plan to be sorted
+     * @returns 
+     */
     //get solutions items sorted by time so we can display them chronologically in the table
     const getTimes = (solution) =>
     {

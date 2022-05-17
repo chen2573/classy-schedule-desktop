@@ -1,4 +1,18 @@
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Checkbox, FormControlLabel, Grid} from '@mui/material';
+/**
+ * CourseAddPage is responsible for creating an html div that allows the user to
+ * create new course objects. 
+ * It will also store the entered information as state.
+ *
+ * Courses can either be classes or labs Labs if course.lab is true Class if
+ * course.lab is false
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
+import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, 
+    TextField, Checkbox, FormControlLabel, Grid} from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useState, useEffect } from 'react';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
@@ -30,15 +44,20 @@ const MenuProps = {
 
 
 /**
- * The component that will be exported. This page will have an Add form and list the Courses that have been added and
- * the courses that are in the database.
- * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
+ * The component that will be exported. This page will have an Add form and list
+ * the Courses that have been added and the courses that are in the database.
+ * @param onAddCourse - the function 'addCourse' from App.js that will fire when
+ *                      the CourseAddPage is submitted
+ * @param onEditCourse - the function 'editCourse' from APP.js that will fire
+ *                       when the edit icon is clicked
  * @param courses - the state of courses passed from App.js
- * @param onDelete - the function 'onDelete' from App.js that will fire when the onclick happens
+ * @param onDelete - the function 'onDelete' from App.js that will fire when the
+ *                   onclick happens
  * @param programs - the state of programs passed from App.js
  * @returns - The exported component
  */
-const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs }) => {
+const CourseAddPage = ({ onAddCourse, onEditCourse, 
+    courses, onDelete, programs }) => {
 
     // Edit functionality state management
     const [courseEditedId, setCourseEditedId] = useState(null);
@@ -47,7 +66,8 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
 
     const onEdit = courseId => e => {
         setCourseEditedId(courseId);
-        setEditedCourse(courseId === null ? null : courses.find(p => p.id === courseId));
+        setEditedCourse(courseId === 
+            null ? null : courses.find(p => p.id === courseId));
         console.log({courseId})
     }
 
@@ -59,7 +79,8 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
 
     /**
      * This function works in tandem to other validating functions
-     * This updates state with the passed state setter iff the passed validate function returns true
+     * This updates state with the passed state setter if 
+     * the passed validate function returns true
      * 
      * @param validateFN  - Validating function
      * @param stateSetter - State updating function
@@ -69,54 +90,112 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
     }
 
     /**
-     * This component represents the form that will be used by the user to enter in new course data.
-     * @param onAddCourse - the addSubmit function that is passed down from App.js
+     * This component represents the form that will be used by the user to enter
+     * in new course data.
+     * @param onAddCourse - the addSubmit function that is passed down from
+     *                      App.js
+     * @param onEditCourse - function passed down from App.js
      * @param programs - the programs that is passed down from App.js
-     * @returns - the component that represents the form that will be used by the user to enter in new course data.
+     * @returns - the component that represents the form that will be used by
+     *            the user to enter in new course data.
      */
     const CourseAdd = ({ onAddCourse, onEditCourse, programs }) => {
-        const [program, setProgram] = useState(courseEditedId === null ? '' : editedCourse.program);
-        const [number, setNumber] = useState(courseEditedId === null ? '' : editedCourse.number);
-        const [name, setName] = useState(courseEditedId === null ? '' : editedCourse.name);
-        const [credits, setCredits] = useState(courseEditedId === null ? '' : editedCourse.credits);
-        const [capacity, setCapacity] = useState(courseEditedId === null ? '' : editedCourse.capacity);
-        //const [length, setLength] = useState(courseEditedId === null ? '' : editedCourse.length);
-        // const [tech, setTech] = useState(courseEditedId === null ? [] : editedCourse.tech);
-        const [lab, setLab] = useState(courseEditedId === null ? false : editedCourse.lab);
-        //const [lcourse, setLCourse] = useState(courseEditedId === null ? [] : editedCourse.lcourse);
+        const [program, setProgram] = useState(courseEditedId === 
+            null ? '' : editedCourse.program);
+        const [number, setNumber] = useState(courseEditedId === 
+            null ? '' : editedCourse.number);
+        const [name, setName] = useState(courseEditedId === 
+            null ? '' : editedCourse.name);
+        const [credits, setCredits] = useState(courseEditedId === 
+            null ? '' : editedCourse.credits);
+        const [capacity, setCapacity] = useState(courseEditedId === 
+            null ? '' : editedCourse.capacity);
+        //const [length, setLength] = useState(courseEditedId === 
+        //  null ? '' : editedCourse.length);
+        // const [tech, setTech] = useState(courseEditedId === 
+        //  null ? [] : editedCourse.tech);
+        const [lab, setLab] = useState(courseEditedId === 
+            null ? false : editedCourse.lab);
+        //const [lcourse, setLCourse] = useState(courseEditedId === 
+        //  null ? [] : editedCourse.lcourse);
 
-        // Course Name must be less than 50 characters and have no numbers
+        /**
+         * Makes sure name is 50 characters or less
+         * @param name - Input value
+         * @returns boolean - true if the length of name is 50 characters or less
+         */
         const validNameLength = name => name.length < 51;
-        const validNameChar = val => [...val.matchAll(/(^[^0-9]+$)?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure there is no numbers in name
+         * @param val - Input value
+         * @returns boolean - true if no numbers
+         */
+        const validNameChar = val => [...val.matchAll(/(^[^0-9]+$)?/g)].some
+        (x => x[0] == val) || val === '';
+        /**
+         * Makes sure name satisfies both length and character constraints
+         * @param name - Input value
+         * @returns boolean - true if both functions return true
+         */
         const validName = name => validNameLength(name) && validNameChar(name)
         // This function calls passes other functions to validate
         const validateName = validate(validName, setName);
 
-        // Course Number must be a value between 100 and 999
-        // FIX LOWER BOUND
-        const validNumber = val => [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure course number is no more than three digits
+         * @param val - Input value
+         * @returns boolean - true if positive integer less than 1000
+         */
+        const validNumber = val => 
+        [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some
+        (x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         const validateNumber = validate(validNumber, setNumber);
 
-        // Credits must be a integer between 0 and 4
-        const validCredits = val => [...val.matchAll(/([0-4])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure in range of 0-4
+         * @param val - Input value
+         * @returns boolean - true if integer inclusive between 0 and 4
+         */
+        const validCredits = val => 
+        [...val.matchAll(/([0-4])?/g)].some(x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         const validateCredits = validate(validCredits, setCredits);
 
-        // Course Capacity must be a value between 0 and 1000
-        const validCapacity = val => [...val.matchAll(/(1000|[1-9][0-9][0-9]|[1-9][0-9]|[0-9])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure capacity is between 0-1000
+         * @param val - Input value
+         * @returns boolean - true if val is inclusive between 0 and 1000
+         */
+        const validCapacity = val => 
+        [...val.matchAll(/(1000|[1-9][0-9][0-9]|[1-9][0-9]|[0-9])?/g)].some
+        (x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         const validateCapacity = validate(validCapacity, setCapacity);
 
-        // Meeting Length (I'm not sure what constraints are for this)
-        const validLength = val => [...val.matchAll(/(200|1[0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure meeting length is positive integer, max of 200
+         * @param val - Input value
+         * @returns boolean - true if positive integer of 200 or less
+         */
+        const validLength = val => 
+        [...val.matchAll(/(200|1[0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some
+        (x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         //const validateLength = validate(validLength, setLength);
 
+
+        /**
+        * This function alerts the user if they are missing necessary data,
+        * if all necessary data is present, it passes the data and resets to default
+        * 
+        * @param e - Event object
+        * @returns - Alert to user
+        */
         const onSubmit = (e) => {
             e.preventDefault();
             e.target.reset();
-
+            
             if (!program) {
                 alert('Please enter a program');
                 return;
@@ -140,11 +219,16 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
 
             let elementClassName = 'item';
             let sections = 0;
+
+            // This section determines whether a course will be edited
+            // or if a course can be created
             if(courseEditedId === null){
-                onAddCourse({program, number, name, credits, capacity, lab, elementClassName, sections}); // Implement checking for length and tech from database
+                onAddCourse({program, number, name, credits, 
+                    capacity, lab, elementClassName, sections}); // Implement checking for length and tech from database
             } else {
                 let id = courseEditedId;
-                onEditCourse({id, program, number, name, credits, capacity, lab, elementClassName, sections});
+                onEditCourse({id, program, number, name, credits, 
+                    capacity, lab, elementClassName, sections});
                 resetState();
             }
 
@@ -160,6 +244,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
 
         return (
             <div className='body-container'>
+                
                 <h2>{courseEditedId !== null ? "Edit" : "Add"} A Class</h2>
                 <form onSubmit={onSubmit}>
 
@@ -288,6 +373,7 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
      * This component is a view that lists out individual CourseListItems.
      * @param courses - The state of courses that is passed down from App.js
      * @param onDelete - The delete function that is passed down from App.js
+     * @param onEdit - The edit function that is passed down from App.js
      * @returns - The component that is a view listing out the CourseListItems
      */
     const CourseList = ({ courses, onDelete, onEdit }) => {
@@ -303,9 +389,12 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
 
 
     /**
-     * The component that will display an individual course. These components will populate the CourseList component.
+     * The component that will display an individual course. These components 
+     * will populate the CourseList component.
      * @param course - an individual course
      * @param onDelete - The delete function that is passed down from App.js
+     * @param courses - the state of courses that is passed down from App.js
+     *                  a collection of created course objects
      * @returns - The component displaying an individual course.
      */
     const CourseListItem = ({ course, onDelete, courses, onEdit }) => {
@@ -325,7 +414,10 @@ const CourseAddPage = ({ onAddCourse, onEditCourse, courses, onDelete, programs 
     /**
      * This page will have an Add form and list the Courses that have been added and
      * the courses that are in the database.
-     * @param onAddCourse - the function 'addCourse' from App.js that will fire when the CourseAddPage is submitted
+     * @param onAddCourse - the function 'addCourse' from App.js that will fire 
+     *                      when the CourseAddPage is submitted
+     * @param onEditCourse - the function 'editCourse' from App.jas that will fire when
+     *                       the edit icon is clicked on an existing course
      * @param courses - the state of courses passed from App.js
      * @param onDelete - the function 'onDelete' from App.js that will fire when the onclick happens
      * @param programs - the state of programs passed from App.js

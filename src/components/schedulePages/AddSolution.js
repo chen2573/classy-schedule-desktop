@@ -1,4 +1,13 @@
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Button,Typography, Input } from '@mui/material';
+/**
+ * AddSolution
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
+import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, 
+    TextField, Button,Typography, Input } from '@mui/material';
 //import { AsyncTaskManager } from 'builder-util';
 import { React, useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
@@ -11,7 +20,8 @@ import DataViewer from '../DataViewer';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 
-import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
+import * as AlgoService from 
+'./../../services/algorithmServices/mainAlgorithmService';
 
 const {
     CHANNEL_MODAL_FROM_MAIN,

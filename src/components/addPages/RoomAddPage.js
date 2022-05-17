@@ -1,4 +1,16 @@
-import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, TextField, Grid} from '@mui/material'
+/**
+ * RoomAddPage is responsible for creating an html div that allows the user to
+ * create new room objects. 
+ * It will also store the entered information as state.
+ *
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
+import { ListItem, Box, InputLabel, FormControl, MenuItem, Select, Chip, 
+    OutlinedInput, TextField, Grid} from '@mui/material'
 //import { AsyncTaskManager } from 'builder-util'
 import { React, useState, useEffect } from 'react'
 import {FaTimes, FaPencilAlt} from 'react-icons/fa'
@@ -29,10 +41,14 @@ const MenuProps = {
 };
 
 /**
- * The component that will be exported. This page will have an Add form and list the Rooms that have been added and
- * the rooms that are in the database.
- * @param onAddRoom - the function 'addRoom' from App.js that will fire when the RoomAddPage is submitted
+ * The component that will be exported. This page will have an Add form 
+ * and list the Rooms that have been added andthe rooms that are in the database.
+ * @param onAddRoom - the function 'addRoom' from App.js that will fire when 
+ *                    the RoomAddPage is submitted
+ * @param onEditRoom - The function 'editRoom' from App.js that will
+*                      fire when the edit icon is clicked on a room item
  * @param rooms - the state of rooms passed from App.js
+ * @param onDelete - Handler function that deletes an individual item from the list
  */
 const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
 
@@ -59,6 +75,9 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
     /**
      * This component represents the form that will be used by the user to enter in new room data.
      * @param onAddRoom - the addSubmit function that is passed down from App.js
+     * @param onEditRoom - function taht is passed down from App.js
+     * @returns          - React component div used to enter 
+    *                      and submit professor information
      */
 
     const RoomAdd = ({onAddRoom, onEditRoom}) => {
@@ -66,23 +85,46 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         const [number, setRNumber] = useState(roomEditedId === null ? '' : editedRoom.number)
         const [capacity, setRCapacity] = useState(roomEditedId === null ? '' : editedRoom.capacity)
 
-        // Building Code must be all uppercase 3 letter code
-        const validRBuilding = val => [...val.matchAll(/([A-Z][A-Z][A-Z]|[A-Z][A-Z]|[A-Z])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure the code is all uppercase letters and no greater than 3 characters
+         * @param val - Input value
+         * @returns boolean - true 3 or less uppercase letters
+         */
+        const validRBuilding = val => 
+        [...val.matchAll(/([A-Z][A-Z][A-Z]|[A-Z][A-Z]|[A-Z])?/g)].some
+        (x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         const validateRBuilidng = validate(validRBuilding, setRBuilding);
         
-        // Room number must be a value between 100 and 999
-        // FIX LOWER BOUND
-        const validRNumber = val => [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure there is a postive integer less than 1000
+         * @param val - Input value
+         * @returns boolean - true if postive integer less tahn 1000
+         */
+        const validRNumber = val => 
+        [...val.matchAll(/([1-9][0-9][0-9]|[1-9][0-9]|[1-9])?/g)].some
+        (x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         const validateRNumber = validate(validRNumber, setRNumber);
 
-        // Room Capacity must be a value between 5 and 300
-        // FIX FOR THE LOWER BOUND OF 5
-        const validRCapacity = val => [...val.matchAll(/(1[0-9][0-9]|2[0-9][0-9]|300|[1-9][0-9]|[1-9])?/g)].some(x => x[0] == val) || val === '';
+        /**
+         * Makes sure there is a positive integer of 300 or less
+         * @param val - Input value
+         * @returns boolean - true if =<300
+         */
+        const validRCapacity = val => 
+        [...val.matchAll(/(1[0-9][0-9]|2[0-9][0-9]|300|[1-9][0-9]|[1-9])?/g)].some
+        (x => x[0] == val) || val === '';
         // This function calls passes other functions to validate
         const validateRCapacity = validate(validRCapacity, setRCapacity);
 
+        /**
+        * This function alerts the user if they are missing necessary data,
+        * if all necessary data is present, it passes the data and resets to default
+        * 
+        * @param e - Event object
+        * @returns - Alert to user
+        */
         const onSubmit = (e) => {
             e.preventDefault()
             e.target.reset()
@@ -198,6 +240,9 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         /**
      * This component is a view that lists out individual RoomListItems.
      * @param rooms - The state of rooms that is passed down from App.js
+     * @param onDelete - Handler function that deletes an individual item from the list
+     * @param onEdit - Handler function that edits an individual item from the list
+     * @returns - React component that lists viewable room components
      */
     const RoomList = ({rooms, onDelete, onEdit}) => {
         return(
@@ -212,6 +257,10 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
     /**
      * The component that will display an individual room. These components will populate the RoomList component.
      * @param room - an individual room
+     * @param onDelete - Handler function that deletes an individual item from the list
+     * @param onEdit - Handler function that edits an individual item from the list
+     * @param rooms - state of created room objects
+     * @returns - React component that displays a single room component
      */
     const RoomListItem = ({room, onDelete, onEdit, rooms}) => {
         return(
@@ -229,8 +278,12 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
     /**
      * This page will have an Add form and list the Rooms that have been added and
      * the rooms that are in the database.
-     * @param onAddRoom - the function 'addRoom' from App.js that will fire when the RoomAddPage is submitted
+     * @param onAddRoom - the function 'addRoom' from App.js that will fire 
+     *                    when the RoomAddPage is submitted
+     * @param onEditRoom - The function 'editRoom' from App.js that will
+     *                          fire when the edit icon is clicked on a room item
      * @param rooms - the state of rooms passed from App.js
+     * @param onDelete - Handler function that deletes an individual item from the list
      */
     const RoomAddPageContent = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
         return (

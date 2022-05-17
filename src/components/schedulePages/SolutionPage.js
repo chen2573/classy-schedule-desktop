@@ -1,6 +1,16 @@
+/**
+ * SolutionPage 
+ *
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors TBD
+ */
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
+import {Popover, Button, Tabs, Tab, Box, Typography, TextField, 
+    CircularProgress, FormControl, InputLabel, Select, MenuItem} 
+    from '@mui/material';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FaTimes, FaPencilAlt} from 'react-icons/fa';
@@ -9,8 +19,10 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
-import * as SolutionService from '../../services/databaseServices/solutionDBService.js'
-import * as AlgoService from './../../services/algorithmServices/mainAlgorithmService';
+import * as SolutionService from 
+'../../services/databaseServices/solutionDBService.js'
+import * as AlgoService from 
+'./../../services/algorithmServices/mainAlgorithmService';
 
 //const payload.data = require("../../utils/solution.json");
 
