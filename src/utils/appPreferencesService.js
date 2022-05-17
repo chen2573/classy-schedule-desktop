@@ -100,7 +100,7 @@ class PreferenceService {
     let wantTeach = [];
 
     for(let i=0; i<preferences.length; i++){
-      if(preferences[i].can_teach && classExistsInState(preferences[i].class_id, courses)){
+      if(preferences[i].canTeach && classExistsInState(preferences[i].class_id, courses)){
         let temp = getClassNameFromId(preferences[i].class_id, courses);
         canTeach.push(temp);
       }
@@ -112,8 +112,8 @@ class PreferenceService {
 
     for(const key in tempProfessors) {
       if(tempProfessors[key].id === profId){
-        tempProfessors[key].can_teach = canTeach;
-        tempProfessors[key].want_teach = wantTeach;
+        tempProfessors[key].canTeach = canTeach;
+        tempProfessors[key].wantTeach = wantTeach;
 
         return tempProfessors[key];
       }

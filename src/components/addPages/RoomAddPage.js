@@ -23,26 +23,10 @@ import DataViewer from '../DataViewer';
  
 
 
-// Styling
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    sx: {
-        "&& .Mui-selected": {
-            backgroundColor: "#D0D9DD"
-        }
-    },
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    }
-};
 
 /**
  * The component that will be exported. This page will have an Add form 
- * and list the Rooms that have been added andthe rooms that are in the database.
+ * and list the Rooms that have been added and the rooms that are in the database.
  * @param onAddRoom - the function 'addRoom' from App.js that will fire when 
  *                    the RoomAddPage is submitted
  * @param onEditRoom - The function 'editRoom' from App.js that will
@@ -57,21 +41,32 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
     const [editedRoom, setEditedRoom] = useState(null);
     const [refresh, setRefresh] = useState('');
 
+    // Handles state changes at the start of editing
     const onEdit = roomId => e => {
         setRoomEditedId(roomId);
         setEditedRoom(roomId === null ? null : rooms.find(p => p.id === roomId));
         console.log({roomId})
     }
 
+    // Handles state changes at the end of editing
     const resetState = () => {
         setEditedRoom(null);
         setRoomEditedId(null);
         setRefresh('Refresh');
     }
 
+    /**
+      * This function works in tandem to other validating functions
+      * This updates state with the passed state setter if 
+      * the passed validate function returns true
+      * 
+      * @param validateFN  - Validating function
+      * @param stateSetter - State updating function
+      */
     const validate = (validateFN, stateSetter) => e => {
         stateSetter(oldValue => validateFN(e.target.value) ? e.target.value : oldValue);
     }
+
     /**
      * This component represents the form that will be used by the user to enter in new room data.
      * @param onAddRoom - the addSubmit function that is passed down from App.js
@@ -79,7 +74,6 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
      * @returns          - React component div used to enter 
     *                      and submit professor information
      */
-
     const RoomAdd = ({onAddRoom, onEditRoom}) => {
         const [building, setRBuilding] = useState(roomEditedId === null ? '' : editedRoom.building)
         const [number, setRNumber] = useState(roomEditedId === null ? '' : editedRoom.number)
@@ -189,42 +183,6 @@ const RoomAddPage = ({onAddRoom, onEditRoom, rooms, onDelete}) => {
                             <TextField InputLabelProps={{ shrink: true }} fullWidth id="enter_room_capacity" label="Room Capacity" variant="outlined" value={capacity} onChange={validateRCapacity}/>
                         </Box>
                     </Grid>
-
-                    {/*<Grid item xs = {6}>
-                        <Box sx={{ minWidth: 120 }}>
-                            <FormControl fullWidth>
-                                <InputLabel shrink id="label">Required Technology</InputLabel>
-                                <Select
-                                labelId="label"
-                                id='technology_dropdown'
-                                multiple
-                                notched
-                                onChange={handleTechChange}
-                                value={tech}
-                                label="Required Technology"
-                                input={<OutlinedInput id="select-multiple-chip" label="Required Technology" />}
-                                renderValue={(selected) => (
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                    {selected.map((value) => (
-                                        <Chip key={value} label={value} />
-                                    ))}
-                                    </Box>
-                                )}
-                                MenuProps={MenuProps}
-                                >
-                                    <MenuItem value="Desktop Computers" >Desktop Computers</MenuItem>
-                                    <MenuItem value="Laptop Computers" >Laptop Computers</MenuItem>
-                                    <MenuItem value="Projector" >Projector</MenuItem>
-                                    <MenuItem value="Whiteboard" >Whiteboard</MenuItem>
-                                    <MenuItem value="Chalkboard" >Chalkboard</MenuItem>
-                                    <MenuItem value="Robots" >Robots</MenuItem>
-                                    <MenuItem value="Zoom peripherals" >Zoom peripherals</MenuItem>
-                                    <MenuItem value="Instructor Computer" >Instructor Computer</MenuItem>
-                                    <MenuItem value="Net Controls" >Net Controls</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                        </Grid>*/}
                 </Grid>
 
 
