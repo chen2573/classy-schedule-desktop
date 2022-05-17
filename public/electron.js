@@ -307,7 +307,7 @@ function buildMainMenuTemplate() {
     }
 
     // Add developer tools item if not in production
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' || process.env.NODE_ENV === 'production') {
         mainMenuTemplate.push({
             label: 'Developer Tools',
             submenu: [{
@@ -1075,6 +1075,10 @@ function addUpdateAndViewPlanChannel(){
     });
 }
 
+const getExtraFilesPath = () => {
+    return path.join(process.resourcesPath, '..'); // go up one directory
+};
+
 //const exec = require('child_process').execFile;
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
@@ -1099,8 +1103,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
             solution = JSON.parse(stdout);
         }
         else {
-            const {stdout} = await execFile(path.join(__dirname, 'Contents/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
-            console.log('SOLUTION LOG --> Solution:' + stdout);
+            const {stdout} = await execFile(path.join(process.resourcesPath, 'public/services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
             solution = JSON.parse(stdout);
         }
 
@@ -1118,8 +1121,7 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
             solution = JSON.parse(stdout);
         }
         else {
-            const {stdout} = await execFile(path.join(__dirname, 'csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
-            console.log('SOLUTION LOG --> Solution:' + stdout);
+            const {stdout} = await execFile(path.join(process.resourcesPath, 'public/services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
             solution = JSON.parse(stdout);
         }
         _payload.data = solution

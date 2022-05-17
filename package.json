@@ -1,7 +1,7 @@
 {
   "name": "classy-schedule-desktop",
   "productName": "ClassySchedule",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "public/electron.js",
   "private": true,
   "author": "CISC480 Desktop Team",
@@ -71,11 +71,17 @@
   "build": {
     "appId": "com.classy-schedule",
     "mac": {
-      "icon": "src/assets/icons/mac/logo-desktop.icns"
+      "icon": "src/assets/icons/mac/logo-desktop.icns",
+      "extraResources": [
+        "public/services/testPythonScript/mac/**/*"
+      ]
     },
     "win": {
       "target": "zip",
-      "icon": "src/assets/icons/win/logo-desktop.ico"
+      "icon": "src/assets/icons/win/logo-desktop.ico",
+      "extraResources": [
+        "public/services/testPythonScript/windows/**/*"
+      ]
     },
     "files": [
       "build/**/*",
@@ -83,10 +89,6 @@
     ],
     "directories": {
       "buildResources": "src/assets/icons/png"
-    },
-    "extraFiles": [
-      "public/services/testPythonScript/mac/**/*",
-      "public/services/testPythonScript/windows/**/*"
-    ]
+    }
   }
 }
