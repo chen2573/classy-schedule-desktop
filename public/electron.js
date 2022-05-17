@@ -1091,9 +1091,18 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
 
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
-        console.log('SOLUTION LOG --> Solution:' + stdout);
-        let solution = JSON.parse(stdout);
+        let solution;
+
+        if (process.env.NODE_ENV !== 'production'){
+            const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
+        else {
+            const {stdout} = await execFile(path.join(__dirname, 'Contents/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
 
         _payload.data = solution;
 
@@ -1101,10 +1110,18 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
     }
     else {
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
-        console.log('SOLUTION LOG --> Solution:' + stdout);
+        let solution;
 
-        let solution = JSON.parse(stdout);
+        if (process.env.NODE_ENV !== 'production'){
+            const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
+        else {
+            const {stdout} = await execFile(path.join(__dirname, 'csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
         _payload.data = solution
         mainWindow.webContents.send('fromMain:Algo', _payload);
     }
