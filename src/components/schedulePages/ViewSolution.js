@@ -105,7 +105,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                             {
                                 //get course name
                                 var name;
-                                if (courses.filter((item) => item.id === entry.course)[0] != undefined)
+                                if (courses.filter((item) => item.id === entry.course)[0] !== undefined)
                                 {
                                     name = Object.entries(courses.filter((item) => item.id === entry.course)[0]);
                                     //console.log('Name', name);
@@ -162,7 +162,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                             {
                                 //get room name
                                 var name;
-                                if (rooms.filter((item) => item.id === entry.room)[0] != undefined)
+                                if (rooms.filter((item) => item.id === entry.room)[0] !== undefined)
                                 {
                                     name = Object.entries(rooms.filter((item) => item.id === entry.room)[0]);
                                     //console.log('Name', name);
@@ -217,7 +217,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                             {
                                 //get professor name
                                 var name;
-                                if (professors.filter((item) => item.id === entry.professor)[0] != undefined)
+                                if (professors.filter((item) => item.id === entry.professor)[0] !== undefined)
                                 {
                                     name = Object.entries(professors.filter((item) => item.id === entry.professor)[0]);
                                     name = name[1][1];
@@ -300,6 +300,8 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
     const [editSolutionEntries, setEditSolutionEntries] = useState([]);
+    const [scrollState, setScrollState] = useState(0);
+    const [index, setIndex] = useState(0);
     
 
     const [planId, setPlanId] = useState('');
@@ -384,7 +386,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
         {
             for (let entry of solution)
             {
-                if (entry.time == solutionTime.id)
+                if (entry.time === solutionTime.id)
                 {
                     solutionTime.entries.push(entry);
                 }
@@ -396,7 +398,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
 
     function mapTimeStringToId(timeString) {
         for(let i=0; i<times.length; i++){
-            if(times[i].time == timeString){
+            if(times[i].time === timeString){
                 return times[i].id;
             }
         }
@@ -409,7 +411,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     function a11yProps(index) {return {id: `simple-tab-${index}`, 'aria-controls': `simple-tabpanel-${index}`,}}
 
     const [page, setPage] = useState(0);
-    const handleChange = (event, newPage) => {setPage(newPage);};
+    const handleChange = (event, newPage) => {setPage(newPage); setIndex(newPage);};
 
     /**
      * This is an individual tabpanel page
@@ -477,25 +479,6 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     }
     //===========================================
 
-    /**
-     * Deletes this plan based on the planId
-     */
-    function deleteSolution(setCurrentPage) {
-        SolutionService.deletePlan(planId).then((data) => {
-            if(data === 1){
-                window.alert('Schedule deleted successfully!');
-                setCurrentPage('SolutionDashboard');
-            }
-            else {
-                window.alert('Error! Unable to delete schedule.')
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-        
-    }
-
     const EditButtons = () => {
         if(!editMode) {
             return (
@@ -504,12 +487,6 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
                     onClick={editSolution}
                     sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
                     <Typography variant="text" color="secondary">Edit Schedule</Typography>
-                </Button>
-
-                <Button variant="contained"
-                    onClick={deleteSolution}
-                    sx={{position:'absolute', bottom:'12vh', left:'14.6vw'}}>
-                    <Typography variant="text" color="#f72d2d">Delete</Typography>
                 </Button>
                 </>
             )
@@ -564,6 +541,24 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
             console.log(error);
         });
     }
+        /**
+     * Deletes this plan based on the planId
+     */
+    const deleteSolution = (setCurrentPage) => () => {
+            SolutionService.deletePlan(planId).then((data) => {
+                if(data === 1){
+                    window.alert('Schedule deleted successfully!');
+                    setCurrentPage('SolutionDashboard');
+                }
+                else {
+                    window.alert('Error! Unable to delete schedule.')
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            
+        }
 
     const TableHeaders = () => {
         if(!editMode) {
@@ -601,7 +596,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
      */
     function addEditSection(timeString, solutionNumber){
         let tempSolutions = editSolutionEntries;
-        
+        setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperAddEditSection(timeString, solutionNumber, tempSolutions)]);
         //console.log('Temp', tempSolutions);
     }
@@ -648,7 +643,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     function deleteEditSection(solutionNumber, entryId){
         let tempSolutions = editSolutionEntries;
         console.log(tempSolutions);
-        
+        setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperDeleteEditSection(solutionNumber, tempSolutions, entryId)]);
         //console.log('Temp', tempSolutions);
     }
@@ -663,7 +658,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
     function helperDeleteEditSection(solutionNumber, tempSolutions, entryId) {
 
         let entryArray = tempSolutions[solutionNumber].entry
-        let tempEntryArray = entryArray.filter((entry) => entry.id != entryId);
+        let tempEntryArray = entryArray.filter((entry) => entry.id !== entryId);
 
         tempSolutions[solutionNumber].entry = tempEntryArray;
 
@@ -679,6 +674,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
      */
     function setNewDropValue(solutionNumber, entryId, newValue, valueChanging) {
         let tempSolutions = editSolutionEntries;
+        setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperNewDropValue(solutionNumber, tempSolutions, entryId, newValue, valueChanging)])
     }
 
@@ -789,7 +785,7 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
         let time;
         
         for(let i=0; i<entryArray.length; i++){
-            if(entryArray[i].id == entryId){
+            if(entryArray[i].id === entryId){
                 time = entryArray[i].time;
                 return time;
             }
@@ -877,6 +873,13 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
                             </table>
                             <EditButtons></EditButtons>
 
+                            <Button variant="contained"
+                                onClick={deleteSolution(setCurrentPage)}
+                                sx={{position:'absolute', bottom:'12vh', left:'14.6vw'}}>
+                                <Typography variant="text" color="#f72d2d">Delete</Typography>
+                            </Button>
+
+
                             <Button variant="contained" 
                                 onClick={updateSchedule(solution, setCurrentPage)}
                                 sx={{position:'absolute', bottom:'12vh', right:'18vw'}}>
@@ -916,9 +919,12 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
 
 
     useEffect(() => {
+        if(document.querySelector('#simple-tabpanel-'+index) !== null){
+            document.querySelector('#simple-tabpanel-'+index).scrollTop = scrollState;
+        }
         console.log('USEEffect EDIT',editSolutionEntries);
         console.log('USEEffect MAIN', tempSolutionEntries);
-    }, [tempSolutionEntries, editSolutionEntries]);
+    }, [tempSolutionEntries, editSolutionEntries, scrollState]);
 
     if(isAlgoCalculating){
         return(
