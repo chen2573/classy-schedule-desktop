@@ -139,7 +139,7 @@ export function deletePlan(planId) {
     }
     else {
         return new Promise((resolve, reject) => {
-            resolve('User Cancelled');
+            resolve(2);
         });
     }
 }
