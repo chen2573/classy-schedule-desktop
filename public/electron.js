@@ -137,6 +137,27 @@ function displayMainWindow() {
                 newPlanDialogue = null;
             });
         }
+        else if(args.request === 'NEW_ADMIN') {
+            newPlanDialogue = new BrowserWindow({
+                parent: mainWindow,
+                webPreferences: {
+                    nodeIntegration: false,
+                    enableRemoteModule: true,
+                    contextIsolation: true,
+                    preload: path.join(__dirname, 'preload.js')
+                },
+                width:600,
+                height:760,
+                resizable: false,
+                center: true,
+                closable: true
+            })
+            newPlanDialogue.loadURL(`file://${path.join(__dirname, '/views/newAccount/newAccount.html')}`);
+
+            newPlanDialogue.on('close', function () {
+                newPlanDialogue = null;
+            });
+        }
     });
 }
 
@@ -369,17 +390,40 @@ function addAuthenticationChannels(){
 
                 let _payload = {
                     result: 'SUCCESS',
-                    message: 'Account created successfully!\nYou may now login.'
+                    message: 'New Admin Account created successfully!'
                 }
                 logInWindow.webContents.send('fromMain:AuthLogIn', _payload);
             }).catch((error) => {
                 let _payload = {
                     result: 'FAIL',
-                    message: 'Error! Unable to create account. Please try again.'
+                    message: 'Error! Unable to create admin account. Please try again.'
                 }
                 logInWindow.webContents.send('fromMain:AuthLogIn', _payload);
 
                 console.log('USER AUTH LOG--> Error creating user: ' + error + '\n');
+            });
+        }
+        else if(args.request === 'FORGOT_PASSWORD'){
+            DB.resetPassword(args.email).then((payload) => {
+                console.log("USER AUTH LOG--> User forgot password"); 
+
+                let _payload = {
+                    result: 'Success',
+                    message: "Password reset successfully!"
+                }
+                
+                logInWindow.webContents.send('fromMain:AuthLogIn', _payload);
+            }).catch((error) => {
+                //dialog.showErrorBox('Login Failed', 'Username or password is incorrect');
+                let _payload = {
+                    result: 'FAIL',
+                    message: 'Error reseting password!',
+                    error: error
+                }
+
+                logInWindow.webContents.send('fromMain:AuthLogIn', _payload);
+
+                console.log('USER AUTH LOG--> Error reseting user: ' + error + '\n');
             });
         }
     });
@@ -1047,9 +1091,18 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
 
     if(process.platform == 'darwin'){
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
-        console.log('SOLUTION LOG --> Solution:' + stdout);
-        let solution = JSON.parse(stdout);
+        let solution;
+
+        if (process.env.NODE_ENV !== 'production'){
+            const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/mac/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
+        else {
+            const {stdout} = await execFile(path.join(__dirname, 'Contents/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
 
         _payload.data = solution;
 
@@ -1057,10 +1110,18 @@ async function executeAlgorithm(data, courses, rooms, professors, labs, totalSol
     }
     else {
         console.log('SOLUTION LOG --> Running Algorithm...');
-        const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
-        console.log('SOLUTION LOG --> Solution:' + stdout);
+        let solution;
 
-        let solution = JSON.parse(stdout);
+        if (process.env.NODE_ENV !== 'production'){
+            const {stdout} = await execFile(path.join(__dirname, 'services/testPythonScript/windows/csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
+        else {
+            const {stdout} = await execFile(path.join(__dirname, 'csp-ortools.exe'), [totalSolutions,topSolutions, strict, data]);
+            console.log('SOLUTION LOG --> Solution:' + stdout);
+            solution = JSON.parse(stdout);
+        }
         _payload.data = solution
         mainWindow.webContents.send('fromMain:Algo', _payload);
     }

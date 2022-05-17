@@ -12,13 +12,19 @@ function logoutFromApplication() {
     window.DB.send('toMain:AuthLogOut', "");
 }
 
+function createAdmin() {
+    let payload = {
+      request: 'NEW_ADMIN'
+    }
+
+    window.DB.send('toMain:Modal', payload);
+}
+
 const SideNavigation = () => {
   return (
     <div id="mySidenav" className="sidenav">
         <a href="#" className="closebtn" onClick={closeNav}>&times;</a>
-        <a className="link-pages" href="/">Account</a>
-        <a className="link-pages" href="/">Services</a>
-        <a className="link-pages" href="/">Contact</a>
+        <a className="link-pages" href="/" onClick={createAdmin}>New Admin</a>
         <a className="link-pages" href="/">Settings</a>
         <br />
         <br />

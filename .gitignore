@@ -27,3 +27,4 @@ yarn-error.log*
 
 public/services/scheduleAlgorithm/mac
 public/services/testPythonScript/mac/*
+public/services/testPythonScript/mac/csp-ortools.exe
