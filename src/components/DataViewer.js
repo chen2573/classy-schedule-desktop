@@ -35,6 +35,8 @@ export function DataViewer ({id, dataState, sx, children})
     if (dataState.filter((item) => item.id === id)[0] != undefined)
     {
         displayData = Object.entries(dataState.filter((item) => item.id === id)[0]);
+        console.log(displayData)
+
     }  //get data entry by id
     
     //wrapper to bind popover state   
@@ -62,7 +64,7 @@ export function DataViewer ({id, dataState, sx, children})
                             //map each attribute of displayData to strings
                             return <Box sx={{display: 'flex', justifyContent:'space-between'}}>
                                         <Typography sx={{fontWeight: 'bold', textTransform: 'uppercase', marginLeft:'1em', marginRight:'1.5em'}}>{attribute[0]}</Typography>
-                                        <Typography sx={{marginLeft:'1.5em', marginRight:'1em'}}>{attribute[1]}</Typography>
+                                        <Typography sx={{marginLeft:'1.5em', marginRight:'1em'}}>{attribute[1].toString()}</Typography>
                                     </Box>
                             }
 
