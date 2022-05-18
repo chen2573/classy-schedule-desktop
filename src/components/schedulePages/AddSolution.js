@@ -38,6 +38,7 @@ const {
  * @returns - The exported component
  */
 const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times }) => {
+    
     /**
     * State variables to send to the algorithm
     */
@@ -196,10 +197,8 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times }
      */
     function createAndRefresh(){
         let haveValidInputs = validateInput();
-
         if(haveValidInputs){
             createNewSchedule();
-            resetStyles();
         }
     }
 
@@ -592,13 +591,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times }
         window.addEventListener('beforeunload', (event) => {
             // Cancel the event as stated by the standard.
             event.preventDefault();
-            
-          
-            createAndRefresh()
+            createAndRefresh();
           });
     }, [courseSections, selectedRooms, selectedProfessors, selectedLabs, roomScrollState, courseScrollState, labsScrollState, professorScrollState]);
-
-
+    useEffect(() => { return () => resetStyles();}, []);
     return (
         <div>
             <SideNavigation></SideNavigation>
