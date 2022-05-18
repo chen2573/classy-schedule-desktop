@@ -5,7 +5,6 @@ const shell = require('electron').shell;
 const mysql = require('mysql');
 const fs = require('fs');
 const isDev = require('electron-is-dev');
-const testData = require('./services/data2.json');
 
 // Objects coming from electron
 const { app, BrowserWindow, Menu, ipcMain, dialog } = electron;
@@ -24,7 +23,7 @@ const DatabaseService = require(path.join(__dirname, 'services/mainDBService.js'
  */
 
 // !!! SET process environment. Comment this out if packaging for development!!!
-//process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 
 // Global variables for the scope of our app. This represents the main window and any additional windows plus our top menu.
 let mainWindow;

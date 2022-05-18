@@ -6,13 +6,11 @@
  * Bugs:
  *    - None currently known
  *
- * @authors TBD
+ * @authors Samuel Swanson, Anshul Bharath, Tianzhi Chen, 
+ *          Joseph Heimel, Glennon Langan
  */
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, 
-    TextField, Button,Typography } from '@mui/material';
-//import { AsyncTaskManager } from 'builder-util';
-import { React, useState, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { Box, Button } from '@mui/material';
+import { React, useEffect } from 'react';
 import './../../assets/styles/HomePage.css';
 import './../../assets/styles/SideNav.css';
 import './../../assets/styles/AddPages.css';
@@ -21,17 +19,17 @@ import TopBar from './../TopBar.js';
 import AddIcon from '@mui/icons-material/Add';
 import DataViewer from '../DataViewer';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-    /**
+/**
  * This component is a view that lists out individual PlanListItems.
+ * 
  * @param plans - The state of plans that are passed down from App.js
  */
      const SolutionList = ({plans, setCurrentPage}) => {
-        console.log('SolutionList', plans);
         return(
-        <div className='container'>
+        <div className = 'container'>
             <h1 className = 'sticky'>Schedules</h1>
             {plans.map((currentSolution, index) => (
-                <SolutionItem key={index} plan={currentSolution} plans={plans} setCurrentPage={setCurrentPage}/>
+                <SolutionItem key = {index} plan = {currentSolution} plans = {plans} setCurrentPage = {setCurrentPage}/>
             ))}
         </div>
         );
@@ -54,17 +52,18 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
     }
     
     /**
-     * The component that will display an individual plan. These components will populate the PlanList component.
+     * The component that will display an individual plan. 
+     * These components will populate the PlanList component.
+     * 
      * @param plans - an individual solution
      */
     const SolutionItem = ({plan, plans, setCurrentPage}) => {
-        {/*console.log(plans);*/}
         return(
-            <div className= "item">
-                <DataViewer id={plan.id} dataState={plans} sx={{position:'absolute'}}>
-                    <MoreHorizIcon style= {{float:"right"}}/>
+            <div className = "item">
+                <DataViewer id = {plan.id} dataState = {plans} sx = {{position:'absolute'}}>
+                    <MoreHorizIcon style = {{float:"right"}}/>
                 </DataViewer>
-                <div onClick={navigateToUpdateSolution(setCurrentPage, plan.id, plan.name, plan.description, plan.year, plan.semester)}>
+                <div onClick = {navigateToUpdateSolution(setCurrentPage, plan.id, plan.name, plan.description, plan.year, plan.semester)}>
                     <h3>{plan.name}</h3>
                     <p>{plan.description}</p>
                 </div>
@@ -75,13 +74,14 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
     /**
      * This page will have a list of plans that have been added and
      * the plans that are in the database.
+     * 
      * @param plans - the state of plans passed from App.js
      */
      const SolutionContent = ({ plans, setCurrentPage}) => {
         return (
-            <div className="home">
-                <div className='solution-page'>
-                    <SolutionList plans={plans} setCurrentPage={setCurrentPage}/>
+            <div className = "home">
+                <div className = 'solution-page'>
+                    <SolutionList plans = {plans} setCurrentPage = {setCurrentPage}/>
                 </div>
             </div>
         );
@@ -96,25 +96,25 @@ const SolutionDashboard = ({plans, setCurrentPage, getLatestPlans}) => {
             <SideNavigation></SideNavigation>
 
             <div id="main">
-                <div className="main-div">
+                <div className = "main-div">
                     <TopBar></TopBar>
 
-                    <div className="container-home">
-                        <SolutionContent plans={plans} setCurrentPage={setCurrentPage}></SolutionContent>
+                    <div className = "container-home">
+                        <SolutionContent plans = {plans} setCurrentPage = {setCurrentPage}></SolutionContent>
                     </div>
                     
                     {/* generate schedule button */}
-                    <Button variant="contained" sx={{position:'absolute', bottom:'48vh', right:'30vw'}} onClick={()=>{setCurrentPage('AddSolution')}}>
+                    <Button variant = "contained" sx = {{position:'absolute', bottom:'48vh', right:'30vw'}} onClick = {()=>{setCurrentPage('AddSolution')}}>
                         <Box>
                             <AddIcon color="secondary"/>
                             <p className="button-text">Optimized Schedule</p>
                         </Box>
                     </Button>
 
-                    <Button variant="contained" sx={{position:'absolute', bottom:'48vh', right:'16vw'}} onClick={()=>{setCurrentPage('CreateSchedule')}}>
+                    <Button variant = "contained" sx = {{position:'absolute', bottom:'48vh', right:'16vw'}} onClick = {()=>{setCurrentPage('CreateSchedule')}}>
                         <Box>
-                            <AddIcon color="secondary"/>
-                            <p className="button-text">Create Schedule</p>
+                            <AddIcon color = "secondary"/>
+                            <p className = "button-text">Create Schedule</p>
                         </Box>
                     </Button>
                 </div>
