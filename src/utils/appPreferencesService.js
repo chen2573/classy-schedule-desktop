@@ -100,7 +100,7 @@ class PreferenceService {
     let wantTeach = [];
 
     for(let i=0; i<preferences.length; i++){
-      if(preferences[i].canTeach && classExistsInState(preferences[i].class_id, courses)){
+      if(preferences[i].can_teach && classExistsInState(preferences[i].class_id, courses)){
         let temp = getClassNameFromId(preferences[i].class_id, courses);
         canTeach.push(temp);
       }

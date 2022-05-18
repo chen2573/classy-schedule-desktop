@@ -26,7 +26,7 @@ export function createProfessor(professor){
         message: 'Renderer CREATE Professor',
         firstName: professor.firstName,
         lastName: professor.lastName,
-        teachLoad: professor.teach_load,
+        teachLoad: professor.teachLoad,
         email: professor.email
     };
     
@@ -60,7 +60,7 @@ export function updateProfessor(professor){
         id: professor.id,
         firstName: professor.firstName,
         lastName: professor.lastName,
-        teachLoad: professor.teach_load,
+        teachLoad: professor.teachLoad,
         email: professor.email
     };
     
