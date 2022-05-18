@@ -847,7 +847,7 @@ function App() {
     }
     else if (currentPage === 'schedule')
     {
-      return <SolutionPage professors={professors} courses={allCourses} rooms={rooms} times={times} programs={programs}/>;
+      return <SolutionPage professors={professors} courses={allCourses} rooms={rooms} times={times} programs={programs} setCurrentPage={setCurrentPage}/>;
     }
     else if(currentPage === 'AddSolution')
     {
