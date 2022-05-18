@@ -1,16 +1,15 @@
 /**
- * AddSolution
+ * AddSolution handles when you want to add a solution using the algorithm.
+ * This page appears when you click optimized schedule on solution dashboard.
  *
  * Bugs:
  *    - None currently known
  *
- * @authors TBD
+ * @authors Samuel Swanson, Anshul Bharath, Tianzhi Chen, 
+ *          Joseph Heimel, Glennon Langan
  */
-import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput, 
-    TextField, Button,Typography, Input } from '@mui/material';
-//import { AsyncTaskManager } from 'builder-util';
+import { Button,Typography } from '@mui/material';
 import { React, useEffect, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
 import './../../assets/styles/HomePage.css';
 import './../../assets/styles/SideNav.css';
 import './../../assets/styles/AddPages.css';
@@ -19,18 +18,18 @@ import TopBar from '../TopBar.js';
 import DataViewer from '../DataViewer';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-
 import * as AlgoService from 
 './../../services/algorithmServices/mainAlgorithmService';
 
 const {
     CHANNEL_MODAL_FROM_MAIN,
     CHANNEL_MODAL_TO_MAIN
-} = require('./../../utils/ipcChannels')
+} = require('./../../utils/ipcChannels');
 
 /**
- * The component that will be exported. This page will 4 lists of the Courses, professors, rooms, and labs that have been added and
- * that are in the database.
+ * The component that will be exported. This page will 4 lists of the Courses,
+ * professors, rooms, and labs that have been added and that are in the database.
+ * 
  * @param courses - the state of courses passed from App.js
  * @param rooms - the state of rooms passed from App.js
  * @param professors - the state of professors passed from App.js
@@ -38,7 +37,7 @@ const {
  * @param setCurrentPage - the function passed to redirect to the solution page
  * @returns - The exported component
  */
-const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times}) => {
+const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times }) => {
     /**
     * State variables to send to the algorithm
     */
@@ -46,26 +45,22 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [selectedProfessors, setSelectedProfessors] = useState([]);
     const [selectedLabs, setSelectedLabs] = useState([]);
-    const [tempState, setTempState] = useState([]);
     const [roomScrollState, setRoomScrollState] = useState(0);
     const [courseScrollState, setCourseScrollState] = useState(0);
     const [professorScrollState, setProfessorScrollState] = useState(0);
     const [labsScrollState, setLabsScrollState] = useState(0);
     const [selectedTimes, setTimes] = useState(times);
 
-    const [stateCurrentPage, setStateCurrentPage] = useState('');
-    const colorIsRed = true;
 
-    //======================== Algorithm Calculation Functions ===========================
+    //======================== Algorithm Calculation Functions =================
     /**
-     * This function runs when a course is selected. The number of sections of the course will 
-     * be determined by user input. 
+     * This function runs when a course is selected. The number of sections of
+     * the course will be determined by user input. 
      * 
      * There has to be an extra => so that this function can run on a onClick.
      * https://stackoverflow.com/questions/63960506/react-pass-value-to-onclick-function
      * 
      * @param course - a course that is being selected 
-     * @returns 
      */
     const addSectionsForClass = (course) => () => {
         let _payload = {
@@ -134,8 +129,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * Selects a room to add for creating schedule. This function changes the background color
-     * and adds it to the state variable holding rooms.
+     * Selects a room to add for creating schedule. This function changes
+     * the background color and adds it to the state variable holding rooms.
+     * 
      * @param room - the room that was clicked
      */
     const selectRooms = (room) => () => {
@@ -153,12 +149,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * Selects a professor to add for creating schedule. This function changes the background color
-     * and adds it to the state variable holding professors.
+     * Selects a professor to add for creating schedule. This function changes
+     * the background color and adds it to the state variable holding professors.
+     * 
      * @param professor - the professor that was clicked
      */
     const selectProfessors = (professor) => () => {
-        //console.log(professor)
         if(professor.elementClassName === "item"){
             professor.elementClassName = "item-selected";
             setProfessorScrollState(document.querySelector('#professorScroll').scrollTop); 
@@ -173,12 +169,12 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * Selects a lab to add for creating schedule. This function changes the background color
-     * and adds it to the state variable holding labs.
+     * Selects a lab to add for creating schedule. This function changes the
+     * background color and adds it to the state variable holding labs.
+     * 
      * @param lab - the lab that was clicked
      */
     const selectLabs = (lab) => () => {
-        //console.log(lab)
         if(lab.elementClassName === "item"){
             lab.elementClassName = "item-selected";
             setLabsScrollState(document.querySelector('#labsScroll').scrollTop); 
@@ -245,8 +241,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * This function makes sure that the courses selected have a teach load less than the
-     * professors selected.
+     * This function makes sure that the courses selected have a teach load less
+     * than the professors selected.
+     * 
      * @returns true if the the courses load is less or equal to the professors.
      */
     function checkCourseLoadWithProfessors(){
@@ -263,6 +260,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
 
     /**
      * This function returns the total load of credits for courses and labs.
+     * 
      * @returns total load of courses and labs.
      */
     function getCourseAndLabLoad(){
@@ -282,6 +280,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
 
     /**
      * This function returns the total of all professors teach load.
+     * 
      * @returns total professors load.
      */
     function getTotalProfLoad(){
@@ -294,7 +293,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * Checks to see if the professors each have at least one of the courses selected.
+     * Checks to see if the professors each have at least one of the
+     * courses selected.
+     * 
      * @returns true if validated, false otherwise.
      */
     function checkProfsCanTeach(){
@@ -311,7 +312,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * This function checks to see that the professors canTeach array has at least one of the courses.
+     * This function checks to see that the professors canTeach array has
+     * at least one of the courses.
+     * 
      * @param id - the id we are checking for
      * @param canTeachArray - an array of course objects.
      * @returns true if the prof satisfies the can teach requirement.
@@ -351,19 +354,20 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * Sends the selected values from this state to the algorithm service. The algo service will create
-     * a json from the variables and run the scheduling algorithm. The current page will then move to the solution viewer page.
+     * Sends the selected values from this state to the algorithm service. 
+     * The algo service will create a json from the variables and run the scheduling
+     * algorithm. The current page will then move to the solution viewer page.
      */
     function createNewSchedule(){
-        //setStateCurrentPage('schedule');
         AlgoService.createJsonOfSelectedStates(courseSections, selectedRooms, selectedProfessors, selectedLabs, selectedTimes, 300, 3, 1);
         setCurrentPage('schedule');
     }
 
 
-    //======================== AddSolution Components =====================================
+    //======================== AddSolution Components ==========================
     /**
      * This component is a view that lists out individual LabListItems.
+     * 
      * @param labs - The state of labs that is passed down from App.js
      */
         const LabList = ({labs, onClickLab}) => {
@@ -371,23 +375,24 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
             <div className='container' id = "labsScroll">
                 <h1 className='sticky'>Labs</h1>
                 {labs.map((currentLab, index) => (
-                    <LabListItem key={index} lab={currentLab} onClickLab={onClickLab} labs={labs}/>
+                    <LabListItem key = {index} lab = {currentLab} onClickLab = {onClickLab} labs = {labs}/>
                 ))}
             </div>
         );
     }
     
     /**
-     * The component that will display an individual lab. These components will populate the LabList component.
+     * The component that will display an individual lab. 
+     * These components will populate the LabList component.
+     * 
      * @param lab - an individual lab
      */
     const LabListItem = ({lab, onClickLab, labs}) => {
         return(
-            <div className={lab.elementClassName}>
-                <DataViewer id={lab.id} dataState={labs} sx={{position:'absolute'}}>
-                    <MoreHorizIcon style= {{float:"right"}}/>
+            <div className = {lab.elementClassName}>
+                <DataViewer id = {lab.id} dataState = {labs} sx = {{position:'absolute'}}>
+                    <MoreHorizIcon style = {{float:"right"}}/>
                 </DataViewer>
-                {/* this needs to change to a location if more than one building is used number is not unique*/}
                 <div onClick = {onClickLab(lab)}>
                     <h3>Lab: {lab?.name}</h3>
                     <p><em>Course: {lab?.number}</em></p>
@@ -400,13 +405,14 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     /**
      * This page will have a list of Labs that have been added and
      * the labs that are in the database.
+     * 
      * @param labs - the state of labs passed from App.js
      */
      const LabAddPageContent = ({ labs, onClickLab}) => {
         return (
-            <div className="home">
-                <div className='element-page'>
-                    <LabList labs={labs} onClickLab={onClickLab}/>
+            <div className = "home">
+                <div className = 'element-page'>
+                    <LabList labs = {labs} onClickLab = {onClickLab}/>
                 </div>
             </div>
         );
@@ -420,10 +426,10 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
      */
     const ProfessorList = ({professors, onClickProfessor}) => {
         return (
-                <div className='container' id = "professorScroll">
+                <div className = 'container' id = "professorScroll">
                     <h1 className = "sticky">Professors</h1>                    
                     {professors.map((currentProfessor, index) => (
-                        <ProfessorListItem key={index} professor={currentProfessor} onClickProfessor={onClickProfessor} professors={professors}/>
+                        <ProfessorListItem key = {index} professor = {currentProfessor} onClickProfessor = {onClickProfessor} professors = {professors}/>
                     ))}
                 </div>
 
@@ -432,18 +438,18 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
    
    
     /**
-     * The component that will display an individual professor. These components will populate the ProfessorList component.
+     * The component that will display an individual professor.
+     * These components will populate the ProfessorList component.
      * 
      * @param professor - An individual professor
      * @returns         - React component that displays a single professor component
      */
     const ProfessorListItem = ({professor, onClickProfessor, professors}) => {
         return (
-            <div className={professor.elementClassName}>
-                <DataViewer id={professor.id} dataState={professors} sx={{position:'absolute'}}>
-                    <MoreHorizIcon style= {{float:"right"}}/>
+            <div className = {professor.elementClassName}>
+                <DataViewer id = {professor.id} dataState={professors} sx={{position:'absolute'}}>
+                    <MoreHorizIcon style = {{float:"right"}}/>
                 </DataViewer>
-                {/* this needs to change to a location if more than one building is used number is not unique*/}
                 <div onClick = {onClickProfessor(professor)}>
                     <h3>{professor.firstName} {professor.lastName}</h3>
                 </div>
@@ -459,9 +465,9 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
      */
     const ProfessorAddPageContent = ({professors, onClickProfessor}) => {
         return (
-        <div className="home">
-            <div className='element-page'>
-            <ProfessorList professors={professors} onClickProfessor={onClickProfessor}/> 
+        <div className = "home">
+            <div className = 'element-page'>
+                <ProfessorList professors = {professors} onClickProfessor = {onClickProfessor}/> 
             </div>
         </div>
         );
@@ -469,14 +475,15 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
 
     /**
      * This component is a view that lists out individual RoomListItems.
+     * 
      * @param rooms - The state of rooms that is passed down from App.js
      */
         const RoomList = ({ rooms, onClickRoom }) => {
             return(
-                <div className='container' id = "roomScroll">
-                    <h1 className='sticky'>Rooms</h1>
+                <div className = 'container' id = "roomScroll">
+                    <h1 className = 'sticky'>Rooms</h1>
                     {rooms.map((currentRoom, index) => (
-                        <RoomListItem key={index} room={currentRoom} onClickRoom={onClickRoom} rooms={rooms}/>
+                        <RoomListItem key = {index} room = {currentRoom} onClickRoom = {onClickRoom} rooms = {rooms}/>
                     ))}
                 </div>
 
@@ -484,22 +491,21 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     }
 
     /**
-     * The component that will display an individual room. These components will populate the RoomList component.
+     * The component that will display an individual room. 
+     * These components will populate the RoomList component.
+     * 
      * @param room - an individual room
      */
     const RoomListItem = ({ room, onClickRoom, rooms }) => {
         return(
-        <div className={room.elementClassName}>
-            <DataViewer id={room.id} dataState={rooms} sx={{position:'absolute'}}>
-                <MoreHorizIcon style= {{float:"right"}}/>
+        <div className = {room.elementClassName}>
+            <DataViewer id = {room.id} dataState = {rooms} sx = {{position:'absolute'}}>
+                <MoreHorizIcon style = {{float:"right"}}/>
             </DataViewer>
-            {/* this needs to change to a location if more than one building is used number is not unique*/}
             <div onClick = {onClickRoom(room)}>
                 <br></br>
                 <h3>{room.building} {room.number} </h3>
             </div>
-            
-            {/*Do we want to add a subheader like the video*/}
         </div>
         );
     }
@@ -507,13 +513,14 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     /**
      * This page will have a list of the Rooms that have been added and
      * the rooms that are in the database.
+     * 
      * @param rooms - the state of rooms passed from App.js
      */
      const RoomAddPageContent = ({ rooms, onClickRoom }) => {
         return (
-          <div className="home">
-              <div className='element-page'>
-                  <RoomList rooms={rooms} onClickRoom={onClickRoom}/>
+          <div className = "home">
+              <div className = 'element-page'>
+                  <RoomList rooms = {rooms} onClickRoom = {onClickRoom}/>
               </div>
           </div>
         );
@@ -521,6 +528,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
 
     /**
      * This component is a view that lists out individual CourseListItems.
+     * 
      * @param courses - The state of courses that is passed down from App.js
      * @returns - The component that is a view listing out the CourseListItems
      */
@@ -529,7 +537,7 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
             <div className='container' id = "courseScroll">
                 <h1 className='sticky'>Courses</h1>                
                 {courses.map((currentCourse, index) => (
-                    <CourseListItem key={index} course={currentCourse} onClickCourse={onClickCourse}/>
+                    <CourseListItem key = {index} course = {currentCourse} onClickCourse = {onClickCourse}/>
                 ))}
             </div>
 
@@ -538,20 +546,21 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
 
 
     /**
-     * The component that will display an individual course. These components will populate the CourseList component.
+     * The component that will display an individual course. 
+     * These components will populate the CourseList component.
+     * 
      * @param course - an individual course
      * @returns - The component displaying an individual course.
      */
     const CourseListItem = ({ course, onClickCourse}) => {
         //addSectionsForClass(course)
         return (            
-                <div className={course.elementClassName} id={course.id} >
-                    <DataViewer id={course.id} dataState={courses} sx={{position:'absolute'}}>
-                        <MoreHorizIcon style= {{float:"right"}}/>
+                <div className = {course.elementClassName} id = {course.id} >
+                    <DataViewer id = {course.id} dataState = {courses} sx = {{position:'absolute'}}>
+                        <MoreHorizIcon style = {{float:"right"}}/>
                     </DataViewer>
-                    <div onClick={onClickCourse(course)}>
+                    <div onClick = {onClickCourse(course)}>
                         <h3>{course.program} {course.number}</h3>
-                        {/* This stuff in the paragraph tag will become popover*/}
                         <p><em>Course Name</em> : {course.name}<br /></p>
                     </div>
                 </div>
@@ -561,26 +570,21 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
     /**
      * This page will have a list of the Courses that have been added and
      * the courses that are in the database.
+     * 
      * @param courses - the state of courses passed from App.js
      * @returns - The exported component
      */
     const CourseAddPageContent = ({ courses, onClickCourse }) => {
         return (
-            <div className="home">
-                <div className='element-page'>
-                    <CourseList courses={courses} onClickCourse={onClickCourse}/>
+            <div className = "home">
+                <div className = 'element-page'>
+                    <CourseList courses = {courses} onClickCourse = {onClickCourse}/>
                 </div>
             </div>
         );
     }
 
     useEffect(() => {
-        //console.log('STATE REFRESH');
-        //console.log('=============');
-        //console.log('COURSES', courseSections);
-        //console.log('ROOMS', selectedRooms);
-        //console.log('PROFS', selectedProfessors);
-        //console.log('LABS', selectedLabs);
         document.querySelector('#roomScroll').scrollTop = roomScrollState;
         document.querySelector('#courseScroll').scrollTop = courseScrollState;
         document.querySelector('#labsScroll').scrollTop = labsScrollState;
@@ -593,21 +597,6 @@ const AddSolution = ({ courses, rooms, professors, labs, setCurrentPage, times})
             createAndRefresh()
           });
     }, [courseSections, selectedRooms, selectedProfessors, selectedLabs, roomScrollState, courseScrollState, labsScrollState, professorScrollState]);
-    /**
-     * Resets the UI style when user leaves the page
-     */
-    // useEffect(() => {
-    //     return () => {
-    //         if(stateCurrentPage !== 'schedule'){
-    //             let choice = window.confirm("You are about to leave this page. Your selections will be lost!");
-    //             if(choice){
-    //                 resetStyles();
-    //             }else{
-    //                 setCurrentPage('AddSolution');
-    //             }
-    //         }
-    //     }
-    //   }, [stateCurrentPage]);
 
 
     return (

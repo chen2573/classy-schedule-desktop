@@ -1,15 +1,27 @@
+/**
+ * Preload sets up the IPC channels which sets up communication between react
+ * and electron.
+ * 
+ * Bugs:
+ *    - None currently known
+ *
+ * @authors Anshul Bharath
+ */
 const { contextBridge } = require("electron");
 window.ipcRenderer = require('electron').ipcRenderer;
 
 /**
  * This function is a preload script to set up IPC channels.
  * 
- * This creates a context bridge between electron and our react app. This allows our electron app
- * to know about our React UI without the React UI know the inner workings of the IPC. 
+ * This creates a context bridge between electron and our react app. This allows
+ * our electron app to know about our React UI without the React UI know the
+ * inner workings of the IPC. 
  * 
- * This will Expose protected methods that allow the renderer process to use the ipcRenderer without exposing the entire object.
+ * This will Expose protected methods that allow the renderer process to use the
+ * ipcRenderer without exposing the entire object.
  * 
- * To add a new channelyou have to add the string to the 'validChannels' and add a constant to src/utils/ipcChannels.js.
+ * To add a new channelyou have to add the string to the 'validChannels' and add 
+ * a constant to src/utils/ipcChannels.js.
  */
 contextBridge.exposeInMainWorld(
     "DB", {
