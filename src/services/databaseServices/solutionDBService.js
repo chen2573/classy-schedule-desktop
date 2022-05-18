@@ -40,9 +40,12 @@ export function createPlan(solution, professors, courses, rooms, programs) {
 
     return new Promise((resolve, reject) => {
         window.DB.receive('fromMain:Plan', (data) => {
-            if(data.status === 'SUCCESS') {
+            if(data.status === 'SUCCESS_CREATE') {
                 //window.alert(data.message);
                 resolve(1);
+            }
+            else if(data.status === 'CANCEL'){
+                resolve(2);
             }
             else {
                 resolve(-1);
@@ -63,6 +66,7 @@ export function createPlan(solution, professors, courses, rooms, programs) {
  * @param rooms - the state times.
  */
  export function updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs) {
+    let recieved = 0;
     let _payload = {
         request: 'UPDATE_PLAN',
         id: planId,
@@ -74,11 +78,13 @@ export function createPlan(solution, professors, courses, rooms, programs) {
 
     window.DB.send("toMain:Modal", _payload);
 
+    
     window.DB.receive('fromMain:Modal', (data) => {
         if(data.status === 'FAIL'){
             window.alert(data.message);
         }
         else if(data.status === 'SUCCESS'){
+            
             let sectionJson = createSectionsJson(planId, solution.entry, professors, courses, rooms, programs);
 
             let _payload = {
@@ -87,8 +93,7 @@ export function createPlan(solution, professors, courses, rooms, programs) {
                 planId: planId,
                 data: sectionJson
             }
-            window.DB.send("toMain:Plan", _payload);
-
+            window.DB.send("toMain:Plan", _payload);     
         }
         else {
             window.alert('An unexpected error occured.');
@@ -97,15 +102,22 @@ export function createPlan(solution, professors, courses, rooms, programs) {
 
     return new Promise((resolve, reject) => {
         window.DB.receive('fromMain:Plan', (data) => {
-            if(data.status === 'SUCCESS') {
+            if(data.status === 'SUCCESS_UPDATE') {
                 //window.alert(data.message);
                 resolve(1);
+            }
+            else if(data.status === 'CANCEL'){
+                resolve(2);
             }
             else {
                 resolve(-1);
             }
         });
     });
+}
+
+function waiting(){
+    console.log("Waiting");
 }
 
 /**
@@ -139,7 +151,7 @@ export function deletePlan(planId) {
     }
     else {
         return new Promise((resolve, reject) => {
-            resolve('User Cancelled');
+            resolve(2);
         });
     }
 }

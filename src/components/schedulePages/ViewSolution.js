@@ -9,21 +9,17 @@
  */
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, TextField, 
+import {Button, Tabs, Tab, Box, Typography, TextField, 
     CircularProgress, FormControl, InputLabel, Select, MenuItem} 
     from '@mui/material';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FaTimes, FaPencilAlt} from 'react-icons/fa';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
 import * as SolutionService from 
 '../../services/databaseServices/solutionDBService.js';
-import * as AlgoService from 
-'./../../services/algorithmServices/mainAlgorithmService';
+
 
 //const payload.data = require("../../utils/solution.json");
 
@@ -38,8 +34,6 @@ import * as AlgoService from
  */
 const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, onDeleteEditSection, solutionNumber, onChangeDropDown}) =>
 {
-    //console.log("Entries", courseEntries);
-    //console.log("Item", solutionNumber);
     /**
      * 
      * @param  
@@ -518,6 +512,9 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
                 window.alert('Schedule created successfully!');
                 setCurrentPage('SolutionDashboard');
             }
+            else if(data === 2){
+                return;
+            }
             else if(data === -1) {
                 window.alert('Error! Unable to create schedule.')
             }
@@ -527,11 +524,20 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
         });
     }
 
+    /**
+     * 
+     * @param solution - the solution we are updating with.
+     * @param setCurrentPage - the function the 
+     * @returns 
+     */
     const updateSchedule = (solution, setCurrentPage) => () => {
         SolutionService.updatePlan(planId, planName, planDescription, planYear, planSemester, solution, professors, courses, rooms, programs).then((data) => {
             if(data === 1){
                 window.alert('Schedule updated successfully!');
                 setCurrentPage('SolutionDashboard');
+            }
+            else if(data === 2){
+                return;
             }
             else if(data === -1) {
                 window.alert('Error! Unable to update schedule.')
@@ -545,20 +551,23 @@ export function ViewSolution ({professors, courses, rooms, times, programs, setC
      * Deletes this plan based on the planId
      */
     const deleteSolution = (setCurrentPage) => () => {
-            SolutionService.deletePlan(planId).then((data) => {
-                if(data === 1){
-                    window.alert('Schedule deleted successfully!');
-                    setCurrentPage('SolutionDashboard');
-                }
-                else {
-                    window.alert('Error! Unable to delete schedule.')
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        SolutionService.deletePlan(planId).then((data) => {
+            if(data === 1){
+                window.alert('Schedule deleted successfully!');
+                setCurrentPage('SolutionDashboard');
+            }
+            else if(data === 2){
+                return;
+            }
+            else {
+                window.alert('Error! Unable to delete schedule.')
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
             
-        }
+    }
 
     const TableHeaders = () => {
         if(!editMode) {

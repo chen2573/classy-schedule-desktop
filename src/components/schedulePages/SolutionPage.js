@@ -457,6 +457,16 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms, programs).then((data) => {
+            if(data === 1){
+                window.alert('Schedule created successfully!');
+                setCurrentPage('SolutionDashboard');
+            }
+            else if(data === 2){
+                return;
+            }
+            else if(data === -1) {
+                window.alert('Error! Unable to create schedule.')
+            }
         })
         .catch((error) => {
             console.log(error);

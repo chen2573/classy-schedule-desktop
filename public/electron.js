@@ -32,6 +32,8 @@ let logInWindow;
 let mainMenuTemplate;
 let newPlanDialogue;
 
+let receivedCount = 0;
+
 //This variable is a global variable that keeps track of a user session
 let userLoggedIn = false;
 
@@ -160,6 +162,18 @@ function displayMainWindow() {
             newPlanDialogue.on('close', function () {
                 newPlanDialogue = null;
             });
+        }
+        else if(args.request === 'CANCEL_PLAN'){
+            newPlanDialogue.close();
+            console.log("MODAL WINDOW LOG --> " + args.message);
+
+            receivedCount = 0;
+
+            let _payload = {
+                status: 'CANCEL',
+                message: "Schedule cancelled"
+            };
+            mainWindow.webContents.send('fromMain:Plan', _payload);
         }
     });
 }
@@ -897,10 +911,6 @@ function addModalWindows(){
                 mainWindow.webContents.send('fromMain:Modal', _payload);
             });
         }
-        else if(args.request === "CANCEL_PLAN") {
-            newPlanDialogue.close();
-            console.log("MODAL WINDOW LOG --> " + args.message);
-        }
     });
 }
 
@@ -921,19 +931,23 @@ function addModalWindows(){
                 console.error('!!!DATABASE LOG--> ERROR returning PLANS: ' + error + + '\n');
             });
         }
-        else if(args.request === 'CREATE_MULTIPLE'){
+        else if(args.request === 'CREATE_MULTIPLE' && receivedCount < 1){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request CREATE MULTIPLE SECTIONS")
-            console.log(args.data);
 
+            receivedCount++;      
+    
             DB.createMultipleSections(args.data).then((payload) => {
                 console.log("DATABASE LOG--> Successfully created SECTIONS\n");
+                
 
                 let _payload = {
-                    status: 'SUCCESS',
+                    status: 'SUCCESS_CREATE',
                     message: "Schedule created successfully!",
                 };
+
                 mainWindow.webContents.send('fromMain:Plan', _payload);
+                receivedCount = 0;
 
             }).catch((error) => {
                 console.error('!!!DATABASE LOG--> ERROR adding SECTIONS: ' + error + '\n');
@@ -946,19 +960,21 @@ function addModalWindows(){
                 mainWindow.webContents.send('fromMain:Plan', _payload);
             });
         }
-        else if(args.request === 'UPDATE_MULTIPLE'){
+        else if(args.request === 'UPDATE_MULTIPLE' && receivedCount < 1){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request UPDATE MULTIPLE SECTIONS")
             console.log(args.data);
+            receivedCount++;
 
             DB.updateMultipleSections(args.planId, args.data).then((payload) => {
                 console.log("DATABASE LOG--> Successfully updated SECTIONS for planId: " +args.planId+ "\n");
 
                 let _payload = {
-                    status: 'SUCCESS',
+                    status: 'SUCCESS_UPDATE',
                     message: "Schedule updated successfully!",
                 };
                 mainWindow.webContents.send('fromMain:Plan', _payload);
+                receivedCount = 0;
 
             }).catch((error) => {
                 console.error('!!!DATABASE LOG--> ERROR updating SECTIONS: ' + error + '\n');
@@ -975,34 +991,19 @@ function addModalWindows(){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request DELETE section for plan: "+args.id);
 
-            DB.deleteMultipleSections(args.id).then((payload) => {
-                console.log("DATABASE LOG--> Successfully deleted SECTIONS for planId: " +args.id+ "\n");
-                console.log("DATABASE LOG --> " + "Making request DELETE plan: "+args.id);
-                
-                DB.deletePlan(args.id).then((payload) => {
-                    console.log("DATABASE LOG --> " + "Successfully deleted plan: "+args.id);
-                    let _payload = {
-                        status: 'SUCCESS',
-                        message: "Schedule deleted successfully!",
-                    };
-                    mainWindow.webContents.send('fromMain:Plan', _payload);
-
-                }).catch((error) => {
-                    console.error('!!!DATABASE LOG--> ERROR deleting PLAN: ' + error + '\n');
-                    let _payload = {
-                        status: 'FAIL',
-                        message: "Error! Unable to delete Schedule.",
-                        errorCode: error
-                    };
-    
-                    mainWindow.webContents.send('fromMain:Plan', _payload);
-                });
+            DB.deletePlan(args.id).then((payload) => {
+                console.log("DATABASE LOG --> " + "Successfully deleted plan: "+args.id);
+                let _payload = {
+                    status: 'SUCCESS',
+                    message: "Schedule deleted successfully!",
+                };
+                mainWindow.webContents.send('fromMain:Plan', _payload);
 
             }).catch((error) => {
-                console.error('!!!DATABASE LOG--> ERROR deleting SECTIONS: ' + error + '\n');
+                console.error('!!!DATABASE LOG--> ERROR deleting PLAN: ' + error + '\n');
                 let _payload = {
                     status: 'FAIL',
-                    message: "Error! Unable to delete sections.",
+                    message: "Error! Unable to delete Schedule.",
                     errorCode: error
                 };
 
