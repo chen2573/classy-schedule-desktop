@@ -277,7 +277,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * @param rooms rooms state
  * @returns the solutions page
  */
-export function SolutionPage ({professors, courses, rooms, times, programs})
+export function SolutionPage ({professors, courses, rooms, times, programs, setCurrentPage})
 {  
     const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
