@@ -33,6 +33,8 @@ let logInWindow;
 let mainMenuTemplate;
 let newPlanDialogue;
 
+let receivedCount = 0;
+
 //This variable is a global variable that keeps track of a user session
 let userLoggedIn = false;
 
@@ -161,6 +163,18 @@ function displayMainWindow() {
             newPlanDialogue.on('close', function () {
                 newPlanDialogue = null;
             });
+        }
+        else if(args.request === 'CANCEL_PLAN'){
+            newPlanDialogue.close();
+            console.log("MODAL WINDOW LOG --> " + args.message);
+
+            receivedCount = 0;
+
+            let _payload = {
+                status: 'CANCEL',
+                message: "Schedule cancelled"
+            };
+            mainWindow.webContents.send('fromMain:Plan', _payload);
         }
     });
 }
@@ -898,10 +912,6 @@ function addModalWindows(){
                 mainWindow.webContents.send('fromMain:Modal', _payload);
             });
         }
-        else if(args.request === "CANCEL_PLAN") {
-            newPlanDialogue.close();
-            console.log("MODAL WINDOW LOG --> " + args.message);
-        }
     });
 }
 
@@ -922,19 +932,23 @@ function addModalWindows(){
                 console.error('!!!DATABASE LOG--> ERROR returning PLANS: ' + error + + '\n');
             });
         }
-        else if(args.request === 'CREATE_MULTIPLE'){
+        else if(args.request === 'CREATE_MULTIPLE' && receivedCount < 1){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request CREATE MULTIPLE SECTIONS")
-            console.log(args.data);
 
+            receivedCount++;      
+    
             DB.createMultipleSections(args.data).then((payload) => {
                 console.log("DATABASE LOG--> Successfully created SECTIONS\n");
+                
 
                 let _payload = {
-                    status: 'SUCCESS',
+                    status: 'SUCCESS_CREATE',
                     message: "Schedule created successfully!",
                 };
+
                 mainWindow.webContents.send('fromMain:Plan', _payload);
+                receivedCount = 0;
 
             }).catch((error) => {
                 console.error('!!!DATABASE LOG--> ERROR adding SECTIONS: ' + error + '\n');
@@ -947,19 +961,21 @@ function addModalWindows(){
                 mainWindow.webContents.send('fromMain:Plan', _payload);
             });
         }
-        else if(args.request === 'UPDATE_MULTIPLE'){
+        else if(args.request === 'UPDATE_MULTIPLE' && receivedCount < 1){
             console.log("DATABASE LOG --> " + args.message)
             console.log("DATABASE LOG --> " + "Making request UPDATE MULTIPLE SECTIONS")
             console.log(args.data);
+            receivedCount++;
 
             DB.updateMultipleSections(args.planId, args.data).then((payload) => {
                 console.log("DATABASE LOG--> Successfully updated SECTIONS for planId: " +args.planId+ "\n");
 
                 let _payload = {
-                    status: 'SUCCESS',
+                    status: 'SUCCESS_UPDATE',
                     message: "Schedule updated successfully!",
                 };
                 mainWindow.webContents.send('fromMain:Plan', _payload);
+                receivedCount = 0;
 
             }).catch((error) => {
                 console.error('!!!DATABASE LOG--> ERROR updating SECTIONS: ' + error + '\n');
