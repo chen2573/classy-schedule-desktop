@@ -5,7 +5,6 @@ const shell = require('electron').shell;
 const mysql = require('mysql');
 const fs = require('fs');
 const isDev = require('electron-is-dev');
-const testData = require('./services/data2.json');
 
 // Objects coming from electron
 const { app, BrowserWindow, Menu, ipcMain, dialog } = electron;
