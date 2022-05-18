@@ -3,13 +3,12 @@
  * user to create new professor objects.
  * It will also store the entered information as state.
  * 
- * 
  * @authors Anshul Bharath, Joseph Heimel, Glennon Langan, Samuel Swanson
  */
 
  import { Box, InputLabel, FormControl, MenuItem, Select, Chip, OutlinedInput,
    TextField, Grid } from '@mui/material';
- import { React, useState, memo, useReducer, useEffect } from 'react';
+ import { React, useState, useEffect } from 'react';
  import {FaTimes, FaPencilAlt} from 'react-icons/fa';
  
  import './../../assets/styles/HomePage.css';
@@ -45,7 +44,6 @@
       setProfEditedId(profId);
       setEditedProfessor(profId === null ? null : 
         professors.find(p => p.id === profId));
-      console.log({profId})
     }
 
     // Handles state changes at the end of editing
@@ -114,13 +112,12 @@
         * This function enforces that the input is an int 0-20, with a .5,
         * and an empty string
         * 
-        * 
         * @param val - Input value
         * @returns   - True if the input is valid, otherwise false
         */
       const validTeachingLoad = val => 
       [...val.matchAll(/(1[0-9]|20|[0-9])?(\.[5]{0,1})?/g)].some
-      (x => x[0] == val) || val === '';
+      (x => x[0] === val) || val === '';
     
       // This function calls passes other functions to validate
       const validateTeachLoad = validate(validTeachingLoad, setTeachLoad);
@@ -128,30 +125,31 @@
       /**
         * This function enforces that the input is alphanumeric lower or
         * upper case or ' '
+        * 
         * @param name - Input value
         * @returns    - True if the input is valid, otherwise false
         */
       const validNameChars = name => 
       name.split('').every(c => new Array(26).fill(true).map((e, i) => 
-      String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) =>
-      String.fromCharCode(i  + 97)).map(x => 
+      String.fromCharCode(i + 97)).concat(new Array(26).fill(true).map((e, i) =>
+      String.fromCharCode(i + 97)).map(x => 
         x.toUpperCase())).concat(' ').includes(c));
       
       /**
-        * This function enforces that the input is alphanumeric lower or upper case or ' '
+        * This function enforces that the input is alphanumeric lower or 
+        * upper case or ' '
+        * 
         * @param email - Input value
         * @returns    - True if the input is valid, otherwise false
         */
       const validEmailChars = email => 
       email.split('').every(c => new Array(26).fill(true).map((e, i) => 
-      String.fromCharCode(i  + 97)).concat(new Array(26).fill(true).map((e, i) => 
-      String.fromCharCode(i  + 97)).map(x => x.toUpperCase())).concat(' ')
-      .concat('.').concat('@').concat('0').concat('1').concat('2').concat('3').
-      concat('4').concat('5').concat('6').concat('7').concat('8').concat('9').
-      includes(c));
+      String.fromCharCode(i + 97)).concat(new Array(26).fill(true).map((e, i) => 
+      String.fromCharCode(i + 97)).map(x => x.toUpperCase())).concat(' ').concat('.').concat('@').concat('0').concat('1').concat('2').concat('3').concat('4').concat('5').concat('6').concat('7').concat('8').concat('9').includes(c));
     
       /**
         *  This function enforces that the input is less than 30 characters
+        * 
         * @param name - Input value
         * @returns    - True if the input is valid, otherwise false
         */
@@ -183,10 +181,8 @@
         */
       const handleClick = (courseInfo, stateSetter) => e => {
         stateSetter(oldValue => {
-          if(oldValue.some(x => JSON.stringify(x) == JSON.stringify(courseInfo))) {
-            console.log({oldValue});
-    
-            return oldValue.filter(x => JSON.stringify(x) != JSON.stringify(courseInfo));
+          if(oldValue.some(x => JSON.stringify(x) === JSON.stringify(courseInfo))) { 
+            return oldValue.filter(x => JSON.stringify(x) !== JSON.stringify(courseInfo));
           }
           const newValue = [...oldValue, courseInfo]
           return newValue;
