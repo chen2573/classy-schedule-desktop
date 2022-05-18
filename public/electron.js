@@ -23,7 +23,7 @@ const DatabaseService = require(path.join(__dirname, 'services/mainDBService.js'
  */
 
 // !!! SET process environment. Comment this out if packaging for development!!!
-//process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 
 // Global variables for the scope of our app. This represents the main window and any additional windows plus our top menu.
 let mainWindow;
