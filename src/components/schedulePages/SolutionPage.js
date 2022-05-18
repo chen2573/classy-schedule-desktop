@@ -1,28 +1,23 @@
 /**
- * SolutionPage 
+ * SolutionPage is the page we land on after an algorithm generates a new
+ * solution.
  *
  * Bugs:
  *    - None currently known
- *
- * @authors TBD
+ * @authors Samuel Swanson, Anshul Bharath, Tianzhi Chen, 
+ *          Joseph Heimel, Glennon Langan
  */
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Popover, Button, Tabs, Tab, Box, Typography, TextField, 
-    CircularProgress, FormControl, InputLabel, Select, MenuItem} 
-    from '@mui/material';
+import {Button, Tabs, Tab, Box, Typography, CircularProgress, FormControl, 
+    InputLabel, Select, MenuItem} from '@mui/material';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FaTimes, FaPencilAlt} from 'react-icons/fa';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import DataViewer from './../DataViewer.js';
 import './../../assets/styles/Solution.css';
 
 import * as SolutionService from 
 '../../services/databaseServices/solutionDBService.js'
-import * as AlgoService from 
-'./../../services/algorithmServices/mainAlgorithmService';
 
 //const payload.data = require("../../utils/solution.json");
 
@@ -31,26 +26,26 @@ import * as AlgoService from
 
 /**
  * automatically populates solutions items
- * @param courseEntries courses assigned to a time slot by the GenerateSolutions component
+ * 
+ * @param courseEntries courses assigned to a time slot by the GenerateSolutions
+ * component
  * @param time the time slot
  * @returns a table row item containing all courses entry in a time slot
  */
 const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode, onAddEditSection, onDeleteEditSection, solutionNumber, onChangeDropDown}) =>
 {
-    //console.log("Entries", courseEntries);
-    //console.log("Item", solutionNumber);
 
     const TimeDisplay = ({time, editMode, solutionNumber, onAddEditSection}) => {
         if(!editMode) {
-            return <th scope="row">{time}</th>
+            return <th scope = "row">{time}</th>
         }
         else {
-            return <><th scope="row">
+            return <><th scope = "row">
                         {time} 
                         <br></br> 
-                        <div class="tooltip" onClick={() => onAddEditSection(time, solutionNumber)}>
+                        <div class = "tooltip" onClick = {() => onAddEditSection(time, solutionNumber)}>
                             <AddCircleSharpIcon></AddCircleSharpIcon>
-                            <span class="tooltiptext">Add Section</span> 
+                            <span class = "tooltiptext">Add Section</span> 
                         </div>
                     </th></>
         }
@@ -61,9 +56,9 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
         {
             return(
             <table ><tbody><tr  ><td>
-                <div className="tooltip checkbox-div" onClick={() => onDeleteEditSection(solutionNumber, entry.id)}>
-                <DeleteIcon size="large" inputProps={{ 'aria-label': 'controlled' }}/>
-                    <span className="tooltiptext">Delete Section</span> 
+                <div className = "tooltip checkbox-div" onClick={() => onDeleteEditSection(solutionNumber, entry.id)}>
+                <DeleteIcon size = "large" inputProps={{ 'aria-label': 'controlled' }}/>
+                    <span className = "tooltiptext">Delete Section</span> 
                 </div>    
             </td></tr></tbody></table>)
             
@@ -75,8 +70,8 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
     const DeleteColumn = ({entries, editMode}) => {
         if(editMode) {
             return (
-                <td className="delete-row-container">
-                    <DeleteColumnElement entries={entries}></DeleteColumnElement>
+                <td className = "delete-row-container">
+                    <DeleteColumnElement entries = {entries}></DeleteColumnElement>
                 </td>
             )
         }
@@ -84,30 +79,25 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
             return <></>
         }
     }
+    const item = <tr key = {time} className="row">
+                    <TimeDisplay time = {time} editMode = {editMode} onAddEditSection = {onAddEditSection} solutionNumber = {solutionNumber}></TimeDisplay>
 
-    //console.log(courses);
-    //console.log(courseEntries);
-    //populate items in the time slot row 
-    const item = <tr key={time} className="row">
-                    <TimeDisplay time={time} editMode={editMode} onAddEditSection={onAddEditSection} solutionNumber={solutionNumber}></TimeDisplay>
-
-                    {<td className="course-container">
+                    {<td className = "course-container">
                         {courseEntries.map((entry) =>
                             {
                                 //get course name
                                 var name;
-                                if (courses.filter((item) => item.id === entry.course)[0] != undefined)
+                                if (courses.filter((item) => item.id === entry.course)[0] !== undefined)
                                 {
                                     name = Object.entries(courses.filter((item) => item.id === entry.course)[0]);
-                                    //console.log('Name', name);
                                     name = name[1][1] + " " + name[2][1];
                                 }
 
                                 //return table entry
                                 if(!editMode){
-                                    return <table key={entry.course}><tbody><tr key={entry.course} ><td>
-                                                <DataViewer id={entry.course} dataState={courses} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                                    <Button className="entry-button" variant="text"color="inherit">
+                                    return <table key = {entry.course}><tbody><tr key = {entry.course} ><td>
+                                                <DataViewer id = {entry.course} dataState = {courses} sx = {{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                    <Button className = "entry-button" variant = "text"color = "inherit">
                                                         {name}
                                                     </Button>
                                                 </DataViewer>
@@ -116,26 +106,26 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                                 else {
 
 
-                                    return <table key={entry.course}><tbody><tr key={entry.course} ><td>
+                                    return <table key = {entry.course}><tbody><tr key = {entry.course} ><td>
                                     <FormControl fullWidth>
-                                        <InputLabel shrink id="label">Course</InputLabel>
+                                        <InputLabel shrink id = "label">Course</InputLabel>
                                         <Select
-                                        labelId="label"
-                                        id='course_dropdown'
+                                        labelId = "label"
+                                        id = 'course_dropdown'
                                         notched
-                                        MenuProps={{sx: {
+                                        MenuProps = {{sx: {
                                             "&& .Mui-selected": {
                                             backgroundColor: "#90A4AE"
                                             }
                                         }}}
-                                        value={entry.course}
-                                        label="Course Name"
-                                        onChange={(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'COURSE')}
+                                        value = {entry.course}
+                                        label = "Course Name"
+                                        onChange = {(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'COURSE')}
                                         >
                                         {courses.map(course => (
                                             <MenuItem 
-                                            key={course.id} 
-                                            value={course.id}
+                                            key = {course.id} 
+                                            value = {course.id}
                                             >
                                             <b>{course.program} {course.number}</b>: <i>{course.name}</i>
                                             </MenuItem>
@@ -148,49 +138,48 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                         }
                     </td>}
 
-                    {<td className="room-container">
+                    {<td className = "room-container">
                         {courseEntries.map((entry) =>
                             {
                                 //get room name
                                 var name;
-                                if (rooms.filter((item) => item.id === entry.room)[0] != undefined)
+                                if (rooms.filter((item) => item.id === entry.room)[0] !== undefined)
                                 {
                                     name = Object.entries(rooms.filter((item) => item.id === entry.room)[0]);
-                                    //console.log('Name', name);
                                     name = name[1][1] + " " + name[2][1];
                                 }
 
                                 //return table entry
                                 if(!editMode){
-                                    return <table key={entry.room}><tbody><tr key={entry.room} ><td>
-                                                <DataViewer id={entry.room} dataState={rooms} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                                    <Button className="entry-button" variant="text"color="inherit">
+                                    return <table key = {entry.room}><tbody><tr key = {entry.room} ><td>
+                                                <DataViewer id = {entry.room} dataState = {rooms} sx = {{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                    <Button className = "entry-button" variant = "text"color = "inherit">
                                                         {name}
                                                     </Button>
                                                 </DataViewer>
                                         </td></tr></tbody></table>
                                 }
                                 else {
-                                    return <table key={entry.room}><tbody><tr key={entry.room} ><td>
+                                    return <table key = {entry.room}><tbody><tr key = {entry.room} ><td>
                                     <FormControl fullWidth>
-                                        <InputLabel shrink id="label">Room</InputLabel>
+                                        <InputLabel shrink id = "label">Room</InputLabel>
                                         <Select
-                                        labelId="room-label"
-                                        id='room_dropdown'
+                                        labelId = "room-label"
+                                        id = 'room_dropdown'
                                         notched
-                                        MenuProps={{sx: {
+                                        MenuProps = {{sx: {
                                             "&& .Mui-selected": {
                                             backgroundColor: "#90A4AE"
                                             }
                                         }}}
-                                        value={entry.room}
-                                        label="Room"
-                                        onChange={(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'ROOM')}
+                                        value = {entry.room}
+                                        label = "Room"
+                                        onChange = {(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'ROOM')}
                                         >
                                         {rooms.map(room => (
                                             <MenuItem 
-                                            key={room.id} 
-                                            value={room.id}
+                                            key = {room.id} 
+                                            value = {room.id}
                                             >
                                             <b>{room.building}</b> {room.number}
                                             </MenuItem>
@@ -203,12 +192,12 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
                         }
                     </td>}
 
-                    {<td className="professor-container">
+                    {<td className = "professor-container">
                         {courseEntries.map((entry) =>
                             {
                                 //get professor name
                                 var name;
-                                if (professors.filter((item) => item.id === entry.professor)[0] != undefined)
+                                if (professors.filter((item) => item.id === entry.professor)[0] !== undefined)
                                 {
                                     name = Object.entries(professors.filter((item) => item.id === entry.professor)[0]);
                                     name = name[1][1];
@@ -216,35 +205,35 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
 
                                 //return table entry
                                 if(!editMode){
-                                    return <table key={entry.professor}><tbody><tr key={entry.professor} ><td>
-                                                <DataViewer id={entry.professor} dataState={professors} sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                                    <Button className="entry-button" variant="text"color="inherit">
+                                    return <table key = {entry.professor}><tbody><tr key = {entry.professor} ><td>
+                                                <DataViewer id = {entry.professor} dataState = {professors} sx = {{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                                                    <Button className = "entry-button" variant = "text"color = "inherit">
                                                         {name}
                                                     </Button>
                                                 </DataViewer>
                                         </td></tr></tbody></table>
                                 }
                                 else {
-                                    return <table key={entry.professor}><tbody><tr key={entry.professor} ><td>
+                                    return <table key = {entry.professor}><tbody><tr key = {entry.professor} ><td>
                                     <FormControl fullWidth>
-                                        <InputLabel shrink id="label">Professor</InputLabel>
+                                        <InputLabel shrink id = "label">Professor</InputLabel>
                                         <Select
-                                        labelId="prof-label"
-                                        id='prof_dropdown'
+                                        labelId = "prof-label"
+                                        id = 'prof_dropdown'
                                         notched
-                                        MenuProps={{sx: {
+                                        MenuProps = {{sx: {
                                             "&& .Mui-selected": {
                                             backgroundColor: "#90A4AE"
                                             }
                                         }}}
-                                        value={entry.professor}
-                                        label="Professor"
-                                        onChange={(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'PROF')}
+                                        value = {entry.professor}
+                                        label = "Professor"
+                                        onChange = {(e) => onChangeDropDown(solutionNumber, entry.id, e.target.value, 'PROF')}
                                         >
                                         {professors.map(professor => (
                                             <MenuItem 
-                                            key={professor.id} 
-                                            value={professor.id}
+                                            key = {professor.id} 
+                                            value = {professor.id}
                                             >
                                             <b>{professor.firstName} {professor.lastName}</b>
                                             </MenuItem>
@@ -259,7 +248,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
 
                     </td>}
                     
-                    <DeleteColumn entries={courseEntries} editMode={editMode}></DeleteColumn>
+                    <DeleteColumn entries = {courseEntries} editMode = {editMode}></DeleteColumn>
 
                 </tr>;
 
@@ -272,6 +261,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  * This is the main component of the page. It returns the whole solutions page
  * it calls GenerateSolutions and populates the solutions table within each of the
  * weekdays.
+ * 
  * @param professors professors state
  * @param courses courses state
  * @param rooms rooms state
@@ -279,10 +269,7 @@ const SolutionItem = ({courseEntries, time, professors, courses, rooms, editMode
  */
 export function SolutionPage ({professors, courses, rooms, times, programs})
 {  
-    const [tempState, setTempState] = useState([]);
     const [tempSolutionEntries, setTempSolutionEntries] = useState();
-    const [numSolutions, setNumSolutions] = useState(300);
-    const [topSolutions, setTopSolutions] = useState(3);
     const [selectedCourses, setSelectedCourses] = useState([]);
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [selectedProfessors, setSelectedProfessors] = useState([]);
@@ -295,54 +282,18 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     const [editMode, setEditMode] = useState(false);
 
 
-    function getNewSolution() {
-        setIsAlgoCalculating(true);
-        AlgoService.createJsonOfSelectedStates(selectedCourses, selectedRooms, selectedProfessors, selectedLabs, 300, 2);
-    }
-
-    // times = 
-    // [
-    //     {
-    //         "id": 1,
-    //         "time": "MWF 8:15am",
-    //         "partOfDay": "morning"
-    //     },
-
-    //     {
-    //         "id": 2,
-    //         "time": "TR 1:30pm",
-    //         "partOfDay": "afternoon"
-    //     }
-    //     ,
-    //     {
-    //         "id": 3,
-    //         "time": "MWF 10:55am",
-    //         "partOfDay": "morning"
-    //     },
-    //     {
-    //         "id": 4,
-    //         "time": "TR 12:00pm",
-    //         "partOfDay": "afternoon"
-    //     }
-    // ];
     
     const solutionEntries = [];
     window.DB.receive('fromMain:Algo', (payload) => {
         //get solutions entries
         //console.log(payload.data);
-        for (let i=0; i<payload.data.length; i++)
+        for (let i = 0; i < payload.data.length; i++)
         {
             if (i > 10) {break;}
-            if(payload.data[i] != null){
+            if(payload.data[i] !== null){
                 solutionEntries.push({"solutionNum": i, "entry": payload.data[i]});
             }
         }
-        //console.log(solutionEntries);
-        //setTempState([]);
-
-        // This makes a deep copy of the 2D array which an array of objects.
-        // This fixes aliasing issues that were occuring when working with two arrays.
-        // REF: https://attacomsian.com/blog/javascript-deep-clone-array
         let mainArray = JSON.parse(JSON.stringify(solutionEntries));
         let editArray = JSON.parse(JSON.stringify(solutionEntries));
 
@@ -357,16 +308,11 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         setIsAlgoCalculating(false);
     });
 
-    // for (let i=0; i<payload.data.length; i++)
-    // {
-    //     if (i > 10) {break;}
-    //     solutionEntries.push({"solutionNum": i, "entry": payload.data[i]});
-        
-    // }
 
 
 
-    //get solutions items sorted by time so we can display them chronologically in the table
+    //get solutions items sorted by time so we can display them chronologically
+    //in the table
     const getTimes = (solution) =>
     {
         let solutionTimes = [];
@@ -381,7 +327,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         {
             for (let entry of solution)
             {
-                if (entry.time == solutionTime.id)
+                if (entry.time === solutionTime.id)
                 {
                     solutionTime.entries.push(entry);
                 }
@@ -392,8 +338,8 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     }
 
     function mapTimeStringToId(timeString) {
-        for(let i=0; i<times.length; i++){
-            if(times[i].time == timeString){
+        for(let i = 0; i < times.length; i++){
+            if(times[i].time === timeString){
                 return times[i].id;
             }
         }
@@ -410,23 +356,25 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
 
     /**
      * This is an individual tabpanel page
+     * 
      * @param props 
      * @returns a tabpannel page with elements wrapped inside
      */
     function TabPanel(props)
     {
-        const { children, value, index, ...other } = props;     //load props and children wrapped within TabPanel
+        //load props and children wrapped within TabPanel
+        const { children, value, index, ...other } = props;
       
         return (
           <div
-            className="tab-pannel-container"
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            className = "tab-pannel-container"
+            role = "tabpanel"
+            hidden = {value !== index}
+            id = {`simple-tabpanel-${index}`}
+            aria-labelledby = {`simple-tab-${index}`}
             {...other}
           >
-            {value === index && (<Box sx={{ p: 3 }}>{children}</Box>)}
+            {value === index && (<Box sx = {{ p: 3 }}>{children}</Box>)}
           </div>
         );
     }
@@ -449,7 +397,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     function checkForMissingValues(array) {
         let entryArrays = array[page].entry;
 
-        for(let i=0; i<entryArrays.length; i++){
+        for(let i = 0; i < entryArrays.length; i++){
             if(entryArrays[i].course === -1){
                 window.alert('Invalid Input.\nPlease select a Course!');
                 return false;
@@ -479,24 +427,24 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     const EditButtons = () => {
         if(!editMode) {
             return (
-                <Button variant="contained"
-                    onClick={editSolution}
-                    sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                    <Typography variant="text" color="secondary">Edit Solution</Typography>
+                <Button variant = "contained"
+                    onClick = {editSolution}
+                    sx = {{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                    <Typography variant = "text" color = "secondary">Edit Solution</Typography>
                 </Button>
             )
         }
         else {
             return (
                 <div>
-                    <Button variant="contained"
-                        onClick={saveEdits}
-                        sx={{position:'absolute', bottom:'12vh', left:'13.5vw'}}>
-                        <Typography variant="text" color="secondary">Save Edits</Typography>
+                    <Button variant = "contained"
+                        onClick = {saveEdits}
+                        sx = {{position:'absolute', bottom:'12vh', left:'13.5vw'}}>
+                        <Typography variant = "text" color = "secondary">Save Edits</Typography>
                     </Button>
-                    <Button variant="contained"
-                        onClick={cancelEdits}
-                        sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
+                    <Button variant = "contained"
+                        onClick = {cancelEdits}
+                        sx = {{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
                         <Typography variant="text" color="secondary">Cancel Edits</Typography>
                     </Button>
                 </div>
@@ -509,8 +457,6 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     //================ Saving Schedule Functions ==============================
     const saveSchedule = (solution) => () => {
         SolutionService.createPlan(solution, professors, courses, rooms, programs).then((data) => {
-            //SolutionService.saveScheduleToPlan()
-            //console.log(data);
         })
         .catch((error) => {
             console.log(error);
@@ -543,11 +489,14 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
 
     //====== Edit Funcitonality Functions ======================
     /**
-     * This function is attached to the add symbol in the Time column. This function is designed to add a section into
-     * a specified time slot. With the help of the helper function we are able to do this.
+     * This function is attached to the add symbol in the Time column. 
+     * This function is designed to add a section into a specified time slot. 
+     * With the help of the helper function we are able to do this.
      * 
      * https://www.youtube.com/watch?v=0iNDB-2fg8A&ab_channel=WebDevJunkie 
-     * This video helped me solve the issue of the parent component not rendering when I wanted it to.
+     * This video helped me solve the issue of the parent component not 
+     * rendering when I wanted it to.
+     * 
      * @param timeString - the string found in the time object
      * @param solutionNumber - the solution number we are working with
      */
@@ -555,11 +504,12 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         let tempSolutions = editSolutionEntries;
         setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperAddEditSection(timeString, solutionNumber, tempSolutions)]);
-        //console.log('Temp', tempSolutions);
     }
 
     /**
-     * This function is a helper function for the add button. It returns a new array with an added object for the specified time slot.
+     * This function is a helper function for the add button. 
+     * It returns a new array with an added object for the specified time slot.
+     * 
      * @param timeString - the time period to add the section
      * @param solutionNumber - the solution number we are working with.
      * @param tempSolutions = a soft copy of the state variable of edit solutions.
@@ -577,14 +527,6 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
             time: timeId,
             room: -1
         }
-        /**
-         * Desired structure =>
-         * temp = [{..}, {..}] =>
-         * temp[0] = {solutionNum: 0, entry:Array(2)}
-         * temp[0].entry[0] = {professor: 51, course: 7876, time: 4, room: 6}
-         * 
-         * temp[solutionNumber].entry.push(newEntry)
-         */
         let tempEntryArray = tempSolutions[solutionNumber].entry
         tempEntryArray.push(newEntry);
 
@@ -594,19 +536,20 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
 
     /**
      * This function deletes a section by id.
+     * 
      * @param solutionNumber - the solution number we are working with
      * @param entryId - the id of the section that is being deleted.
      */
     function deleteEditSection(solutionNumber, entryId){
         let tempSolutions = editSolutionEntries;
-        console.log(tempSolutions);
+
         setScrollState(document.querySelector('#simple-tabpanel-'+index).scrollTop);
         setEditSolutionEntries([...helperDeleteEditSection(solutionNumber, tempSolutions, entryId)]);
-        //console.log('Temp', tempSolutions);
     }
 
     /**
      * This function deletes the section that is specified.
+     * 
      * @param solutionNumber - the solution number we are working with.
      * @param tempSolutions - the a soft copy of the edit state.
      * @param entryId - the id of the section we are working with
@@ -615,7 +558,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     function helperDeleteEditSection(solutionNumber, tempSolutions, entryId) {
 
         let entryArray = tempSolutions[solutionNumber].entry
-        let tempEntryArray = entryArray.filter((entry) => entry.id != entryId);
+        let tempEntryArray = entryArray.filter((entry) => entry.id !== entryId);
 
         tempSolutions[solutionNumber].entry = tempEntryArray;
 
@@ -623,7 +566,9 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     }
 
     /**
-     * This function updates the value being stored in the dropdown. This function runs when a value is changed for any dropdown.
+     * This function updates the value being stored in the dropdown. 
+     * This function runs when a value is changed for any dropdown.
+     * 
      * @param solutionNumber - the solution that number we are working with.
      * @param entryId - the id of the section that is being changed.
      * @param newValue - the value of the dropdown that is being changed.
@@ -636,7 +581,9 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     }
 
     /**
-     * This is a helper function that create the new array with the modified values.
+     * This is a helper function that create the new array 
+     * with the modified values.
+     * 
      * @param solutionNumber - the solution number that we are working with.
      * @param tempSolutions - a soft copy of the edit state.
      * @param entryId - the id of the 
@@ -742,7 +689,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         let time;
         
         for(let i=0; i<entryArray.length; i++){
-            if(entryArray[i].id == entryId){
+            if(entryArray[i].id === entryId){
                 time = entryArray[i].time;
                 return time;
             }
@@ -759,7 +706,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     function getEntriesByTime(entryArray, time) {
         let listOfEntriesSameTime = [];
 
-        for(let i=0; i<entryArray.length; i++){
+        for(let i = 0; i < entryArray.length; i++){
             if(entryArray[i].time === time){
                 listOfEntriesSameTime.push(entryArray[i]);
             }
@@ -775,7 +722,7 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
      * @param newValue - the new value that is being changed by the dropdown.
      * @returns true if a conflict exists and false otherwise.     */
     function doesConflictExist(entriesFromSameTime, element, newValue) {
-        for(let i=0; i<entriesFromSameTime.length; i++){
+        for(let i = 0; i < entriesFromSameTime.length; i++){
             if(entriesFromSameTime[i][element] === newValue) {
                 if(element === 'professor'){
                     window.alert('Error! There may be a conflict with this Professor.');
@@ -797,11 +744,11 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
     const SolutionItemDisplay = ({solutionTimes, solutionNumber}) => {
         return solutionTimes.map((solutionTime) => 
         {   
-            return <SolutionItem courseEntries={solutionTime.entries}
-                                time={solutionTime.time}
-                                professors={professors}
-                                courses={courses}
-                                rooms={rooms}
+            return <SolutionItem courseEntries = {solutionTime.entries}
+                                time = {solutionTime.time}
+                                professors = {professors}
+                                courses = {courses}
+                                rooms = {rooms}
                                 editMode = {editMode}
                                 solutionNumber = {solutionNumber}
                                 onAddEditSection = {addEditSection}
@@ -815,25 +762,23 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         if(!editMode){
             return tempSolutionEntries?.map((solution) =>
             {
-                //console.log('tempSolutionEntries', tempSolutionEntries);
-                //console.log(solution);
                 let solutionTimes = getTimes(solution.entry);
-                //(solutionTimes);
-                return <TabPanel value={page} index={solution.solutionNum}>
-                            <table className="schedule">
+
+                return <TabPanel value = {page} index = {solution.solutionNum}>
+                            <table className = "schedule">
                                 <tbody>
                                     <TableHeaders></TableHeaders>
 
-                                    <SolutionItemDisplay solutionTimes={solutionTimes} solutionNumber={solution.solutionNum}></SolutionItemDisplay>
+                                    <SolutionItemDisplay solutionTimes = {solutionTimes} solutionNumber = {solution.solutionNum}></SolutionItemDisplay>
 
                                 </tbody>
                             </table>
                             <EditButtons></EditButtons>
 
-                            <Button variant="contained" 
-                                onClick={saveSchedule(solution)}
-                                sx={{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
-                                <Typography variant="text" color="secondary">Save Schedule</Typography>
+                            <Button variant = "contained" 
+                                onClick = {saveSchedule(solution)}
+                                sx = {{position:'absolute', bottom:'12vh', right:'2.5vw'}}>
+                                <Typography variant = "text" color = "secondary">Save Schedule</Typography>
                             </Button>
                         </TabPanel>;
             })
@@ -841,16 +786,14 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         else {
             return editSolutionEntries?.map((solution) =>
             {
-                //('EDITSolutionEntries', editSolutionEntries);
-                //console.log(solution);
                 let solutionTimes = getTimes(solution.entry);
-                //console.log(solutionTimes);
-                return <TabPanel value={page} index={solution.solutionNum}>
-                            <table className="schedule">
+
+                return <TabPanel value = {page} index = {solution.solutionNum}>
+                            <table className = "schedule">
                                 <tbody>
                                     <TableHeaders></TableHeaders>
 
-                                    <SolutionItemDisplay solutionTimes={solutionTimes} solutionNumber={solution.solutionNum}></SolutionItemDisplay>
+                                    <SolutionItemDisplay solutionTimes = {solutionTimes} solutionNumber = {solution.solutionNum}></SolutionItemDisplay>
 
                                 </tbody>
                             </table>
@@ -866,32 +809,28 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
         if(document.querySelector('#simple-tabpanel-'+index) !== null){
             document.querySelector('#simple-tabpanel-'+index).scrollTop = scrollState;
         }
-        console.log('USEEffect EDIT',editSolutionEntries);
-        console.log('USEEffect MAIN', tempSolutionEntries);
     }, [tempSolutionEntries, editSolutionEntries, scrollState]);
 
     if(isAlgoCalculating){
         return(
-            <div className="calculating">
+            <div className = "calculating">
                 <h4>Calculating your Schedule</h4> <br />
-                <CircularProgress size="5vw" thickness="2"/>
+                <CircularProgress size = "5vw" thickness = "2"/>
             </div>
         );
     }
     else {
-        console.log(tempSolutionEntries);
-        console.log(editSolutionEntries);
 
         return (
-            <div className="solutions-container">
-                <Box sx={{ width: '100%'}}>
-                    <Typography variant="h5" sx={{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
+            <div className = "solutions-container">
+                <Box sx = {{ width: '100%'}}>
+                    <Typography variant = "h5" sx = {{marginTop:'2vh', lineHeight:'2vh', marginLeft:'2.5vw', color:'primary.dark'}}>Schedule</Typography>
                     <hr/>
                 </Box>
 
-                <div className="schedule-container">
+                <div className = "schedule-container">
                     {/* Tabs */}
-                    <Tabs value={page} onChange={handleChange} aria-label="basic tabs example">
+                    <Tabs value = {page} onChange = {handleChange} aria-label = "basic tabs example">
                         {/*console.log('Solution', tempSolutionEntries)*/}
                         {tempSolutionEntries?.map((solution) =>
                         {
@@ -906,41 +845,6 @@ export function SolutionPage ({professors, courses, rooms, times, programs})
                         They display different schedule solutions */}
                     <SolutionTabs></SolutionTabs>
 
-                    {/* settings 
-                    <PopupState variant="popover">
-                        {(popupState) => (
-                            <React.Fragment>
-                                <Button variant="contained"
-                                        {...bindTrigger(popupState)} 
-                                        sx={{position:'absolute', bottom:'12vh', left:'2.5vw'}}>
-                                    <Typography variant="text" color="secondary">Settings</Typography>
-                                </Button>
-
-                                <Popover {...bindMenu(popupState)}
-                                    anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                                    transformOrigin={{vertical: 'bottom', horizontal: 'left'}}
-                                    sx={{width:"15%"}}>
-                                    <Box>
-                                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="Number of Solutions Considered"
-                                                label="Number of Solutions Considered" variant="outlined"
-                                                value={numSolutions}
-                                                sx={{margin:"5%", width:"90%"}}/>
-
-                                        <TextField InputLabelProps={{ shrink: true }} fullWidth id="Top Solutions Returned"
-                                                label="Top Solutions Returned" variant="outlined"
-                                                value={topSolutions}
-                                                sx={{margin:"5%", width:"90%"}}/>
-
-                                    <Button variant="contained" onClick={getNewSolution}>
-                                        <Typography variant="text" color="secondary">Update Settings</Typography>
-                                    </Button>
-
-                                    </Box>
-                                        
-                                </Popover>
-                            </React.Fragment>
-                        )}
-                    </PopupState>*/}
                 </div>
             </div>
         );
